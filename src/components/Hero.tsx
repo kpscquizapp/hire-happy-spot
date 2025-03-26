@@ -14,10 +14,10 @@ const Hero = () => {
   };
 
   return (
-    <section className="pt-32 pb-20 bg-gradient-to-b from-blue-50 to-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,122,255,0.1),transparent_70%)]"></div>
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl"></div>
-      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-blue-100/20 rounded-full blur-3xl"></div>
+    <section className="pt-32 pb-20 bg-gradient-to-b from-teal-50 to-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(20,184,166,0.1),transparent_70%)]"></div>
+      <div className="absolute -top-24 -right-24 w-96 h-96 bg-teal-100/30 rounded-full blur-3xl"></div>
+      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-teal-100/20 rounded-full blur-3xl"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-12 animate-fade-in">

@@ -80,7 +80,7 @@ const PopularCategories = () => {
               href={`/category/${category.id}`}
               className="glass-card p-6 flex flex-col items-center text-center group fade-in-section"
             >
-              <div className="w-14 h-14 bg-blue-50 flex items-center justify-center rounded-full mb-4 group-hover:bg-blue group-hover:text-white transition-all duration-300">
+              <div className="w-14 h-14 bg-teal-50 flex items-center justify-center rounded-full mb-4 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300">
                 {category.icon}
               </div>
               <h3 className="font-medium text-neutral-900 mb-1">{category.name}</h3>

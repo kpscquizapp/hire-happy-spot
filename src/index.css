@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
 
-    --primary: 211 100% 50%;
+    --primary: 180 100% 30%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 97%;
@@ -23,7 +23,7 @@
     --muted: 0 0% 97%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 211 100% 50%;
+    --accent: 180 100% 30%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -31,7 +31,7 @@
 
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 211 100% 50%;
+    --ring: 180 100% 30%;
 
     --radius: 0.5rem;
 
@@ -55,7 +55,7 @@
     --popover: 0 0% 12%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 211 100% 50%;
+    --primary: 180 100% 30%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 15%;
@@ -64,7 +64,7 @@
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 65%;
 
-    --accent: 211 100% 50%;
+    --accent: 180 100% 30%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -72,7 +72,7 @@
 
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 211 100% 50%;
+    --ring: 180 100% 30%;
   }
 }
 
@@ -93,7 +93,7 @@
   }
 
   ::selection {
-    @apply bg-blue-300 text-foreground;
+    @apply bg-teal-300 text-foreground;
   }
 }
 
@@ -111,7 +111,7 @@
   }
   
   .button-primary {
-    @apply bg-blue flex items-center justify-center rounded-full px-6 py-3 font-medium text-white shadow-sm transition-all duration-300 hover:bg-blue-600 hover:shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    @apply bg-teal-600 flex items-center justify-center rounded-full px-6 py-3 font-medium text-white shadow-sm transition-all duration-300 hover:bg-teal-700 hover:shadow focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2;
   }
   
   .button-secondary {
@@ -123,7 +123,7 @@
   }
   
   .input-primary {
-    @apply rounded-full border-neutral-200 bg-white px-4 py-3 text-neutral-900 shadow-sm transition-all duration-300 placeholder:text-neutral-400 focus:border-blue focus:ring-1 focus:ring-blue-200 focus:ring-offset-0;
+    @apply rounded-full border-neutral-200 bg-white px-4 py-3 text-neutral-900 shadow-sm transition-all duration-300 placeholder:text-neutral-400 focus:border-teal-600 focus:ring-1 focus:ring-teal-200 focus:ring-offset-0;
   }
   
   .fade-in-section {
