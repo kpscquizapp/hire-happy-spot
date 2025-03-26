@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Clock, MapPin, Briefcase } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 // Define a type for our job listings
 type JobListing = {
@@ -84,73 +85,88 @@ const HighlightedJob = () => {
   };
 
   return (
-    <section className="py-16 bg-gradient-to-br from-neutral-50 to-white relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-full bg-[url('https://placehold.co/1600x900')] bg-cover bg-center opacity-5"></div>
+    <section className="py-20 bg-gradient-to-br from-teal-50 to-sky-50 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_25%_50%,rgba(3,179,176,0.1),transparent_50%)]"></div>
+      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-[radial-gradient(circle_at_50%_50%,rgba(99,138,219,0.08),transparent_50%)]"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">
-            Featured Opportunities
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-6 tracking-tight">
+            Featured <span className="text-teal-600">Opportunities</span>
           </h2>
-          <p className="text-neutral-600 max-w-2xl mx-auto">
+          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
             Discover top jobs from leading companies in the industry. Apply now to take the next step in your career journey.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {currentJobs.map((job) => (
-            <div key={job.id} className="fade-in-section bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300 border border-neutral-100">
-              <span className="inline-block bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-sm font-medium mb-4">
-                {job.company}
-              </span>
-              <h3 className="text-xl font-bold text-neutral-900 mb-3">
+            <div key={job.id} className="fade-in-section bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-neutral-100 transform hover:-translate-y-1 transition-transform">
+              <div className="flex justify-between items-start mb-4">
+                <span className="inline-block bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-sm font-medium">
+                  {job.company}
+                </span>
+                <div className="w-3 h-3 rounded-full bg-teal-500 animate-pulse"></div>
+              </div>
+              
+              <h3 className="text-2xl font-bold text-neutral-900 mb-4 leading-tight">
                 {job.title}
               </h3>
-              <p className="text-neutral-600 mb-5 line-clamp-3">
+              
+              <p className="text-neutral-600 mb-6 line-clamp-3">
                 {job.description}
               </p>
-              <div className="flex flex-wrap gap-2 mb-6">
-                <span className="bg-neutral-100 px-3 py-1 rounded-full text-sm text-neutral-600">
+              
+              <div className="flex flex-wrap gap-3 mb-8">
+                <div className="flex items-center bg-neutral-50 px-3 py-2 rounded-lg text-sm text-neutral-700">
+                  <Briefcase className="h-4 w-4 mr-2 text-teal-500" />
                   {job.salary}
-                </span>
-                <span className="bg-neutral-100 px-3 py-1 rounded-full text-sm text-neutral-600">
+                </div>
+                <div className="flex items-center bg-neutral-50 px-3 py-2 rounded-lg text-sm text-neutral-700">
+                  <MapPin className="h-4 w-4 mr-2 text-teal-500" />
                   {job.location}
-                </span>
-                <span className="bg-neutral-100 px-3 py-1 rounded-full text-sm text-neutral-600">
+                </div>
+                <div className="flex items-center bg-neutral-50 px-3 py-2 rounded-lg text-sm text-neutral-700">
+                  <Clock className="h-4 w-4 mr-2 text-teal-500" />
                   {job.type}
-                </span>
+                </div>
               </div>
+              
               <div className="flex justify-between items-center">
-                <a href={`/company/${job.company.toLowerCase()}`} className="text-neutral-600 hover:text-teal-600 text-sm">
+                <a href={`/company/${job.company.toLowerCase()}`} className="text-neutral-600 hover:text-teal-600 transition-colors text-sm font-medium">
                   About {job.company}
                 </a>
-                <a href={`/job/${job.id}`} className="button-primary text-sm py-2 px-4">
+                <Button variant="default" size="sm" className="bg-teal-600 hover:bg-teal-700 text-white rounded-full">
                   Apply <ChevronRight className="ml-1 h-4 w-4 inline" />
-                </a>
+                </Button>
               </div>
             </div>
           ))}
         </div>
 
         {totalPages > 1 && (
-          <div className="flex justify-center mt-10 gap-2">
-            <button 
+          <div className="flex justify-center mt-12 gap-3">
+            <Button 
               onClick={prevPage}
-              className="p-2 rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
+              variant="outline" 
+              size="icon"
+              className="rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
               aria-label="Previous page"
             >
               <ChevronLeft className="h-5 w-5 text-neutral-600" />
-            </button>
-            <div className="flex items-center text-neutral-600 px-4">
+            </Button>
+            <div className="flex items-center bg-white text-neutral-600 px-4 py-2 rounded-full border border-neutral-200">
               Page {currentPage + 1} of {totalPages}
             </div>
-            <button 
+            <Button 
               onClick={nextPage}
-              className="p-2 rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
+              variant="outline"
+              size="icon"
+              className="rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
               aria-label="Next page"
             >
               <ChevronRight className="h-5 w-5 text-neutral-600" />
-            </button>
+            </Button>
           </div>
         )}
       </div>
