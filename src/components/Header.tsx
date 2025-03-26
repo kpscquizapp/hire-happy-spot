@@ -8,6 +8,14 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const Header = () => {
@@ -56,24 +64,126 @@ const Header = () => {
             </a>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#jobs" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              {translations.jobs[language]}
-            </a>
-            <a href="#services" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              {translations.services[language]}
-            </a>
-            <a href="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              {translations.aboutUs[language]}
-            </a>
-            <a href="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              {translations.blog[language]}
-            </a>
-            <a href="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              {translations.contact[language]}
-            </a>
-          </nav>
+          {/* Desktop Navigation with Hover Menus */}
+          <NavigationMenu className="hidden md:flex mr-auto ml-8">
+            <NavigationMenuList>
+              {/* Jobs Dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
+                  {translations.jobs[language]}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-96">
+                  <div className="grid grid-cols-2 gap-3">
+                    <a 
+                      href="#jobs-by-location" 
+                      className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
+                    >
+                      <div className="text-sm font-medium text-neutral-900">
+                        {language === 'pl' ? 'Praca wg lokalizacji' : 'Jobs by Location'}
+                      </div>
+                      <div className="text-xs text-neutral-500 group-hover:text-teal-600">
+                        {language === 'pl' ? 'Znajdź oferty w Twojej okolicy' : 'Find opportunities in your area'}
+                      </div>
+                    </a>
+                    <a 
+                      href="#jobs-by-category" 
+                      className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
+                    >
+                      <div className="text-sm font-medium text-neutral-900">
+                        {language === 'pl' ? 'Praca wg kategorii' : 'Jobs by Category'}
+                      </div>
+                      <div className="text-xs text-neutral-500 group-hover:text-teal-600">
+                        {language === 'pl' ? 'Przeglądaj oferty według specjalizacji' : 'Browse listings by specialization'}
+                      </div>
+                    </a>
+                    <a 
+                      href="#jobs-by-experience" 
+                      className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
+                    >
+                      <div className="text-sm font-medium text-neutral-900">
+                        {language === 'pl' ? 'Praca wg doświadczenia' : 'Jobs by Experience'}
+                      </div>
+                      <div className="text-xs text-neutral-500 group-hover:text-teal-600">
+                        {language === 'pl' ? 'Od początkujących po ekspertów' : 'From entry-level to expert roles'}
+                      </div>
+                    </a>
+                    <a 
+                      href="#jobs-by-industry" 
+                      className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
+                    >
+                      <div className="text-sm font-medium text-neutral-900">
+                        {language === 'pl' ? 'Praca wg branży' : 'Jobs by Industry'}
+                      </div>
+                      <div className="text-xs text-neutral-500 group-hover:text-teal-600">
+                        {language === 'pl' ? 'Oferty w różnych sektorach' : 'Opportunities across sectors'}
+                      </div>
+                    </a>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              
+              {/* Services Dropdown */}
+              <NavigationMenuItem>
+                <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
+                  {translations.services[language]}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-80">
+                  <div className="flex flex-col space-y-1">
+                    <a 
+                      href="#career-path" 
+                      className="group rounded-md p-3 hover:bg-neutral-50"
+                    >
+                      <div className="text-sm font-medium text-neutral-900">
+                        {language === 'pl' ? 'Wizualizacja ścieżki kariery' : 'Career Path Visualization'}
+                      </div>
+                      <div className="text-xs text-neutral-500 group-hover:text-teal-600">
+                        {language === 'pl' ? 'Planuj swoją karierę' : 'Plan your career trajectory'}
+                      </div>
+                    </a>
+                    <a 
+                      href="#resume-builder" 
+                      className="group rounded-md p-3 hover:bg-neutral-50"
+                    >
+                      <div className="text-sm font-medium text-neutral-900">
+                        {language === 'pl' ? 'Kreator CV' : 'Resume Builder'}
+                      </div>
+                      <div className="text-xs text-neutral-500 group-hover:text-teal-600">
+                        {language === 'pl' ? 'Stwórz profesjonalne CV' : 'Create a professional resume'}
+                      </div>
+                    </a>
+                    <a 
+                      href="#technical-trainings" 
+                      className="group rounded-md p-3 hover:bg-neutral-50"
+                    >
+                      <div className="text-sm font-medium text-neutral-900">
+                        {language === 'pl' ? 'Szkolenia techniczne' : 'Technical Trainings'}
+                      </div>
+                      <div className="text-xs text-neutral-500 group-hover:text-teal-600">
+                        {language === 'pl' ? 'Rozwijaj swoje umiejętności' : 'Develop your skills'}
+                      </div>
+                    </a>
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              
+              {/* Regular Menu Items */}
+              <NavigationMenuItem>
+                <a href="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-3 py-2">
+                  {translations.aboutUs[language]}
+                </a>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <a href="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-3 py-2">
+                  {translations.blog[language]}
+                </a>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <a href="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-3 py-2">
+                  {translations.contact[language]}
+                </a>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
 
           {/* Auth Buttons and Language Selector */}
           <div className="hidden md:flex items-center space-x-4">
@@ -107,7 +217,7 @@ const Header = () => {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button and Language Selector */}
           <div className="md:hidden flex items-center space-x-2">
             {/* Language Toggle for Mobile */}
             <DropdownMenu>
@@ -161,12 +271,42 @@ const Header = () => {
       )}>
         <div className="container mx-auto px-4 py-4">
           <nav className="flex flex-col space-y-4">
-            <a href="#jobs" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-              {translations.jobs[language]}
-            </a>
-            <a href="#services" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-              {translations.services[language]}
-            </a>
+            {/* Jobs with submenu */}
+            <div className="space-y-2">
+              <div className="font-medium text-neutral-900">{translations.jobs[language]}</div>
+              <div className="pl-4 border-l-2 border-neutral-100 space-y-2">
+                <a href="#jobs-by-location" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+                  {language === 'pl' ? 'Praca wg lokalizacji' : 'Jobs by Location'}
+                </a>
+                <a href="#jobs-by-category" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+                  {language === 'pl' ? 'Praca wg kategorii' : 'Jobs by Category'}
+                </a>
+                <a href="#jobs-by-experience" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+                  {language === 'pl' ? 'Praca wg doświadczenia' : 'Jobs by Experience'}
+                </a>
+                <a href="#jobs-by-industry" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+                  {language === 'pl' ? 'Praca wg branży' : 'Jobs by Industry'}
+                </a>
+              </div>
+            </div>
+            
+            {/* Services with submenu */}
+            <div className="space-y-2">
+              <div className="font-medium text-neutral-900">{translations.services[language]}</div>
+              <div className="pl-4 border-l-2 border-neutral-100 space-y-2">
+                <a href="#career-path" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+                  {language === 'pl' ? 'Wizualizacja ścieżki kariery' : 'Career Path Visualization'}
+                </a>
+                <a href="#resume-builder" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+                  {language === 'pl' ? 'Kreator CV' : 'Resume Builder'}
+                </a>
+                <a href="#technical-trainings" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+                  {language === 'pl' ? 'Szkolenia techniczne' : 'Technical Trainings'}
+                </a>
+              </div>
+            </div>
+            
+            {/* Regular menu items */}
             <a href="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
               {translations.aboutUs[language]}
             </a>

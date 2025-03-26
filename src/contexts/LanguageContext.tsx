@@ -89,7 +89,65 @@ const translations = {
   popular: {
     pl: 'Popularne: Programista, Project Manager, Marketing, Sprzedaż',
     en: 'Popular: Developer, Project Manager, Marketing, Sales',
-  }
+  },
+  
+  // Dropdown Menus
+  jobsByLocation: {
+    pl: 'Praca wg lokalizacji',
+    en: 'Jobs by Location',
+  },
+  jobsByCategory: {
+    pl: 'Praca wg kategorii',
+    en: 'Jobs by Category',
+  },
+  jobsByExperience: {
+    pl: 'Praca wg doświadczenia',
+    en: 'Jobs by Experience',
+  },
+  jobsByIndustry: {
+    pl: 'Praca wg branży',
+    en: 'Jobs by Industry',
+  },
+  careerPathVisualization: {
+    pl: 'Wizualizacja ścieżki kariery',
+    en: 'Career Path Visualization',
+  },
+  resumeBuilder: {
+    pl: 'Kreator CV',
+    en: 'Resume Builder',
+  },
+  technicalTrainings: {
+    pl: 'Szkolenia techniczne',
+    en: 'Technical Trainings',
+  },
+  findOpportunitiesInArea: {
+    pl: 'Znajdź oferty w Twojej okolicy',
+    en: 'Find opportunities in your area',
+  },
+  browseBySpecialization: {
+    pl: 'Przeglądaj oferty według specjalizacji',
+    en: 'Browse listings by specialization',
+  },
+  fromEntryToExpert: {
+    pl: 'Od początkujących po ekspertów',
+    en: 'From entry-level to expert roles',
+  },
+  opportunitiesAcrossSectors: {
+    pl: 'Oferty w różnych sektorach',
+    en: 'Opportunities across sectors',
+  },
+  planCareerTrajectory: {
+    pl: 'Planuj swoją karierę',
+    en: 'Plan your career trajectory',
+  },
+  createProfessionalResume: {
+    pl: 'Stwórz profesjonalne CV',
+    en: 'Create a professional resume',
+  },
+  developYourSkills: {
+    pl: 'Rozwijaj swoje umiejętności',
+    en: 'Develop your skills',
+  },
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
