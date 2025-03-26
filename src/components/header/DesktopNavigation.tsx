@@ -21,7 +21,7 @@ const DesktopNavigation = () => {
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
             {translations.jobs[language]}
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-96 z-50">
+          <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-96 absolute">
             <div className="grid grid-cols-2 gap-3">
               <a 
                 href="#jobs-by-location" 
@@ -76,7 +76,7 @@ const DesktopNavigation = () => {
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
             {translations.services[language]}
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-80 z-50">
+          <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-80 absolute">
             <div className="flex flex-col space-y-1">
               <a 
                 href="#career-path" 
