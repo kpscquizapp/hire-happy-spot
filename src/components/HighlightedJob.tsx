@@ -22,77 +22,77 @@ const HighlightedJob = () => {
     {
       id: 1,
       title: "Senior Product Designer",
-      company: "Infosys",
-      description: "Join our team to create innovative solutions that impact millions of users worldwide. We're looking for a creative mind who can turn complex problems into elegant designs.",
-      salary: "$120k - $150k",
-      location: "Remote / San Francisco",
-      type: "Full-time",
+      company: "CD Projekt",
+      description: "Join our team to create innovative gaming experiences that impact millions of players worldwide. We're looking for a creative mind who can turn complex problems into elegant designs.",
+      salary: "12,000 - 18,000 PLN",
+      location: "Warszawa",
+      type: "Pełny etat",
       featured: true
     },
     {
       id: 2,
       title: "Senior Full Stack Developer",
-      company: "Microsoft",
-      description: "Help build the next generation of cloud solutions. Looking for experienced developers with React, Node.js, and Azure experience to join our growing team.",
-      salary: "$130k - $160k",
-      location: "Seattle / Remote",
-      type: "Full-time",
+      company: "Asseco Poland",
+      description: "Help build the next generation of business solutions. Looking for experienced developers with React, Node.js, and cloud experience to join our growing team.",
+      salary: "15,000 - 20,000 PLN",
+      location: "Kraków / Zdalnie",
+      type: "Pełny etat",
       featured: true
     },
     {
       id: 3,
       title: "UX Research Lead",
-      company: "IBM",
+      company: "Comarch",
       description: "Lead user research initiatives to shape the future of our enterprise software. Seeking an experienced researcher who can transform user insights into actionable product improvements.",
-      salary: "$110k - $140k",
-      location: "New York / Hybrid",
-      type: "Full-time"
+      salary: "10,000 - 16,000 PLN",
+      location: "Wrocław / Hybrydowo",
+      type: "Pełny etat"
     },
     {
       id: 4,
       title: "DevOps Engineer",
-      company: "Accenture",
+      company: "Infosys Poland",
       description: "Join our cloud infrastructure team to design, implement, and maintain scalable systems. Seeking expertise in Kubernetes, AWS, and CI/CD pipelines.",
-      salary: "$125k - $155k",
-      location: "Chicago / Remote",
-      type: "Full-time"
+      salary: "14,000 - 19,000 PLN",
+      location: "Łódź / Zdalnie",
+      type: "Pełny etat"
     },
     {
       id: 5,
       title: "AI/ML Engineer",
-      company: "Wipro",
+      company: "Tauron",
       description: "Work on cutting-edge machine learning models that solve real-world business problems. Looking for experience with PyTorch, TensorFlow, and MLOps practices.",
-      salary: "$140k - $170k",
-      location: "Remote / Bangalore",
-      type: "Full-time"
+      salary: "16,000 - 22,000 PLN",
+      location: "Gdańsk / Zdalnie",
+      type: "Pełny etat"
     },
     {
       id: 6,
       title: "Frontend Developer",
-      company: "Google",
+      company: "Allegro",
       description: "Create beautiful, responsive web applications that are used by millions. Looking for expertise in React, TypeScript, and modern CSS frameworks.",
-      salary: "$115k - $145k",
-      location: "Mountain View / Remote",
-      type: "Full-time"
+      salary: "12,000 - 17,000 PLN",
+      location: "Poznań / Hybrydowo",
+      type: "Pełny etat"
     },
     {
       id: 7,
       title: "Data Scientist",
-      company: "Amazon",
+      company: "PZU",
       description: "Extract insights from large datasets to drive business decisions. Seeking experts in statistical analysis, machine learning, and data visualization.",
-      salary: "$130k - $165k",
-      location: "Seattle / Remote",
-      type: "Full-time",
+      salary: "14,000 - 21,000 PLN",
+      location: "Warszawa / Zdalnie",
+      type: "Pełny etat",
       featured: true
     },
     {
       id: 8,
       title: "Product Manager",
-      company: "Apple",
+      company: "Play",
       description: "Lead the development of innovative products from conception to launch. Looking for strategic thinkers with excellent communication skills.",
-      salary: "$140k - $180k",
-      location: "Cupertino / Hybrid",
-      type: "Full-time"
+      salary: "16,000 - 24,000 PLN",
+      location: "Kraków / Hybrydowo",
+      type: "Pełny etat"
     }
   ];
 
@@ -127,14 +127,14 @@ const HighlightedJob = () => {
         <div className="text-center mb-16">
           <div className="inline-block mb-3">
             <span className="bg-teal-100/50 text-teal-700 text-sm font-medium px-4 py-1.5 rounded-full">
-              Latest Opportunities
+              Najnowsze oferty
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-6 tracking-tight">
-            Featured <span className="text-teal-600">Opportunities</span>
+            Wyróżnione <span className="text-teal-600">oferty pracy</span>
           </h2>
           <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-            Discover top jobs from leading companies in the industry. Apply now to take the next step in your career journey.
+            Odkryj najlepsze oferty pracy od wiodących firm w Polsce. Aplikuj już teraz, aby zrobić kolejny krok w swojej karierze.
           </p>
         </div>
 
@@ -152,7 +152,7 @@ const HighlightedJob = () => {
                     {job.featured && (
                       <span className="inline-flex items-center bg-amber-50 text-amber-600 px-3 py-1 rounded-full text-sm font-medium border border-amber-100/50">
                         <Star className="h-3.5 w-3.5 mr-1 text-amber-500" />
-                        Featured
+                        Wyróżnione
                       </span>
                     )}
                   </div>
@@ -184,10 +184,10 @@ const HighlightedJob = () => {
                 
                 <div className="flex justify-between items-center mt-auto pt-4 border-t border-neutral-100">
                   <a href={`/company/${job.company.toLowerCase()}`} className="text-neutral-600 hover:text-teal-600 transition-colors text-sm font-medium">
-                    About {job.company}
+                    O firmie {job.company}
                   </a>
                   <Button variant="default" size="sm" className="bg-teal-600 hover:bg-teal-700 text-white rounded-full">
-                    Apply <ChevronRight className="ml-1 h-4 w-4 inline" />
+                    Aplikuj <ChevronRight className="ml-1 h-4 w-4 inline" />
                   </Button>
                 </div>
               </div>
@@ -202,7 +202,7 @@ const HighlightedJob = () => {
               variant="outline" 
               size="icon"
               className="rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
-              aria-label="Previous page"
+              aria-label="Poprzednia strona"
             >
               <ChevronLeft className="h-5 w-5 text-neutral-600" />
             </Button>
@@ -216,7 +216,7 @@ const HighlightedJob = () => {
               variant="outline"
               size="icon"
               className="rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
-              aria-label="Next page"
+              aria-label="Następna strona"
             >
               <ChevronRight className="h-5 w-5 text-neutral-600" />
             </Button>
@@ -225,7 +225,7 @@ const HighlightedJob = () => {
         
         <div className="text-center mt-12">
           <Button variant="outline" className="rounded-full px-8 py-6 text-base bg-white hover:bg-teal-50 text-teal-600 hover:text-teal-700 border border-teal-200/50 shadow-sm hover:shadow transition-all">
-            Browse All Job Listings <ChevronRight className="ml-2 h-5 w-5" />
+            Przeglądaj wszystkie oferty <ChevronRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </div>

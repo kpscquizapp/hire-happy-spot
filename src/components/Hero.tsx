@@ -22,10 +22,10 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-12 animate-fade-in">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-900 mb-4 tracking-tight">
-            Find your dream job today
+            Znajdź wymarzoną pracę
           </h1>
           <p className="text-lg md:text-xl text-neutral-600 mb-8">
-            Discover opportunities that match your skills and aspirations
+            Odkryj oferty dopasowane do Twoich umiejętności i aspiracji
           </p>
 
           <form onSubmit={handleSearch} className="glass-card p-4 md:p-6">
@@ -36,7 +36,7 @@ const Hero = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Job title, skills, or company"
+                  placeholder="Stanowisko, umiejętności lub firma"
                   className="input-primary pl-11 w-full"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -49,7 +49,7 @@ const Hero = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Location"
+                  placeholder="Lokalizacja"
                   className="input-primary pl-11 w-full"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
@@ -65,22 +65,22 @@ const Hero = () => {
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
                 >
-                  <option value="">Experience level</option>
-                  <option value="entry">Entry Level</option>
-                  <option value="mid">Mid Level</option>
-                  <option value="senior">Senior Level</option>
-                  <option value="executive">Executive</option>
+                  <option value="">Poziom doświadczenia</option>
+                  <option value="entry">Początkujący</option>
+                  <option value="mid">Średniozaawansowany</option>
+                  <option value="senior">Zaawansowany</option>
+                  <option value="executive">Kierowniczy</option>
                 </select>
               </div>
               
               <button type="submit" className="button-primary whitespace-nowrap">
-                Search Jobs
+                Szukaj ofert
               </button>
             </div>
           </form>
           
           <div className="mt-6 text-neutral-500 text-sm">
-            Popular: Software Engineer, Product Manager, Marketing, Sales
+            Popularne: Programista, Project Manager, Marketing, Sprzedaż
           </div>
         </div>
       </div>
