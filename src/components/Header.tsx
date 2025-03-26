@@ -79,10 +79,10 @@ const Header = () => {
                       className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
                     >
                       <div className="text-sm font-medium text-neutral-900">
-                        {language === 'pl' ? 'Praca wg lokalizacji' : 'Jobs by Location'}
+                        {translations.jobsByLocation[language]}
                       </div>
                       <div className="text-xs text-neutral-500 group-hover:text-teal-600">
-                        {language === 'pl' ? 'Znajdź oferty w Twojej okolicy' : 'Find opportunities in your area'}
+                        {translations.findOpportunitiesInArea[language]}
                       </div>
                     </a>
                     <a 
@@ -90,10 +90,10 @@ const Header = () => {
                       className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
                     >
                       <div className="text-sm font-medium text-neutral-900">
-                        {language === 'pl' ? 'Praca wg kategorii' : 'Jobs by Category'}
+                        {translations.jobsByCategory[language]}
                       </div>
                       <div className="text-xs text-neutral-500 group-hover:text-teal-600">
-                        {language === 'pl' ? 'Przeglądaj oferty według specjalizacji' : 'Browse listings by specialization'}
+                        {translations.browseBySpecialization[language]}
                       </div>
                     </a>
                     <a 
@@ -101,10 +101,10 @@ const Header = () => {
                       className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
                     >
                       <div className="text-sm font-medium text-neutral-900">
-                        {language === 'pl' ? 'Praca wg doświadczenia' : 'Jobs by Experience'}
+                        {translations.jobsByExperience[language]}
                       </div>
                       <div className="text-xs text-neutral-500 group-hover:text-teal-600">
-                        {language === 'pl' ? 'Od początkujących po ekspertów' : 'From entry-level to expert roles'}
+                        {translations.fromEntryToExpert[language]}
                       </div>
                     </a>
                     <a 
@@ -112,10 +112,10 @@ const Header = () => {
                       className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
                     >
                       <div className="text-sm font-medium text-neutral-900">
-                        {language === 'pl' ? 'Praca wg branży' : 'Jobs by Industry'}
+                        {translations.jobsByIndustry[language]}
                       </div>
                       <div className="text-xs text-neutral-500 group-hover:text-teal-600">
-                        {language === 'pl' ? 'Oferty w różnych sektorach' : 'Opportunities across sectors'}
+                        {translations.opportunitiesAcrossSectors[language]}
                       </div>
                     </a>
                   </div>
@@ -134,10 +134,10 @@ const Header = () => {
                       className="group rounded-md p-3 hover:bg-neutral-50"
                     >
                       <div className="text-sm font-medium text-neutral-900">
-                        {language === 'pl' ? 'Wizualizacja ścieżki kariery' : 'Career Path Visualization'}
+                        {translations.careerPathVisualization[language]}
                       </div>
                       <div className="text-xs text-neutral-500 group-hover:text-teal-600">
-                        {language === 'pl' ? 'Planuj swoją karierę' : 'Plan your career trajectory'}
+                        {translations.planCareerTrajectory[language]}
                       </div>
                     </a>
                     <a 
@@ -145,10 +145,10 @@ const Header = () => {
                       className="group rounded-md p-3 hover:bg-neutral-50"
                     >
                       <div className="text-sm font-medium text-neutral-900">
-                        {language === 'pl' ? 'Kreator CV' : 'Resume Builder'}
+                        {translations.resumeBuilder[language]}
                       </div>
                       <div className="text-xs text-neutral-500 group-hover:text-teal-600">
-                        {language === 'pl' ? 'Stwórz profesjonalne CV' : 'Create a professional resume'}
+                        {translations.createProfessionalResume[language]}
                       </div>
                     </a>
                     <a 
@@ -156,10 +156,10 @@ const Header = () => {
                       className="group rounded-md p-3 hover:bg-neutral-50"
                     >
                       <div className="text-sm font-medium text-neutral-900">
-                        {language === 'pl' ? 'Szkolenia techniczne' : 'Technical Trainings'}
+                        {translations.technicalTrainings[language]}
                       </div>
                       <div className="text-xs text-neutral-500 group-hover:text-teal-600">
-                        {language === 'pl' ? 'Rozwijaj swoje umiejętności' : 'Develop your skills'}
+                        {translations.developYourSkills[language]}
                       </div>
                     </a>
                   </div>
@@ -276,16 +276,16 @@ const Header = () => {
               <div className="font-medium text-neutral-900">{translations.jobs[language]}</div>
               <div className="pl-4 border-l-2 border-neutral-100 space-y-2">
                 <a href="#jobs-by-location" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
-                  {language === 'pl' ? 'Praca wg lokalizacji' : 'Jobs by Location'}
+                  {translations.jobsByLocation[language]}
                 </a>
                 <a href="#jobs-by-category" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
-                  {language === 'pl' ? 'Praca wg kategorii' : 'Jobs by Category'}
+                  {translations.jobsByCategory[language]}
                 </a>
                 <a href="#jobs-by-experience" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
-                  {language === 'pl' ? 'Praca wg doświadczenia' : 'Jobs by Experience'}
+                  {translations.jobsByExperience[language]}
                 </a>
                 <a href="#jobs-by-industry" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
-                  {language === 'pl' ? 'Praca wg branży' : 'Jobs by Industry'}
+                  {translations.jobsByIndustry[language]}
                 </a>
               </div>
             </div>
@@ -295,13 +295,13 @@ const Header = () => {
               <div className="font-medium text-neutral-900">{translations.services[language]}</div>
               <div className="pl-4 border-l-2 border-neutral-100 space-y-2">
                 <a href="#career-path" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
-                  {language === 'pl' ? 'Wizualizacja ścieżki kariery' : 'Career Path Visualization'}
+                  {translations.careerPathVisualization[language]}
                 </a>
                 <a href="#resume-builder" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
-                  {language === 'pl' ? 'Kreator CV' : 'Resume Builder'}
+                  {translations.resumeBuilder[language]}
                 </a>
                 <a href="#technical-trainings" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
-                  {language === 'pl' ? 'Szkolenia techniczne' : 'Technical Trainings'}
+                  {translations.technicalTrainings[language]}
                 </a>
               </div>
             </div>
