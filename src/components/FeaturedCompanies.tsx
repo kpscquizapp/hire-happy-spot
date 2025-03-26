@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -9,14 +10,14 @@ interface Company {
 }
 
 const companies: Company[] = [
-  { id: 1, name: 'Zensar', logo: 'https://download.logo.wine/logo/Zensar_Technologies/Zensar_Technologies-Logo.wine.png', jobCount: 42 },
   { id: 2, name: 'Infosys', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.svg/1280px-Infosys_logo.svg.png', jobCount: 78 },
-  { id: 3, name: 'Xoriant', logo: 'https://www.xoriant.com/hubfs/Xoriant-Logo-2023.png', jobCount: 35 },
   { id: 4, name: 'TCS', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tata_Consultancy_Services_Logo.svg/1280px-Tata_Consultancy_Services_Logo.svg.png', jobCount: 120 },
   { id: 5, name: 'Wipro', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Wipro_Primary_Logo_Color_RGB.svg/1280px-Wipro_Primary_Logo_Color_RGB.svg.png', jobCount: 67 },
   { id: 6, name: 'Accenture', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Accenture.svg/1280px-Accenture.svg.png', jobCount: 93 },
   { id: 7, name: 'IBM', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1280px-IBM_logo.svg.png', jobCount: 84 },
   { id: 8, name: 'Microsoft', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1280px-Microsoft_logo.svg.png', jobCount: 56 },
+  { id: 9, name: 'CD Projekt', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/6/68/CD_Projekt_logo.svg/1200px-CD_Projekt_logo.svg.png', jobCount: 42 },
+  { id: 10, name: 'Asseco Poland', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Asseco_logo.svg/2560px-Asseco_logo.svg.png', jobCount: 65 },
 ];
 
 const FeaturedCompanies = () => {
