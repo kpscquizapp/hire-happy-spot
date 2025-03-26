@@ -15,9 +15,9 @@ const DesktopNavigation = () => {
 
   return (
     <NavigationMenu className="hidden md:flex mr-auto ml-8">
-      <NavigationMenuList>
+      <NavigationMenuList className="space-x-4">
         {/* Jobs Dropdown */}
-        <NavigationMenuItem>
+        <NavigationMenuItem className="relative">
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
             {translations.jobs[language]}
           </NavigationMenuTrigger>
@@ -72,7 +72,7 @@ const DesktopNavigation = () => {
         </NavigationMenuItem>
         
         {/* Services Dropdown */}
-        <NavigationMenuItem>
+        <NavigationMenuItem className="relative">
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
             {translations.services[language]}
           </NavigationMenuTrigger>
@@ -117,17 +117,17 @@ const DesktopNavigation = () => {
         
         {/* Regular Menu Items */}
         <NavigationMenuItem>
-          <a href="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-3 py-2">
+          <a href="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.aboutUs[language]}
           </a>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <a href="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-3 py-2">
+          <a href="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.blog[language]}
           </a>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <a href="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-3 py-2">
+          <a href="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.contact[language]}
           </a>
         </NavigationMenuItem>
