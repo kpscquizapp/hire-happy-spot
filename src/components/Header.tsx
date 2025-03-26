@@ -72,7 +72,7 @@ const Header = () => {
                 <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
                   {translations.jobs[language]}
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-96">
+                <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-96 z-50">
                   <div className="grid grid-cols-2 gap-3">
                     <a 
                       href="#jobs-by-location" 
@@ -127,7 +127,7 @@ const Header = () => {
                 <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
                   {translations.services[language]}
                 </NavigationMenuTrigger>
-                <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-80">
+                <NavigationMenuContent className="bg-white p-4 rounded-md shadow-lg w-80 z-50">
                   <div className="flex flex-col space-y-1">
                     <a 
                       href="#career-path" 
@@ -193,7 +193,7 @@ const Header = () => {
                 <Globe className="h-5 w-5 mr-1" />
                 <span>{language === 'pl' ? 'PL' : 'EN'}</span>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="bg-white z-50">
                 <DropdownMenuItem 
                   onClick={() => toggleLanguage('pl')}
                   className={cn("cursor-pointer", language === 'pl' && "text-teal-600 font-medium")}
@@ -224,7 +224,7 @@ const Header = () => {
               <DropdownMenuTrigger className="flex items-center text-neutral-600 hover:text-teal-600 transition-colors duration-300 mr-3">
                 <Globe className="h-5 w-5" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
+              <DropdownMenuContent align="end" className="bg-white z-50">
                 <DropdownMenuItem 
                   onClick={() => toggleLanguage('pl')}
                   className={cn("cursor-pointer", language === 'pl' && "text-teal-600 font-medium")}
@@ -266,7 +266,7 @@ const Header = () => {
 
       {/* Mobile Menu */}
       <div className={cn(
-        "md:hidden absolute top-full left-0 right-0 bg-white border-t border-neutral-100 transition-all duration-300 overflow-hidden shadow-lg",
+        "md:hidden absolute top-full left-0 right-0 bg-white border-t border-neutral-100 transition-all duration-300 overflow-hidden shadow-lg z-40",
         mobileMenuOpen ? "max-h-[calc(100vh-4rem)]" : "max-h-0"
       )}>
         <div className="container mx-auto px-4 py-4">
