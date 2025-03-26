@@ -1,11 +1,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Globe } from 'lucide-react';
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuTrigger 
+} from '@/components/ui/dropdown-menu';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, setLanguage, translations } = useLanguage();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +23,10 @@ const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const toggleLanguage = (lang: 'pl' | 'en') => {
+    setLanguage(lang);
+  };
 
   return (
     <header 
@@ -47,53 +59,98 @@ const Header = () => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <a href="#jobs" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              Jobs
+              {translations.jobs[language]}
             </a>
             <a href="#services" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              Services
+              {translations.services[language]}
             </a>
             <a href="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              About Us
+              {translations.aboutUs[language]}
             </a>
             <a href="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              Blog
+              {translations.blog[language]}
             </a>
             <a href="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300">
-              Contact
+              {translations.contact[language]}
             </a>
           </nav>
 
-          {/* Auth Buttons */}
+          {/* Auth Buttons and Language Selector */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Language Selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center text-neutral-600 hover:text-teal-600 transition-colors duration-300">
+                <Globe className="h-5 w-5 mr-1" />
+                <span>{language === 'pl' ? 'PL' : 'EN'}</span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem 
+                  onClick={() => toggleLanguage('pl')}
+                  className={cn("cursor-pointer", language === 'pl' && "text-teal-600 font-medium")}
+                >
+                  Polski (PL)
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => toggleLanguage('en')}
+                  className={cn("cursor-pointer", language === 'en' && "text-teal-600 font-medium")}
+                >
+                  English (EN)
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <a href="/employer" className="text-neutral-900 hover:text-teal-600 transition-colors duration-300 font-medium">
-              Employer Login
+              {translations.employerLogin[language]}
             </a>
             <a href="/register" className="button-primary text-sm py-2">
-              Register <ChevronRight className="ml-1 h-4 w-4" />
+              {translations.register[language]} <ChevronRight className="ml-1 h-4 w-4" />
             </a>
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden flex items-center text-neutral-900" 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <div className="space-y-1.5">
-              <span className={cn(
-                "block h-0.5 w-6 bg-current transition-all duration-300",
-                mobileMenuOpen && "translate-y-2 rotate-45"
-              )}></span>
-              <span className={cn(
-                "block h-0.5 w-6 bg-current transition-all duration-300",
-                mobileMenuOpen && "opacity-0"
-              )}></span>
-              <span className={cn(
-                "block h-0.5 w-6 bg-current transition-all duration-300",
-                mobileMenuOpen && "-translate-y-2 -rotate-45"
-              )}></span>
-            </div>
-          </button>
+          <div className="md:hidden flex items-center space-x-2">
+            {/* Language Toggle for Mobile */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center text-neutral-600 hover:text-teal-600 transition-colors duration-300 mr-3">
+                <Globe className="h-5 w-5" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem 
+                  onClick={() => toggleLanguage('pl')}
+                  className={cn("cursor-pointer", language === 'pl' && "text-teal-600 font-medium")}
+                >
+                  Polski (PL)
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => toggleLanguage('en')}
+                  className={cn("cursor-pointer", language === 'en' && "text-teal-600 font-medium")}
+                >
+                  English (EN)
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
+            <button 
+              className="flex items-center text-neutral-900" 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <div className="space-y-1.5">
+                <span className={cn(
+                  "block h-0.5 w-6 bg-current transition-all duration-300",
+                  mobileMenuOpen && "translate-y-2 rotate-45"
+                )}></span>
+                <span className={cn(
+                  "block h-0.5 w-6 bg-current transition-all duration-300",
+                  mobileMenuOpen && "opacity-0"
+                )}></span>
+                <span className={cn(
+                  "block h-0.5 w-6 bg-current transition-all duration-300",
+                  mobileMenuOpen && "-translate-y-2 -rotate-45"
+                )}></span>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -105,27 +162,27 @@ const Header = () => {
         <div className="container mx-auto px-4 py-4">
           <nav className="flex flex-col space-y-4">
             <a href="#jobs" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-              Jobs
+              {translations.jobs[language]}
             </a>
             <a href="#services" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-              Services
+              {translations.services[language]}
             </a>
             <a href="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-              About Us
+              {translations.aboutUs[language]}
             </a>
             <a href="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-              Blog
+              {translations.blog[language]}
             </a>
             <a href="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-              Contact
+              {translations.contact[language]}
             </a>
           </nav>
           <div className="mt-6 flex flex-col space-y-4">
             <a href="/employer" className="text-neutral-900 hover:text-teal-600 transition-colors duration-300 font-medium py-2">
-              Employer Login
+              {translations.employerLogin[language]}
             </a>
             <a href="/register" className="button-primary text-center">
-              Register <ChevronRight className="ml-1 h-4 w-4 inline" />
+              {translations.register[language]} <ChevronRight className="ml-1 h-4 w-4 inline" />
             </a>
           </div>
         </div>

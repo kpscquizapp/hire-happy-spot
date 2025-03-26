@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
 import { Search, MapPin, Briefcase } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Hero = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
   const [experience, setExperience] = useState('');
+  const { language, translations } = useLanguage();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,10 +24,10 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-12 animate-fade-in">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-900 mb-4 tracking-tight">
-            Znajdź wymarzoną pracę
+            {translations.findDreamJob[language]}
           </h1>
           <p className="text-lg md:text-xl text-neutral-600 mb-8">
-            Odkryj oferty dopasowane do Twoich umiejętności i aspiracji
+            {translations.discoverOpportunities[language]}
           </p>
 
           <form onSubmit={handleSearch} className="glass-card p-4 md:p-6">
@@ -36,7 +38,7 @@ const Hero = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Stanowisko, umiejętności lub firma"
+                  placeholder={translations.positionSkillsCompany[language]}
                   className="input-primary pl-11 w-full"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -49,7 +51,7 @@ const Hero = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder="Lokalizacja"
+                  placeholder={translations.location[language]}
                   className="input-primary pl-11 w-full"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
@@ -65,22 +67,22 @@ const Hero = () => {
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
                 >
-                  <option value="">Poziom doświadczenia</option>
-                  <option value="entry">Początkujący</option>
-                  <option value="mid">Średniozaawansowany</option>
-                  <option value="senior">Zaawansowany</option>
-                  <option value="executive">Kierowniczy</option>
+                  <option value="">{translations.experienceLevel[language]}</option>
+                  <option value="entry">{translations.entry[language]}</option>
+                  <option value="mid">{translations.mid[language]}</option>
+                  <option value="senior">{translations.senior[language]}</option>
+                  <option value="executive">{translations.executive[language]}</option>
                 </select>
               </div>
               
               <button type="submit" className="button-primary whitespace-nowrap">
-                Szukaj ofert
+                {translations.searchJobs[language]}
               </button>
             </div>
           </form>
           
           <div className="mt-6 text-neutral-500 text-sm">
-            Popularne: Programista, Project Manager, Marketing, Sprzedaż
+            {translations.popular[language]}
           </div>
         </div>
       </div>
