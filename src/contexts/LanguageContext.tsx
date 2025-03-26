@@ -148,6 +148,44 @@ const translations = {
     pl: 'Rozwijaj swoje umiejętności',
     en: 'Develop your skills',
   },
+  
+  // Featured Jobs
+  latestJobs: {
+    pl: 'Najnowsze oferty',
+    en: 'Latest jobs',
+  },
+  featuredJobs: {
+    pl: 'Wyróżnione oferty pracy',
+    en: 'Featured job offers',
+  },
+  discoverBestJobs: {
+    pl: 'Odkryj najlepsze oferty pracy od wiodących firm w Polsce. Aplikuj już teraz, aby zrobić kolejny krok w swojej karierze.',
+    en: 'Discover the best job opportunities from leading companies in Poland. Apply now to take the next step in your career.',
+  },
+  featured: {
+    pl: 'Wyróżnione',
+    en: 'Featured',
+  },
+  apply: {
+    pl: 'Aplikuj',
+    en: 'Apply',
+  },
+  aboutCompany: {
+    pl: 'O firmie',
+    en: 'About',
+  },
+  browseAllJobs: {
+    pl: 'Przeglądaj wszystkie oferty',
+    en: 'Browse all jobs',
+  },
+  previousPage: {
+    pl: 'Poprzednia strona',
+    en: 'Previous page',
+  },
+  nextPage: {
+    pl: 'Następna strona',
+    en: 'Next page',
+  },
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
