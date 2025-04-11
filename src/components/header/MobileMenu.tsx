@@ -23,16 +23,16 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
           <div className="space-y-2">
             <div className="font-medium text-neutral-900">{translations.jobs[language]}</div>
             <div className="pl-4 border-l-2 border-neutral-100 space-y-2">
-              <Link to="#jobs-by-location" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              <Link to="/jobs-by-location" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.jobsByLocation[language]}
               </Link>
-              <Link to="#jobs-by-category" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              <Link to="/jobs-by-category" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.jobsByCategory[language]}
               </Link>
-              <Link to="#jobs-by-experience" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              <Link to="/jobs-by-experience" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.jobsByExperience[language]}
               </Link>
-              <Link to="#jobs-by-industry" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              <Link to="/jobs-by-industry" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.jobsByIndustry[language]}
               </Link>
             </div>
@@ -45,23 +45,23 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
               <Link to="/career-path" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.careerPathVisualization[language]}
               </Link>
-              <Link to="#resume-builder" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              <Link to="/resume-builder" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.resumeBuilder[language]}
               </Link>
-              <Link to="#technical-trainings" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              <Link to="/technical-trainings" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.technicalTrainings[language]}
               </Link>
             </div>
           </div>
           
           {/* Regular menu items */}
-          <Link to="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
+          <Link to="/about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
             {translations.aboutUs[language]}
           </Link>
-          <Link to="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
+          <Link to="/blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
             {translations.blog[language]}
           </Link>
-          <Link to="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
+          <Link to="/contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
             {translations.contact[language]}
           </Link>
         </nav>

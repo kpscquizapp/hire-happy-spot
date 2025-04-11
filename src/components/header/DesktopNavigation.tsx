@@ -22,10 +22,10 @@ const DesktopNavigation = () => {
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
             {translations.jobs[language]}
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="p-4 rounded-md shadow-lg w-96">
+          <NavigationMenuContent className="p-4 rounded-md shadow-lg w-96 bg-white">
             <div className="grid grid-cols-2 gap-3">
               <Link 
-                to="#jobs-by-location" 
+                to="/jobs-by-location" 
                 className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
               >
                 <div className="text-sm font-medium text-neutral-900">
@@ -36,7 +36,7 @@ const DesktopNavigation = () => {
                 </div>
               </Link>
               <Link 
-                to="#jobs-by-category" 
+                to="/jobs-by-category" 
                 className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
               >
                 <div className="text-sm font-medium text-neutral-900">
@@ -47,7 +47,7 @@ const DesktopNavigation = () => {
                 </div>
               </Link>
               <Link 
-                to="#jobs-by-experience" 
+                to="/jobs-by-experience" 
                 className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
               >
                 <div className="text-sm font-medium text-neutral-900">
@@ -58,7 +58,7 @@ const DesktopNavigation = () => {
                 </div>
               </Link>
               <Link 
-                to="#jobs-by-industry" 
+                to="/jobs-by-industry" 
                 className="group flex flex-col space-y-1 rounded-md p-3 hover:bg-neutral-50"
               >
                 <div className="text-sm font-medium text-neutral-900">
@@ -77,7 +77,7 @@ const DesktopNavigation = () => {
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
             {translations.services[language]}
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="p-4 rounded-md shadow-lg w-80">
+          <NavigationMenuContent className="p-4 rounded-md shadow-lg w-80 bg-white">
             <div className="flex flex-col space-y-1">
               <Link 
                 to="/career-path" 
@@ -91,7 +91,7 @@ const DesktopNavigation = () => {
                 </div>
               </Link>
               <Link 
-                to="#resume-builder" 
+                to="/resume-builder" 
                 className="group rounded-md p-3 hover:bg-neutral-50"
               >
                 <div className="text-sm font-medium text-neutral-900">
@@ -102,7 +102,7 @@ const DesktopNavigation = () => {
                 </div>
               </Link>
               <Link 
-                to="#technical-trainings" 
+                to="/technical-trainings" 
                 className="group rounded-md p-3 hover:bg-neutral-50"
               >
                 <div className="text-sm font-medium text-neutral-900">
@@ -118,17 +118,17 @@ const DesktopNavigation = () => {
         
         {/* Regular Menu Items */}
         <NavigationMenuItem>
-          <Link to="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <Link to="/about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.aboutUs[language]}
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <Link to="/blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.blog[language]}
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <Link to="/contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.contact[language]}
           </Link>
         </NavigationMenuItem>
