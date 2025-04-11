@@ -6,7 +6,6 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
@@ -18,11 +17,11 @@ const DesktopNavigation = () => {
     <NavigationMenu className="hidden md:flex mr-auto ml-8">
       <NavigationMenuList className="space-x-4">
         {/* Jobs Dropdown */}
-        <NavigationMenuItem className="relative">
-          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-white hover:bg-white focus:bg-white data-[state=open]:bg-white">
             {translations.jobs[language]}
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="p-4 rounded-md shadow-lg w-96 bg-white">
+          <NavigationMenuContent className="p-4 rounded-md shadow-lg w-96 bg-white z-50">
             <div className="grid grid-cols-2 gap-3">
               <Link 
                 to="/jobs-by-location" 
@@ -73,11 +72,11 @@ const DesktopNavigation = () => {
         </NavigationMenuItem>
         
         {/* Services Dropdown */}
-        <NavigationMenuItem className="relative">
-          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent">
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 bg-white hover:bg-white focus:bg-white data-[state=open]:bg-white">
             {translations.services[language]}
           </NavigationMenuTrigger>
-          <NavigationMenuContent className="p-4 rounded-md shadow-lg w-80 bg-white">
+          <NavigationMenuContent className="p-4 rounded-md shadow-lg w-80 bg-white z-50">
             <div className="flex flex-col space-y-1">
               <Link 
                 to="/career-path" 

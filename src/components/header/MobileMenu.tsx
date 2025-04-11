@@ -14,7 +14,7 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
 
   return (
     <div className={cn(
-      "md:hidden absolute top-full left-0 right-0 bg-white border-t border-neutral-100 transition-all duration-300 overflow-hidden shadow-lg z-40",
+      "md:hidden fixed top-full left-0 right-0 bg-white border-t border-neutral-100 transition-all duration-300 overflow-hidden shadow-lg z-40",
       isOpen ? "max-h-[calc(100vh-4rem)]" : "max-h-0"
     )}>
       <div className="container mx-auto px-4 py-4">
