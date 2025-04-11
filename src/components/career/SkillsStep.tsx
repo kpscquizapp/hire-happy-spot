@@ -28,7 +28,12 @@ const skillCategories: SkillCategory[] = [
       pl: 'Języki Programowania',
       en: 'Programming Languages'
     },
-    skills: ['Python', 'JavaScript', 'Java', 'C#', 'C++', 'PHP', 'Ruby', 'Swift', 'Kotlin', 'Go', 'Rust', 'Scala', 'R', 'MATLAB', 'TypeScript']
+    skills: [
+      'Python', 'JavaScript', 'Java', 'C#', 'C++', 'PHP', 'Ruby', 'Swift', 
+      'Kotlin', 'Go', 'Rust', 'Scala', 'R', 'MATLAB', 'TypeScript',
+      'Dart', 'Perl', 'Haskell', 'Objective-C', 'Assembly', 'Groovy',
+      'Lua', 'Clojure', 'F#', 'COBOL', 'Fortran', 'Erlang', 'Julia'
+    ]
   },
   {
     id: 'web',
@@ -36,7 +41,13 @@ const skillCategories: SkillCategory[] = [
       pl: 'Rozwój Stron Internetowych',
       en: 'Web Development'
     },
-    skills: ['React', 'Angular', 'Vue.js', 'Node.js', 'Express.js', 'Django', 'Flask', 'HTML', 'CSS', 'jQuery', 'Bootstrap', 'Tailwind CSS']
+    skills: [
+      'React', 'Angular', 'Vue.js', 'Node.js', 'Express.js', 'Django', 'Flask', 
+      'HTML', 'CSS', 'jQuery', 'Bootstrap', 'Tailwind CSS', 'Next.js', 'Svelte',
+      'GraphQL', 'REST API', 'WebSockets', 'Redux', 'Gatsby', 'Webpack',
+      'SASS/SCSS', 'Ember.js', 'Three.js', 'D3.js', 'Material UI', 'Chakra UI',
+      'TypeORM', 'Prisma', 'Vite', 'Laravel', 'Ruby on Rails', 'Spring Boot'
+    ]
   },
   {
     id: 'data',
@@ -44,7 +55,40 @@ const skillCategories: SkillCategory[] = [
       pl: 'Nauka o Danych',
       en: 'Data Science'
     },
-    skills: ['SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'MySQL', 'Data Analysis', 'Machine Learning', 'Big Data', 'Data Visualization', 'TensorFlow', 'PyTorch']
+    skills: [
+      'SQL', 'NoSQL', 'MongoDB', 'PostgreSQL', 'MySQL', 'Data Analysis', 
+      'Machine Learning', 'Big Data', 'Data Visualization', 'TensorFlow', 
+      'PyTorch', 'Pandas', 'NumPy', 'Scikit-learn', 'Power BI', 'Tableau',
+      'Hadoop', 'Spark', 'SPSS', 'SAS', 'R Studio', 'Jupyter Notebooks',
+      'Data Mining', 'NLP', 'Computer Vision', 'Time Series Analysis',
+      'Data Warehousing', 'ETL Processes', 'Reinforcement Learning', 'A/B Testing'
+    ]
+  },
+  {
+    id: 'mobile',
+    name: {
+      pl: 'Rozwój Aplikacji Mobilnych',
+      en: 'Mobile Development'
+    },
+    skills: [
+      'iOS Development', 'Android Development', 'React Native', 'Flutter', 
+      'Swift UI', 'Kotlin Multiplatform', 'Xamarin', 'Ionic', 'Unity Mobile',
+      'Mobile UX Design', 'Firebase', 'AppStore Optimization', 'Google Play Console',
+      'Push Notifications', 'Mobile Analytics', 'Mobile Security', 'ARKit/ARCore'
+    ]
+  },
+  {
+    id: 'devops',
+    name: {
+      pl: 'DevOps i Infrastruktura',
+      en: 'DevOps & Infrastructure'
+    },
+    skills: [
+      'Docker', 'Kubernetes', 'AWS', 'Azure', 'GCP', 'CI/CD', 'Jenkins', 
+      'GitHub Actions', 'Terraform', 'Ansible', 'Prometheus', 'Grafana',
+      'Linux Administration', 'Bash Scripting', 'Networking', 'Security',
+      'Microservices', 'Serverless', 'ELK Stack', 'Redis', 'RabbitMQ', 'Kafka'
+    ]
   }
 ];
 
