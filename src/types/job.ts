@@ -18,3 +18,25 @@ export type JobListing = {
   };
   featured?: boolean;
 };
+
+export type CareerPath = {
+  id: number;
+  title: string;
+  description: string;
+  requiredSkills: string[];
+  recommendedCourses: Course[];
+  salaryRange: string;
+  demandLevel: 'high' | 'medium' | 'low';
+  growthPotential: 'high' | 'medium' | 'low';
+};
+
+export type Course = {
+  id: number;
+  title: string;
+  provider: string;
+  duration: string;
+  cost: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  description: string;
+  url: string;
+};
