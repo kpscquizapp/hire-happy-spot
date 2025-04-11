@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
 import AuthButtons from './AuthButtons';
@@ -22,18 +23,18 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
           <div className="space-y-2">
             <div className="font-medium text-neutral-900">{translations.jobs[language]}</div>
             <div className="pl-4 border-l-2 border-neutral-100 space-y-2">
-              <a href="#jobs-by-location" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              <Link to="#jobs-by-location" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.jobsByLocation[language]}
-              </a>
-              <a href="#jobs-by-category" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              </Link>
+              <Link to="#jobs-by-category" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.jobsByCategory[language]}
-              </a>
-              <a href="#jobs-by-experience" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              </Link>
+              <Link to="#jobs-by-experience" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.jobsByExperience[language]}
-              </a>
-              <a href="#jobs-by-industry" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              </Link>
+              <Link to="#jobs-by-industry" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.jobsByIndustry[language]}
-              </a>
+              </Link>
             </div>
           </div>
           
@@ -41,28 +42,28 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
           <div className="space-y-2">
             <div className="font-medium text-neutral-900">{translations.services[language]}</div>
             <div className="pl-4 border-l-2 border-neutral-100 space-y-2">
-              <a href="#career-path" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              <Link to="/career-path" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.careerPathVisualization[language]}
-              </a>
-              <a href="#resume-builder" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              </Link>
+              <Link to="#resume-builder" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.resumeBuilder[language]}
-              </a>
-              <a href="#technical-trainings" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
+              </Link>
+              <Link to="#technical-trainings" className="block text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-1">
                 {translations.technicalTrainings[language]}
-              </a>
+              </Link>
             </div>
           </div>
           
           {/* Regular menu items */}
-          <a href="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
+          <Link to="#about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
             {translations.aboutUs[language]}
-          </a>
-          <a href="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
+          </Link>
+          <Link to="#blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
             {translations.blog[language]}
-          </a>
-          <a href="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
+          </Link>
+          <Link to="#contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
             {translations.contact[language]}
-          </a>
+          </Link>
         </nav>
         <AuthButtons isMobile={true} />
       </div>
