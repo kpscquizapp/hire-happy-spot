@@ -9,7 +9,7 @@ interface AuthButtonsProps {
 }
 
 const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
 
   return (
     <div className={isMobile ? "mt-6 flex flex-col space-y-4" : "hidden md:flex items-center space-x-4"}>
@@ -17,13 +17,13 @@ const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
         to="/employer" 
         className="text-neutral-900 hover:text-teal-600 transition-colors duration-300 font-medium py-2"
       >
-        {translations.employerLogin[language]}
+        {translations.employerLogin}
       </Link>
       <Link 
         to="/register" 
         className={`button-primary ${isMobile ? "text-center" : "text-sm py-2"}`}
       >
-        {translations.register[language]} 
+        {translations.register} 
         <ChevronRight className={`${isMobile ? "inline" : "ml-1"} h-4 w-4`} />
       </Link>
     </div>

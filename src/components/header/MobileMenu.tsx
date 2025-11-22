@@ -10,7 +10,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ isOpen }: MobileMenuProps) => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
 
   return (
     <div className={cn(
@@ -21,18 +21,23 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
         <nav className="flex flex-col space-y-4">
           {/* Career Path link */}
           <Link to="/career-path" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2 font-medium">
-            {translations.careerPathVisualization[language]}
+            {translations.careerPathVisualization}
+          </Link>
+          
+          {/* Talent Marketplace link */}
+          <Link to="/marketplace" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2 font-medium">
+            {translations.marketplace}
           </Link>
           
           {/* Regular menu items */}
           <Link to="/about" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-            {translations.aboutUs[language]}
+            {translations.aboutUs}
           </Link>
           <Link to="/blog" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-            {translations.blog[language]}
+            {translations.blog}
           </Link>
           <Link to="/contact" className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 py-2">
-            {translations.contact[language]}
+            {translations.contact}
           </Link>
         </nav>
         <AuthButtons isMobile={true} />

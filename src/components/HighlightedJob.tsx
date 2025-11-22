@@ -8,7 +8,7 @@ import JobPagination from './jobs/JobPagination';
 import { jobListings } from '@/data/jobListings';
 
 const HighlightedJob = () => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
   
   // State to track current page of job listings
   const [currentPage, setCurrentPage] = useState(0);
@@ -41,14 +41,14 @@ const HighlightedJob = () => {
         <div className="text-center mb-16">
           <div className="inline-block mb-3">
             <span className="bg-teal-100/50 text-teal-700 text-sm font-medium px-4 py-1.5 rounded-full">
-              {translations.latestJobs[language]}
+              {translations.latestJobs}
             </span>
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-6 tracking-tight">
-            {translations.featuredJobs[language]}
+            {translations.featuredJobs}
           </h2>
           <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
-            {translations.discoverBestJobs[language]}
+            {translations.discoverBestJobs}
           </p>
         </div>
 
@@ -67,7 +67,7 @@ const HighlightedJob = () => {
         
         <div className="text-center mt-12">
           <Button variant="outline" className="rounded-full px-8 py-6 text-base bg-white hover:bg-teal-50 text-teal-600 hover:text-teal-700 border border-teal-200/50 shadow-sm hover:shadow transition-all">
-            {translations.browseAllJobs[language]} <ChevronRight className="ml-2 h-5 w-5" />
+            {translations.browseAllJobs} <ChevronRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
       </div>

@@ -11,7 +11,7 @@ interface JobCardProps {
 }
 
 const JobCard = ({ job }: JobCardProps) => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
 
   return (
     <Card key={job.id} className="fade-in-section bg-white rounded-2xl p-0 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-0 group h-full">
@@ -26,7 +26,7 @@ const JobCard = ({ job }: JobCardProps) => {
             {job.featured && (
               <span className="inline-flex items-center bg-amber-50 text-amber-600 px-3 py-1 rounded-full text-sm font-medium border border-amber-100/50">
                 <Star className="h-3.5 w-3.5 mr-1 text-amber-500" />
-                {translations.featured[language]}
+                {translations.featured}
               </span>
             )}
           </div>
@@ -34,11 +34,11 @@ const JobCard = ({ job }: JobCardProps) => {
         </div>
         
         <h3 className="text-2xl font-bold text-neutral-900 mb-3 leading-tight group-hover:text-teal-600 transition-colors">
-          {job.title[language]}
+          {job.title.en}
         </h3>
         
         <p className="text-neutral-600 mb-6 line-clamp-3 flex-grow">
-          {job.description[language]}
+          {job.description.en}
         </p>
         
         <div className="flex flex-wrap gap-3 mb-6">
@@ -52,16 +52,16 @@ const JobCard = ({ job }: JobCardProps) => {
           </div>
           <div className="flex items-center bg-neutral-50 px-3 py-2 rounded-lg text-sm text-neutral-700 border border-neutral-100">
             <Clock className="h-4 w-4 mr-2 text-teal-500" />
-            {job.type[language]}
+            {job.type.en}
           </div>
         </div>
         
         <div className="flex justify-between items-center mt-auto pt-4 border-t border-neutral-100">
           <a href={`/company/${job.company.toLowerCase()}`} className="text-neutral-600 hover:text-teal-600 transition-colors text-sm font-medium">
-            {translations.aboutCompany[language]} {job.company}
+            {translations.aboutCompany} {job.company}
           </a>
           <Button variant="default" size="sm" className="bg-teal-600 hover:bg-teal-700 text-white rounded-full">
-            {translations.apply[language]} <ChevronRight className="ml-1 h-4 w-4 inline" />
+            {translations.apply} <ChevronRight className="ml-1 h-4 w-4 inline" />
           </Button>
         </div>
       </div>

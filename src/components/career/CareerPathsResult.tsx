@@ -14,7 +14,7 @@ interface CareerPathsResultProps {
 }
 
 const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResultProps) => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
   const [selectedPath, setSelectedPath] = useState<CareerPath | null>(careerPaths[0] || null);
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   
@@ -22,10 +22,10 @@ const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResul
     <div className="animate-in fade-in duration-300">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-semibold text-neutral-800">
-          {translations.recommendedCareerPaths[language]}
+          {translations.recommendedCareerPaths}
         </h2>
         <Button variant="outline" onClick={onBack}>
-          {translations.back[language]}
+          {translations.back}
         </Button>
       </div>
       
@@ -33,7 +33,7 @@ const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResul
         {/* Left column - Career paths list */}
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-neutral-700">
-            {translations.availablePaths[language]}
+            {translations.availablePaths}
           </h3>
           
           <div className="space-y-3">
@@ -54,7 +54,7 @@ const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResul
                   <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center text-teal-600">
                       <LineChart className="w-3 h-3 mr-1" />
-                      <span>{translations[path.demandLevel][language]}</span>
+                      <span>{translations[path.demandLevel]}</span>
                     </div>
                     <div>{path.salaryRange}</div>
                   </div>
@@ -79,7 +79,7 @@ const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResul
                 <CardContent>
                   <div className="space-y-4">
                     <div>
-                      <h4 className="text-sm font-semibold mb-2">{translations.requiredSkills[language]}</h4>
+                      <h4 className="text-sm font-semibold mb-2">{translations.requiredSkills}</h4>
                       <div className="flex flex-wrap gap-2">
                         {selectedPath.requiredSkills.map((skill) => (
                           <span 
@@ -94,12 +94,12 @@ const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResul
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="bg-neutral-50 p-3 rounded-md">
-                        <div className="text-sm text-neutral-500">{translations.salaryRange[language]}</div>
+                        <div className="text-sm text-neutral-500">{translations.salaryRange}</div>
                         <div className="font-medium">{selectedPath.salaryRange}</div>
                       </div>
                       <div className="bg-neutral-50 p-3 rounded-md">
-                        <div className="text-sm text-neutral-500">{translations.demandLevel[language]}</div>
-                        <div className="font-medium">{translations[selectedPath.demandLevel][language]}</div>
+                        <div className="text-sm text-neutral-500">{translations.demandLevel}</div>
+                        <div className="font-medium">{translations[selectedPath.demandLevel]}</div>
                       </div>
                     </div>
                   </div>
@@ -109,15 +109,15 @@ const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResul
               <div>
                 <h3 className="text-lg font-medium text-neutral-700 mb-4 flex items-center">
                   <GraduationCap className="mr-2 h-5 w-5 text-teal-600" />
-                  {translations.recommendedCourses[language]}
+                  {translations.recommendedCourses}
                 </h3>
                 
                 <Tabs defaultValue="all" className="w-full">
                   <TabsList className="w-full justify-start mb-4">
-                    <TabsTrigger value="all">{translations.all[language]}</TabsTrigger>
-                    <TabsTrigger value="beginner">{translations.beginner[language]}</TabsTrigger>
-                    <TabsTrigger value="intermediate">{translations.intermediate[language]}</TabsTrigger>
-                    <TabsTrigger value="advanced">{translations.advanced[language]}</TabsTrigger>
+                    <TabsTrigger value="all">{translations.all}</TabsTrigger>
+                    <TabsTrigger value="beginner">{translations.beginner}</TabsTrigger>
+                    <TabsTrigger value="intermediate">{translations.intermediate}</TabsTrigger>
+                    <TabsTrigger value="advanced">{translations.advanced}</TabsTrigger>
                   </TabsList>
                   
                   <TabsContent value="all" className="space-y-4">
@@ -179,27 +179,27 @@ const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResul
                       <Award className="mr-2 h-5 w-5 text-teal-600" />
                       {selectedCourse.title}
                     </CardTitle>
-                    <CardDescription>{translations.providedBy[language]} {selectedCourse.provider}</CardDescription>
+                    <CardDescription>{translations.providedBy} {selectedCourse.provider}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <p>{selectedCourse.description}</p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                       <div className="bg-neutral-50 p-3 rounded-md">
-                        <div className="text-sm text-neutral-500">{translations.duration[language]}</div>
+                        <div className="text-sm text-neutral-500">{translations.duration}</div>
                         <div className="font-medium">{selectedCourse.duration}</div>
                       </div>
                       <div className="bg-neutral-50 p-3 rounded-md">
-                        <div className="text-sm text-neutral-500">{translations.cost[language]}</div>
+                        <div className="text-sm text-neutral-500">{translations.cost}</div>
                         <div className="font-medium">{selectedCourse.cost}</div>
                       </div>
                       <div className="bg-neutral-50 p-3 rounded-md">
-                        <div className="text-sm text-neutral-500">{translations.level[language]}</div>
-                        <div className="font-medium">{translations[selectedCourse.level][language]}</div>
+                        <div className="text-sm text-neutral-500">{translations.level}</div>
+                        <div className="font-medium">{translations[selectedCourse.level]}</div>
                       </div>
                     </div>
                     <Button className="w-full" asChild>
                       <a href={selectedCourse.url} target="_blank" rel="noopener noreferrer">
-                        {translations.goToCourse[language]}
+                        {translations.goToCourse}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </a>
                     </Button>
@@ -209,7 +209,7 @@ const CareerPathsResult = ({ careerPaths, onBack, experience }: CareerPathsResul
             </>
           ) : (
             <div className="flex items-center justify-center h-60 text-neutral-400">
-              {translations.selectPath[language]}
+              {translations.selectPath}
             </div>
           )}
         </div>
@@ -225,11 +225,11 @@ interface CourseCardProps {
 }
 
 const CourseCard = ({ course, onClick, isSelected }: CourseCardProps) => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
   
   return (
     <Card 
-      className={`cursor-pointer transition hover:shadow-md ${isSelected ? 'border-teal-500 ring-1 ring-teal-500' : ''}`}
+      className={`cursor-pointer transition hover:shadow-md ${isSelected ? 'border-teal-500 ring-1 ring-1 ring-teal-500' : ''}`}
       onClick={onClick}
     >
       <CardContent className="p-4 flex justify-between items-center">
@@ -246,7 +246,7 @@ const CourseCard = ({ course, onClick, isSelected }: CourseCardProps) => {
               course.level === 'intermediate' ? 'bg-blue-100 text-blue-800' :
               'bg-purple-100 text-purple-800'
             }`}>
-              {translations[course.level][language]}
+              {translations[course.level]}
             </span>
           </div>
         </div>
