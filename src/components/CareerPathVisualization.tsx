@@ -424,16 +424,16 @@ const generateCareerPaths = (experience: 'experienced' | 'fresher', selectedSkil
 };
 
 const CareerPathVisualization = () => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
   const [currentStep, setCurrentStep] = useState(0);
   const [experience, setExperience] = useState<'experienced' | 'fresher'>('fresher');
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [careerPaths, setCareerPaths] = useState<CareerPath[]>([]);
   
   const steps = [
-    { id: 1, label: translations.experience[language] },
-    { id: 2, label: translations.skills[language] },
-    { id: 3, label: translations.careerGoals[language] }
+    { id: 1, label: translations.experience },
+    { id: 2, label: translations.skills },
+    { id: 3, label: translations.careerGoals }
   ];
   
   const handleNext = () => {
@@ -458,7 +458,7 @@ const CareerPathVisualization = () => {
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8">
-          {translations.careerPathVisualization[language]}
+          {translations.careerPathVisualization}
         </h1>
         
         <StepsIndicator currentStep={currentStep} steps={steps} />

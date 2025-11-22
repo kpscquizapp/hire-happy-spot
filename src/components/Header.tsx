@@ -43,15 +43,13 @@ const Header = () => {
           {/* Desktop Navigation */}
           <DesktopNavigation />
 
-          {/* Auth Buttons and Language Selector */}
+          {/* Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
-            <LanguageSelector />
             <AuthButtons />
           </div>
 
-          {/* Mobile Menu Button and Language Selector */}
-          <div className="md:hidden flex items-center space-x-2">
-            <LanguageSelector isMobile={true} />
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
             <MobileMenuToggle isOpen={mobileMenuOpen} onToggle={toggleMobileMenu} />
           </div>
         </div>

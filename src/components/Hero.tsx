@@ -7,7 +7,7 @@ const Hero = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
   const [experience, setExperience] = useState('');
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,10 +24,10 @@ const Hero = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center mb-12 animate-fade-in">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-900 mb-4 tracking-tight">
-            {translations.findDreamJob[language]}
+            {translations.findDreamJob}
           </h1>
           <p className="text-lg md:text-xl text-neutral-600 mb-8">
-            {translations.discoverOpportunities[language]}
+            {translations.discoverOpportunities}
           </p>
 
           <form onSubmit={handleSearch} className="glass-card p-4 md:p-6">
@@ -38,7 +38,7 @@ const Hero = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder={translations.positionSkillsCompany[language]}
+                  placeholder={translations.positionSkillsCompany}
                   className="input-primary pl-11 w-full"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -51,7 +51,7 @@ const Hero = () => {
                 </div>
                 <input
                   type="text"
-                  placeholder={translations.location[language]}
+                  placeholder={translations.location}
                   className="input-primary pl-11 w-full"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
@@ -67,22 +67,22 @@ const Hero = () => {
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
                 >
-                  <option value="">{translations.experienceLevel[language]}</option>
-                  <option value="entry">{translations.entry[language]}</option>
-                  <option value="mid">{translations.mid[language]}</option>
-                  <option value="senior">{translations.senior[language]}</option>
-                  <option value="executive">{translations.executive[language]}</option>
+                  <option value="">{translations.experienceLevel}</option>
+                  <option value="entry">{translations.entry}</option>
+                  <option value="mid">{translations.mid}</option>
+                  <option value="senior">{translations.senior}</option>
+                  <option value="executive">{translations.executive}</option>
                 </select>
               </div>
               
               <button type="submit" className="button-primary whitespace-nowrap">
-                {translations.searchJobs[language]}
+                {translations.searchJobs}
               </button>
             </div>
           </form>
           
           <div className="mt-6 text-neutral-500 text-sm">
-            {translations.popular[language]}
+            {translations.popular}
           </div>
         </div>
       </div>

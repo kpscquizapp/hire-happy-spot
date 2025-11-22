@@ -12,7 +12,7 @@ interface JobPaginationProps {
 }
 
 const JobPagination = ({ currentPage, totalPages, prevPage, nextPage }: JobPaginationProps) => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
 
   if (totalPages <= 1) return null;
 
@@ -23,7 +23,7 @@ const JobPagination = ({ currentPage, totalPages, prevPage, nextPage }: JobPagin
         variant="outline" 
         size="icon"
         className="rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
-        aria-label={translations.previousPage[language]}
+        aria-label={translations.previousPage}
       >
         <ChevronLeft className="h-5 w-5 text-neutral-600" />
       </Button>
@@ -37,7 +37,7 @@ const JobPagination = ({ currentPage, totalPages, prevPage, nextPage }: JobPagin
         variant="outline"
         size="icon"
         className="rounded-full bg-white border border-neutral-200 hover:bg-neutral-50 transition-colors"
-        aria-label={translations.nextPage[language]}
+        aria-label={translations.nextPage}
       >
         <ChevronRight className="h-5 w-5 text-neutral-600" />
       </Button>

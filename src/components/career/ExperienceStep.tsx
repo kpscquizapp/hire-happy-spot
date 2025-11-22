@@ -12,12 +12,12 @@ interface ExperienceStepProps {
 }
 
 const ExperienceStep = ({ experience, setExperience, onNext }: ExperienceStepProps) => {
-  const { language, translations } = useLanguage();
+  const { translations } = useLanguage();
   
   return (
     <div className="bg-white rounded-lg shadow-sm p-8 animate-in fade-in duration-300">
       <h2 className="text-2xl font-semibold text-neutral-800 mb-6">
-        {translations.areYouExperienced[language]}
+        {translations.areYouExperienced}
       </h2>
 
       <RadioGroup 
@@ -29,10 +29,10 @@ const ExperienceStep = ({ experience, setExperience, onNext }: ExperienceStepPro
           <RadioGroupItem value="experienced" id="experienced" className="mt-1" />
           <div className="ml-3">
             <Label htmlFor="experienced" className="text-base font-medium">
-              {translations.yes[language]}
+              {translations.yes}
             </Label>
             <p className="text-sm text-gray-500">
-              {translations.haveExperience[language]}
+              {translations.haveExperience}
             </p>
           </div>
         </div>
@@ -41,10 +41,10 @@ const ExperienceStep = ({ experience, setExperience, onNext }: ExperienceStepPro
           <RadioGroupItem value="fresher" id="fresher" className="mt-1" />
           <div className="ml-3">
             <Label htmlFor="fresher" className="text-base font-medium">
-              {translations.no[language]}
+              {translations.no}
             </Label>
             <p className="text-sm text-gray-500">
-              {translations.newToField[language]}
+              {translations.newToField}
             </p>
           </div>
         </div>
@@ -55,7 +55,7 @@ const ExperienceStep = ({ experience, setExperience, onNext }: ExperienceStepPro
         disabled={!experience}
         className="mt-8 w-full md:w-auto"
       >
-        {translations.nextStep[language]}
+        {translations.nextStep}
       </Button>
     </div>
   );
