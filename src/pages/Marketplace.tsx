@@ -1,10 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Search, Building2, Users, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Marketplace = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -32,11 +35,11 @@ const Marketplace = () => {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-primary hover:bg-primary/90">
+                <Button size="lg" className="bg-primary hover:bg-primary/90" onClick={() => navigate('/list-bench-talent')}>
                   <Building2 className="mr-2 h-5 w-5" />
                   List Bench Talent
                 </Button>
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" onClick={() => navigate('/find-talent')}>
                   <Search className="mr-2 h-5 w-5" />
                   Find Talent
                 </Button>
