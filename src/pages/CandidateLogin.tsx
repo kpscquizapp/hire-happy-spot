@@ -51,20 +51,20 @@ const CandidateLogin = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-50 via-white to-neutral-50">
       <Header />
       
-      <main className="flex-1 pt-32 pb-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-md mx-auto">
-            <Card className="shadow-xl border-0">
-              <CardHeader className="space-y-2 text-center bg-gradient-to-br from-teal-500 to-teal-600 text-white rounded-t-lg">
-                <CardTitle className="text-2xl font-bold">
+      <main className="flex-1 pt-24 pb-12 px-4 sm:pt-32 sm:pb-20">
+        <div className="container mx-auto">
+          <div className="max-w-md mx-auto w-full">
+            <Card className="shadow-xl border-0 w-full">
+              <CardHeader className="space-y-2 text-center bg-gradient-to-br from-teal-500 to-teal-600 text-white rounded-t-lg p-4 sm:p-6">
+                <CardTitle className="text-xl sm:text-2xl font-bold">
                   {isLogin ? 'Welcome Back' : 'Create Account'}
                 </CardTitle>
-                <CardDescription className="text-teal-50">
+                <CardDescription className="text-teal-50 text-sm sm:text-base">
                   {isLogin ? 'Sign in to continue your job search' : 'Join HIRION to find your dream job'}
                 </CardDescription>
               </CardHeader>
               
-              <CardContent className="pt-6">
+              <CardContent className="p-4 sm:p-6">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {!isLogin && (
                     <div className="space-y-2">
