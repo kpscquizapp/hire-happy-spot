@@ -16,6 +16,7 @@ export type JobListing = {
     pl: string;
     en: string;
   };
+  contractType?: 'full-time' | 'contract' | 'temporary' | 'freelance';
   featured?: boolean;
   experience?: string;
   skills?: string[];

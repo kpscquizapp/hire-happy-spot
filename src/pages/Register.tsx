@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { User, Building2, Mail, Lock, Phone, Briefcase, Users, MapPin } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -24,6 +25,7 @@ const Register = () => {
     phone: '',
     password: '',
     confirmPassword: '',
+    lookingForContract: false,
   });
 
   // Employer form state
@@ -52,11 +54,17 @@ const Register = () => {
     }
 
     const fullName = `${candidateData.firstName} ${candidateData.lastName}`.trim();
-    const success = await signup(candidateData.email, candidateData.password, fullName, 'candidate');
+    const success = await signup(
+      candidateData.email, 
+      candidateData.password, 
+      fullName, 
+      'candidate',
+      candidateData.lookingForContract
+    );
     
     if (success) {
       toast.success('Your candidate account has been created! 🎉');
-      setTimeout(() => navigate('/profile'), 1500);
+      setTimeout(() => navigate('/job-recommendations'), 1500);
     } else {
       toast.error('Email already exists');
     }
@@ -211,6 +219,23 @@ const Register = () => {
                             required
                           />
                         </div>
+                      </div>
+                      
+                      <div className="flex items-center space-x-2 py-2">
+                        <Checkbox 
+                          id="contract-pref" 
+                          checked={candidateData.lookingForContract}
+                          onCheckedChange={(checked) => setCandidateData({
+                            ...candidateData, 
+                            lookingForContract: checked as boolean
+                          })}
+                        />
+                        <Label 
+                          htmlFor="contract-pref" 
+                          className="text-sm font-normal cursor-pointer"
+                        >
+                          I'm looking for contract/temporary jobs
+                        </Label>
                       </div>
                       
                       <Button type="submit" className="w-full bg-gradient-to-r from-teal-600 to-teal-800 hover:from-teal-700 hover:to-teal-900 text-white font-medium py-6">

@@ -12,12 +12,13 @@ interface User {
   currentRole?: string;
   resumeUrl?: string;
   skills?: string[];
+  lookingForContract?: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  signup: (email: string, password: string, name: string, role?: 'candidate' | 'employer') => Promise<boolean>;
+  signup: (email: string, password: string, name: string, role?: 'candidate' | 'employer', lookingForContract?: boolean) => Promise<boolean>;
   logout: () => void;
   updateProfile: (profile: Partial<User>) => void;
 }
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return false;
   };
 
-  const signup = async (email: string, password: string, name: string, role: 'candidate' | 'employer' = 'candidate'): Promise<boolean> => {
+  const signup = async (email: string, password: string, name: string, role: 'candidate' | 'employer' = 'candidate', lookingForContract?: boolean): Promise<boolean> => {
     const users = JSON.parse(localStorage.getItem('hirion_users') || '[]');
     const existingUser = users.find((u: any) => u.email === email);
     
@@ -62,6 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       name,
       role,
       avatar: name.charAt(0).toUpperCase(),
+      lookingForContract: lookingForContract || false,
     };
 
     users.push(newUser);
