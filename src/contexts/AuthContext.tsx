@@ -40,26 +40,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const users = JSON.parse(localStorage.getItem('hirion_users') || '[]');
     let foundUser = users.find((u: any) => u.email === email && u.password === password);
     
-    // Auto-create user if doesn't exist (demo mode)
-    if (!foundUser) {
-      const newUser = {
-        id: Date.now().toString(),
-        email,
-        password,
-        name: email.split('@')[0],
-        role: 'candidate' as const,
-        avatar: email.charAt(0).toUpperCase(),
-        lookingForContract: false,
-      };
-      users.push(newUser);
-      localStorage.setItem('hirion_users', JSON.stringify(users));
-      foundUser = newUser;
+    // Return existing user if found
+    if (foundUser) {
+      const { password: _, ...userWithoutPassword } = foundUser;
+      setUser(userWithoutPassword);
+      localStorage.setItem('hirion_user', JSON.stringify(userWithoutPassword));
+      return true;
     }
     
-    const { password: _, ...userWithoutPassword } = foundUser;
-    setUser(userWithoutPassword);
-    localStorage.setItem('hirion_user', JSON.stringify(userWithoutPassword));
-    return true;
+    return false;
   };
 
   const signup = async (email: string, password: string, name: string, role: 'candidate' | 'employer' = 'candidate', lookingForContract?: boolean): Promise<boolean> => {
