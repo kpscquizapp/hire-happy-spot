@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import CareerPath from "./pages/CareerPath";
 import Marketplace from "./pages/Marketplace";
 import EmployerLogin from "./pages/EmployerLogin";
+import Register from "./pages/Register";
 import ListBenchTalent from "./pages/ListBenchTalent";
 import FindTalent from "./pages/FindTalent";
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/career-path" element={<CareerPath />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/employer" element={<EmployerLogin />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/list-bench-talent" element={<ListBenchTalent />} />
             <Route path="/find-talent" element={<FindTalent />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
