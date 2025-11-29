@@ -8,11 +8,12 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { User, Building2, Mail, Lock, Phone, Briefcase, Users, MapPin } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 const Register = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { signup } = useAuth();
   const [accountType, setAccountType] = useState<'candidate' | 'employer'>('candidate');
 
   // Candidate form state
@@ -37,62 +38,51 @@ const Register = () => {
     confirmPassword: '',
   });
 
-  const handleCandidateSubmit = (e: React.FormEvent) => {
+  const handleCandidateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (candidateData.password !== candidateData.confirmPassword) {
-      toast({
-        title: "Password Mismatch",
-        description: "Passwords do not match. Please try again.",
-        variant: "destructive",
-      });
+      toast.error('Passwords do not match. Please try again.');
       return;
     }
 
     if (candidateData.password.length < 8) {
-      toast({
-        title: "Weak Password",
-        description: "Password must be at least 8 characters long.",
-        variant: "destructive",
-      });
+      toast.error('Password must be at least 8 characters long.');
       return;
     }
 
-    toast({
-      title: "Registration Successful! 🎉",
-      description: "Your candidate account has been created.",
-    });
+    const fullName = `${candidateData.firstName} ${candidateData.lastName}`.trim();
+    const success = await signup(candidateData.email, candidateData.password, fullName, 'candidate');
     
-    setTimeout(() => navigate('/'), 1500);
+    if (success) {
+      toast.success('Your candidate account has been created! 🎉');
+      setTimeout(() => navigate('/profile'), 1500);
+    } else {
+      toast.error('Email already exists');
+    }
   };
 
-  const handleEmployerSubmit = (e: React.FormEvent) => {
+  const handleEmployerSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (employerData.password !== employerData.confirmPassword) {
-      toast({
-        title: "Password Mismatch",
-        description: "Passwords do not match. Please try again.",
-        variant: "destructive",
-      });
+      toast.error('Passwords do not match. Please try again.');
       return;
     }
 
     if (employerData.password.length < 8) {
-      toast({
-        title: "Weak Password",
-        description: "Password must be at least 8 characters long.",
-        variant: "destructive",
-      });
+      toast.error('Password must be at least 8 characters long.');
       return;
     }
 
-    toast({
-      title: "Registration Successful! 🎉",
-      description: "Your employer account has been created.",
-    });
+    const success = await signup(employerData.companyEmail, employerData.password, employerData.companyName, 'employer');
     
-    setTimeout(() => navigate('/employer'), 1500);
+    if (success) {
+      toast.success('Your employer account has been created! 🎉');
+      setTimeout(() => navigate('/employer'), 1500);
+    } else {
+      toast.error('Email already exists');
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { ChevronDown } from 'lucide-react';
 import {
   NavigationMenu,
@@ -12,11 +13,16 @@ import {
 
 const DesktopNavigation = () => {
   const { translations } = useLanguage();
+  const { user } = useAuth();
+
+  const isCandidate = user?.role === 'candidate';
+  const isEmployer = user?.role === 'employer';
 
   return (
     <NavigationMenu className="hidden md:flex mr-auto ml-8">
       <NavigationMenuList className="space-x-1">
-        {/* Candidates Menu */}
+        {/* Candidates Menu - Show only to candidates or non-logged users */}
+        {(!user || isCandidate) && (
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.candidates}
@@ -78,8 +84,10 @@ const DesktopNavigation = () => {
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        )}
 
-        {/* Talent Marketplace Menu */}
+        {/* Talent Marketplace Menu - Show only to employers or non-logged users */}
+        {(!user || isEmployer) && (
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.talentMarketplace}
@@ -118,8 +126,10 @@ const DesktopNavigation = () => {
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        )}
 
-        {/* Employers Menu */}
+        {/* Employers Menu - Show only to employers or non-logged users */}
+        {(!user || isEmployer) && (
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.employers}
@@ -139,8 +149,10 @@ const DesktopNavigation = () => {
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        )}
 
-        {/* Services Menu */}
+        {/* Services Menu - Show only to employers or non-logged users */}
+        {(!user || isEmployer) && (
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.services}
@@ -159,8 +171,10 @@ const DesktopNavigation = () => {
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        )}
 
-        {/* Resources Menu */}
+        {/* Resources Menu - Show only to employers or non-logged users */}
+        {(!user || isEmployer) && (
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.resources}
@@ -179,8 +193,10 @@ const DesktopNavigation = () => {
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        )}
 
-        {/* About Menu */}
+        {/* About Menu - Show only to employers or non-logged users */}
+        {(!user || isEmployer) && (
         <NavigationMenuItem>
           <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
             {translations.aboutUs}
@@ -197,6 +213,7 @@ const DesktopNavigation = () => {
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
+        )}
       </NavigationMenuList>
     </NavigationMenu>
   );

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { ChevronDown, ChevronRight } from 'lucide-react';
 import AuthButtons from './AuthButtons';
 
@@ -11,7 +12,11 @@ interface MobileMenuProps {
 
 const MobileMenu = ({ isOpen }: MobileMenuProps) => {
   const { translations } = useLanguage();
+  const { user } = useAuth();
   const [openSection, setOpenSection] = useState<string | null>(null);
+
+  const isCandidate = user?.role === 'candidate';
+  const isEmployer = user?.role === 'employer';
 
   const toggleSection = (section: string) => {
     setOpenSection(openSection === section ? null : section);
@@ -24,7 +29,8 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
     )}>
       <div className="container mx-auto px-4 py-4">
         <nav className="flex flex-col space-y-2">
-          {/* Candidates Section */}
+          {/* Candidates Section - Show only to candidates or non-logged users */}
+          {(!user || isCandidate) && (
           <div className="border-b border-neutral-100 pb-2">
             <button
               onClick={() => toggleSection('candidates')}
@@ -43,8 +49,10 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
               </div>
             )}
           </div>
+          )}
 
-          {/* Talent Marketplace Section */}
+          {/* Talent Marketplace Section - Show only to employers or non-logged users */}
+          {(!user || isEmployer) && (
           <div className="border-b border-neutral-100 pb-2">
             <button
               onClick={() => toggleSection('marketplace')}
@@ -64,8 +72,10 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
               </div>
             )}
           </div>
+          )}
 
-          {/* Employers Section */}
+          {/* Employers Section - Show only to employers or non-logged users */}
+          {(!user || isEmployer) && (
           <div className="border-b border-neutral-100 pb-2">
             <button
               onClick={() => toggleSection('employers')}
@@ -82,8 +92,10 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
               </div>
             )}
           </div>
+          )}
 
-          {/* Services Section */}
+          {/* Services Section - Show only to employers or non-logged users */}
+          {(!user || isEmployer) && (
           <div className="border-b border-neutral-100 pb-2">
             <button
               onClick={() => toggleSection('services')}
@@ -100,8 +112,10 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
               </div>
             )}
           </div>
+          )}
 
-          {/* Resources Section */}
+          {/* Resources Section - Show only to employers or non-logged users */}
+          {(!user || isEmployer) && (
           <div className="border-b border-neutral-100 pb-2">
             <button
               onClick={() => toggleSection('resources')}
@@ -118,8 +132,10 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
               </div>
             )}
           </div>
+          )}
 
-          {/* About Section */}
+          {/* About Section - Show only to employers or non-logged users */}
+          {(!user || isEmployer) && (
           <div className="border-b border-neutral-100 pb-2">
             <button
               onClick={() => toggleSection('about')}
@@ -136,6 +152,7 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
               </div>
             )}
           </div>
+          )}
         </nav>
         
         <AuthButtons isMobile={true} />
