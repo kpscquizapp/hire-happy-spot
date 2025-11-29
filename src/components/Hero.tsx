@@ -11,8 +11,11 @@ const Hero = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ searchQuery, location, experience });
-    // Handle search logic here
+    const params = new URLSearchParams();
+    if (searchQuery) params.append('query', searchQuery);
+    if (location) params.append('location', location);
+    if (experience) params.append('experience', experience);
+    window.location.href = `/jobs?${params.toString()}`;
   };
 
   return (

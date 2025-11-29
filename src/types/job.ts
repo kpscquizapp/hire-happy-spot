@@ -17,6 +17,10 @@ export type JobListing = {
     en: string;
   };
   featured?: boolean;
+  experience?: string;
+  skills?: string[];
+  industry?: string;
+  fullDescription?: string;
 };
 
 export type CareerPath = {
