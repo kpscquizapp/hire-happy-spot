@@ -4,6 +4,7 @@ interface User {
   id: string;
   email: string;
   name: string;
+  role: 'candidate' | 'employer';
   avatar?: string;
   phone?: string;
   location?: string;
@@ -16,7 +17,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<boolean>;
-  signup: (email: string, password: string, name: string) => Promise<boolean>;
+  signup: (email: string, password: string, name: string, role?: 'candidate' | 'employer') => Promise<boolean>;
   logout: () => void;
   updateProfile: (profile: Partial<User>) => void;
 }
@@ -46,7 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return false;
   };
 
-  const signup = async (email: string, password: string, name: string): Promise<boolean> => {
+  const signup = async (email: string, password: string, name: string, role: 'candidate' | 'employer' = 'candidate'): Promise<boolean> => {
     const users = JSON.parse(localStorage.getItem('hirion_users') || '[]');
     const existingUser = users.find((u: any) => u.email === email);
     
@@ -59,6 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email,
       password,
       name,
+      role,
       avatar: name.charAt(0).toUpperCase(),
     };
 

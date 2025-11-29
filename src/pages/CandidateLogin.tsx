@@ -35,7 +35,7 @@ const CandidateLogin = () => {
         toast.error('Please fill in all fields');
         return;
       }
-      const success = await signup(email, password, name);
+      const success = await signup(email, password, name, 'candidate');
       if (success) {
         toast.success('Account created successfully!');
         navigate('/profile');
