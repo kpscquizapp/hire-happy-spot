@@ -92,6 +92,23 @@ const EmployerLogin = () => {
                 </form>
               </CardContent>
             </Card>
+
+            {/* Candidate Login Link */}
+            <div className="mt-6 text-center">
+              <Card className="border-teal-200 bg-teal-50/50">
+                <CardContent className="py-4">
+                  <p className="text-sm text-neutral-600 mb-2">
+                    Looking for a job?
+                  </p>
+                  <Link 
+                    to="/candidate-login" 
+                    className="text-teal-600 hover:text-teal-700 font-semibold inline-flex items-center gap-2"
+                  >
+                    Candidate Login →
+                  </Link>
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       </main>
