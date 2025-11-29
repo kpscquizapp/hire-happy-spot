@@ -11,6 +11,7 @@ import CareerPath from "./pages/CareerPath";
 import Marketplace from "./pages/Marketplace";
 import EmployerLogin from "./pages/EmployerLogin";
 import Register from "./pages/Register";
+import JobSearch from "./pages/JobSearch";
 import ListBenchTalent from "./pages/ListBenchTalent";
 import FindTalent from "./pages/FindTalent";
 
@@ -29,6 +30,8 @@ const App = () => (
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/employer" element={<EmployerLogin />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/jobs" element={<JobSearch />} />
+            <Route path="/jobs/:category" element={<JobSearch />} />
             <Route path="/list-bench-talent" element={<ListBenchTalent />} />
             <Route path="/find-talent" element={<FindTalent />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
