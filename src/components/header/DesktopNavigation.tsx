@@ -95,7 +95,7 @@ const DesktopNavigation = () => {
                     <Link to="/find-talent" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.contractTalent}</Link>
                     <Link to="/find-talent?type=project" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.shortTermProject}</Link>
                     <Link to="/find-talent?type=bench" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.benchResources}</Link>
-                    <Link to="/ai-matching" className="block text-sm text-teal-600 hover:text-teal-700 py-1 font-medium">{translations.aiTalentMatching}</Link>
+                    <Link to="/find-talent" className="block text-sm text-teal-600 hover:text-teal-700 py-1 font-medium">{translations.aiTalentMatching}</Link>
                     <Link to="/schedule-ai-interview" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.scheduleAIInterview}</Link>
                   </div>
                 </div>
@@ -105,12 +105,12 @@ const DesktopNavigation = () => {
                   <h3 className="font-semibold text-neutral-900 mb-3">{translations.registerTalent}</h3>
                   <div className="space-y-2">
                     <h4 className="text-sm font-medium text-neutral-700 mt-2">For Individuals</h4>
-                    <Link to="/register-freelance" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.registerAsFreelance}</Link>
+                    <Link to="/register-talent" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.registerAsFreelance}</Link>
                     <Link to="/add-skills" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.addSkillsAvailability}</Link>
                     
                     <h4 className="text-sm font-medium text-neutral-700 mt-4">For Companies</h4>
                     <Link to="/list-bench-talent" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.addBenchResources}</Link>
-                    <Link to="/bulk-upload" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.bulkUpload}</Link>
+                    <Link to="/register-talent" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.bulkUpload}</Link>
                     <Link to="/bench-dashboard" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.manageBenchDashboard}</Link>
                   </div>
                 </div>
