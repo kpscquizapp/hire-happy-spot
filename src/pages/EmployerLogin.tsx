@@ -14,25 +14,28 @@ const EmployerLogin = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement authentication logic
-    console.log('Login attempt:', { email });
+    // Simulate authentication
+    if (email && password) {
+      // TODO: Implement real authentication logic
+      window.location.href = '/employer-dashboard';
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 flex items-center justify-center py-20 bg-gradient-to-br from-primary/5 via-accent/5 to-background">
+      <main className="flex-1 flex items-center justify-center py-20 bg-gradient-to-br from-teal-50 via-white to-teal-50">
         <div className="container mx-auto px-4">
           <div className="max-w-md mx-auto">
-            <Card className="glass-card border-0 shadow-elegant">
-              <CardHeader className="text-center pb-4">
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Building2 className="h-8 w-8 text-primary" />
+            <Card className="border-teal-100 shadow-2xl">
+              <CardHeader className="text-center pb-6 bg-gradient-to-r from-teal-600 to-teal-800 text-white rounded-t-lg">
+                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                  <Building2 className="h-10 w-10 text-white" />
                 </div>
-                <CardTitle className="text-2xl font-bold">Employer Login</CardTitle>
-                <CardDescription>
-                  Access your employer dashboard
+                <CardTitle className="text-3xl font-bold">Employer Login</CardTitle>
+                <CardDescription className="text-teal-50">
+                  Access your employer dashboard and manage your hiring
                 </CardDescription>
               </CardHeader>
               
@@ -76,13 +79,13 @@ const EmployerLogin = () => {
                     </Link>
                   </div>
                   
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
-                    Sign In
+                  <Button type="submit" className="w-full bg-gradient-to-r from-teal-600 to-teal-800 hover:from-teal-700 hover:to-teal-900 text-white font-medium py-6">
+                    Sign In to Dashboard
                   </Button>
                   
                   <div className="text-center text-sm text-muted-foreground">
                     Don't have an account?{' '}
-                    <Link to="/register" className="text-primary hover:underline font-medium">
+                    <Link to="/register" className="text-teal-600 hover:underline font-medium">
                       Register as Employer
                     </Link>
                   </div>
