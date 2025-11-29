@@ -128,13 +128,18 @@ const SkillsAssessment = () => {
   const [showResults, setShowResults] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
 
-  if (!user) {
-    navigate('/candidate-login');
-    return null;
-  }
+  React.useEffect(() => {
+    if (!user) {
+      navigate('/candidate-login');
+    }
+  }, [user, navigate]);
 
   const availableSkills: Skill[] = ['React', 'Node.js', 'Python', 'TypeScript', 'AWS', 'Docker'];
   const skillQuestions = selectedSkill ? questions.filter(q => q.skill === selectedSkill) : [];
+
+  if (!user) {
+    return null;
+  }
 
   const handleSkillSelect = (skill: Skill) => {
     setSelectedSkill(skill);

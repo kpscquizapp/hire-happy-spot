@@ -190,7 +190,7 @@ const JobRecommendations = () => {
             <div className="text-center mt-12">
               <Button 
                 size="lg"
-                onClick={() => navigate('/job-search')}
+                onClick={() => navigate('/jobs')}
                 className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
               >
                 Browse All Jobs
