@@ -140,4 +140,35 @@
   .fade-in-section.is-visible {
     @apply opacity-100;
   }
+
+  /* Mobile-optimized touch targets */
+  @media (max-width: 768px) {
+    button, a, input, select, textarea {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Prevent zoom on input focus */
+    input, select, textarea {
+      font-size: 16px;
+    }
+    
+    /* Better spacing for mobile */
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Improve touch scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
 }
+
