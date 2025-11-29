@@ -19,6 +19,7 @@ export const jobListings: JobListing[] = [
       en: "Full-time",
       pl: "Full-time"
     },
+    contractType: "full-time",
     experience: "5-8 years",
     skills: ["React", "Node.js", "AWS", "MongoDB", "TypeScript"],
     industry: "IT & Software",
@@ -66,6 +67,7 @@ We are looking for a Senior Full Stack Developer to join our dynamic team in Ban
       en: "Full-time",
       pl: "Full-time"
     },
+    contractType: "full-time",
     experience: "4-7 years",
     skills: ["Python", "Machine Learning", "TensorFlow", "SQL", "Data Analytics"],
     industry: "IT & Software",
@@ -110,9 +112,10 @@ Join our Data Science team to build innovative AI solutions for global enterpris
     salary: "12-20 LPA",
     location: "Pune",
     type: {
-      en: "Full-time",
-      pl: "Full-time"
+      en: "Contract",
+      pl: "Contract"
     },
+    contractType: "contract",
     experience: "3-6 years",
     skills: ["Docker", "Kubernetes", "AWS", "Jenkins", "Terraform"],
     industry: "IT & Software",
@@ -159,6 +162,7 @@ We're seeking a talented DevOps Engineer to automate and optimize our developmen
       en: "Full-time",
       pl: "Full-time"
     },
+    contractType: "full-time",
     experience: "6-10 years",
     skills: ["Product Strategy", "Agile", "Data Analytics", "User Research", "Roadmap Planning"],
     industry: "E-commerce",
@@ -203,9 +207,10 @@ Join Flipkart's product team to shape the future of e-commerce in India. Drive p
     salary: "10-18 LPA",
     location: "Mumbai",
     type: {
-      en: "Full-time",
-      pl: "Full-time"
+      en: "Contract",
+      pl: "Contract"
     },
+    contractType: "contract",
     experience: "3-5 years",
     skills: ["Figma", "UI Design", "User Research", "Prototyping", "Design Systems"],
     industry: "Food Tech",
@@ -252,6 +257,7 @@ Create beautiful and functional designs for millions of Swiggy users. Work on mo
       en: "Full-time",
       pl: "Full-time"
     },
+    contractType: "full-time",
     experience: "4-7 years",
     skills: ["Java", "Spring Boot", "Microservices", "MySQL", "Redis"],
     industry: "FinTech",
@@ -295,9 +301,10 @@ Join Paytm's backend engineering team to build robust and scalable systems. Work
     salary: "10-18 LPA",
     location: "Gurgaon",
     type: {
-      en: "Full-time",
-      pl: "Full-time"
+      en: "Temporary",
+      pl: "Temporary"
     },
+    contractType: "temporary",
     experience: "3-6 years",
     skills: ["React", "TypeScript", "HTML/CSS", "Redux", "Webpack"],
     industry: "Food Tech",
@@ -344,6 +351,7 @@ Build engaging user interfaces for Zomato's web platform. Work on features used 
       en: "Full-time",
       pl: "Full-time"
     },
+    contractType: "full-time",
     experience: "2-5 years",
     skills: ["Business Analysis", "SQL", "Requirements Gathering", "Agile", "Documentation"],
     industry: "Banking & Finance",
@@ -390,6 +398,7 @@ Join HDFC Bank's digital transformation team as a Business Analyst. Work on inno
       en: "Full-time",
       pl: "Full-time"
     },
+    contractType: "full-time",
     experience: "4-8 years",
     skills: ["Kotlin", "Android SDK", "MVVM", "REST APIs", "Firebase"],
     industry: "FinTech",
@@ -437,6 +446,7 @@ Build innovative features for PhonePe's Android app used by 400+ million users. 
       en: "Full-time",
       pl: "Full-time"
     },
+    contractType: "full-time",
     experience: "3-6 years",
     skills: ["Security Monitoring", "Penetration Testing", "SIEM", "Network Security", "Compliance"],
     industry: "IT & Software",

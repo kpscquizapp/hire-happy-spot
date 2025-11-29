@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -16,6 +17,7 @@ const CandidateLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
+  const [lookingForContract, setLookingForContract] = useState(false);
   const navigate = useNavigate();
   const { login, signup } = useAuth();
 
@@ -26,7 +28,7 @@ const CandidateLogin = () => {
       const success = await login(email, password);
       if (success) {
         toast.success('Welcome back!');
-        navigate('/');
+        navigate('/job-recommendations');
       } else {
         toast.error('Invalid email or password');
       }
@@ -35,10 +37,10 @@ const CandidateLogin = () => {
         toast.error('Please fill in all fields');
         return;
       }
-      const success = await signup(email, password, name, 'candidate');
+      const success = await signup(email, password, name, 'candidate', lookingForContract);
       if (success) {
         toast.success('Account created successfully!');
-        navigate('/profile');
+        navigate('/job-recommendations');
       } else {
         toast.error('Email already exists');
       }
@@ -116,6 +118,22 @@ const CandidateLogin = () => {
                       </button>
                     </div>
                   </div>
+
+                  {!isLogin && (
+                    <div className="flex items-center space-x-2">
+                      <Checkbox 
+                        id="contract" 
+                        checked={lookingForContract}
+                        onCheckedChange={(checked) => setLookingForContract(checked as boolean)}
+                      />
+                      <Label 
+                        htmlFor="contract" 
+                        className="text-sm font-normal cursor-pointer"
+                      >
+                        I'm looking for contract/temporary jobs
+                      </Label>
+                    </div>
+                  )}
 
                   {isLogin && (
                     <div className="flex justify-end">

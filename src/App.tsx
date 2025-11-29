@@ -20,6 +20,7 @@ import JobDetails from "./pages/JobDetails";
 import ListBenchTalent from "./pages/ListBenchTalent";
 import CandidateLogin from "./pages/CandidateLogin";
 import CandidateProfile from "./pages/CandidateProfile";
+import JobRecommendations from "./pages/JobRecommendations";
 
 const queryClient = new QueryClient();
 
@@ -42,9 +43,11 @@ const App = () => (
             <Route path="/register" element={<Register />} />
         <Route path="/jobs" element={<JobSearch />} />
         <Route path="/jobs/:id" element={<JobDetails />} />
+        <Route path="/job/:id" element={<JobDetails />} />
             <Route path="/list-bench-talent" element={<ListBenchTalent />} />
             <Route path="/candidate-login" element={<CandidateLogin />} />
             <Route path="/profile" element={<CandidateProfile />} />
+            <Route path="/job-recommendations" element={<JobRecommendations />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
