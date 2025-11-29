@@ -41,6 +41,7 @@ const App = () => (
             <Route path="/talent/:id" element={<TalentProfile />} />
             <Route path="/register-talent" element={<RegisterTalent />} />
             <Route path="/employer" element={<EmployerLogin />} />
+            <Route path="/employer-login" element={<EmployerLogin />} />
             <Route path="/register" element={<Register />} />
         <Route path="/jobs" element={<JobSearch />} />
         <Route path="/jobs/:id" element={<JobDetails />} />

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -7,17 +7,57 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building2, Mail, Lock } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 const EmployerLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { user, login, signup } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user && user.role === 'employer') {
+      navigate('/find-talent');
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate authentication
-    if (email && password) {
-      // TODO: Implement real authentication logic
-      window.location.href = '/employer-dashboard';
+    setIsLoading(true);
+
+    try {
+      if (isLogin) {
+        const success = await login(email, password);
+        if (success) {
+          // Check if user is employer
+          const storedUser = JSON.parse(localStorage.getItem('hirion_user') || '{}');
+          if (storedUser.role !== 'employer') {
+            toast.error('Please use the candidate login page');
+            setIsLoading(false);
+            return;
+          }
+          toast.success('Welcome back!');
+          navigate('/find-talent');
+        } else {
+          toast.error('Invalid credentials');
+        }
+      } else {
+        const success = await signup(email, password, name, 'employer');
+        if (success) {
+          toast.success('Account created successfully!');
+          navigate('/find-talent');
+        } else {
+          toast.error('Email already registered');
+        }
+      }
+    } catch (error) {
+      toast.error('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -25,22 +65,41 @@ const EmployerLogin = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 flex items-center justify-center py-20 bg-gradient-to-br from-teal-50 via-white to-teal-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-md mx-auto">
+      <main className="flex-1 flex items-center justify-center py-12 px-4 sm:py-20 bg-gradient-to-br from-teal-50 via-white to-teal-50">
+        <div className="container mx-auto">
+          <div className="max-w-md mx-auto w-full">
             <Card className="border-teal-100 shadow-2xl">
-              <CardHeader className="text-center pb-6 bg-gradient-to-r from-teal-600 to-teal-800 text-white rounded-t-lg">
-                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                  <Building2 className="h-10 w-10 text-white" />
+              <CardHeader className="text-center pb-6 bg-gradient-to-r from-teal-600 to-teal-800 text-white rounded-t-lg p-4 sm:p-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                  <Building2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
                 </div>
-                <CardTitle className="text-3xl font-bold">Employer Login</CardTitle>
-                <CardDescription className="text-teal-50">
-                  Access your employer dashboard and manage your hiring
+                <CardTitle className="text-2xl sm:text-3xl font-bold">
+                  {isLogin ? 'Employer Login' : 'Employer Sign Up'}
+                </CardTitle>
+                <CardDescription className="text-teal-50 text-sm sm:text-base">
+                  {isLogin ? 'Access your employer dashboard and manage your hiring' : 'Create an account to start hiring top talent'}
                 </CardDescription>
               </CardHeader>
               
-              <CardContent>
+              <CardContent className="p-4 sm:p-6">
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {!isLogin && (
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Company Name</Label>
+                      <div className="relative">
+                        <Building2 className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="name"
+                          type="text"
+                          placeholder="Your Company"
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          className="pl-10"
+                          required
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="email">Company Email</Label>
                     <div className="relative">
@@ -79,15 +138,23 @@ const EmployerLogin = () => {
                     </Link>
                   </div>
                   
-                  <Button type="submit" className="w-full bg-gradient-to-r from-teal-600 to-teal-800 hover:from-teal-700 hover:to-teal-900 text-white font-medium py-6">
-                    Sign In to Dashboard
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-teal-600 to-teal-800 hover:from-teal-700 hover:to-teal-900 text-white font-medium py-5 sm:py-6"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Processing...' : isLogin ? 'Sign In to Dashboard' : 'Create Account'}
                   </Button>
                   
                   <div className="text-center text-sm text-muted-foreground">
-                    Don't have an account?{' '}
-                    <Link to="/register" className="text-teal-600 hover:underline font-medium">
-                      Register as Employer
-                    </Link>
+                    {isLogin ? "Don't have an account? " : "Already have an account? "}
+                    <button
+                      type="button"
+                      onClick={() => setIsLogin(!isLogin)}
+                      className="text-teal-600 hover:underline font-medium"
+                    >
+                      {isLogin ? 'Sign Up' : 'Sign In'}
+                    </button>
                   </div>
                 </form>
               </CardContent>

@@ -20,12 +20,20 @@ const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
 
   return (
     <div className={isMobile ? "mt-6 flex flex-col space-y-4" : "hidden md:flex items-center space-x-4"}>
-      <Link 
-        to="/candidate-login" 
-        className="text-neutral-900 hover:text-teal-600 transition-colors duration-300 font-medium py-2"
-      >
-        Sign In
-      </Link>
+      <div className={isMobile ? "flex flex-col space-y-2" : "flex items-center space-x-4"}>
+        <Link 
+          to="/candidate-login" 
+          className="text-neutral-900 hover:text-teal-600 transition-colors duration-300 font-medium py-2"
+        >
+          Candidate Sign In
+        </Link>
+        <Link 
+          to="/employer-login" 
+          className="text-neutral-900 hover:text-teal-600 transition-colors duration-300 font-medium py-2"
+        >
+          Employer Sign In
+        </Link>
+      </div>
       <Link 
         to="/candidate-login" 
         className={`button-primary ${isMobile ? "text-center" : "text-sm py-2"}`}
