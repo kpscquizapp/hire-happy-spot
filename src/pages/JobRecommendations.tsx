@@ -39,14 +39,26 @@ const JobRecommendations = () => {
           }
         }
 
-        // Match skills if available
+        // Match skills if available - give extra weight to validated skills
         if (user.skills && job.skills) {
           const matchingSkills = job.skills.filter(skill => 
             user.skills?.some(userSkill => 
               userSkill.toLowerCase() === skill.toLowerCase()
             )
           );
+          
+          // Regular skill match
           score += matchingSkills.length * 20;
+          
+          // Bonus for validated skills
+          if (user.validatedSkills) {
+            const validatedMatches = matchingSkills.filter(skill =>
+              user.validatedSkills?.some(validated => 
+                validated.toLowerCase() === skill.toLowerCase()
+              )
+            );
+            score += validatedMatches.length * 30; // Extra 30 points per validated skill match
+          }
         }
 
         // Match experience level

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, MapPin, Briefcase, Upload, Save, FileText, Star, MessageSquare, History, Settings, LogOut } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { User, Mail, Phone, MapPin, Briefcase, Upload, Save, FileText, Star, MessageSquare, History, Settings, LogOut, Award, Sparkles } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -231,6 +232,57 @@ const CandidateProfile = () => {
                           rows={4}
                         />
                       </div>
+                    </CardContent>
+                  </Card>
+
+                  {/* Validated Skills Badges */}
+                  <Card className="shadow-lg border-0 md:col-span-2 border-2 border-teal-500">
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle className="flex items-center gap-2">
+                            <Award className="h-5 w-5 text-teal-600" />
+                            Validated Skills Badges
+                          </CardTitle>
+                          <CardDescription>
+                            Skills you've validated through assessments
+                          </CardDescription>
+                        </div>
+                        <Link to="/skills-assessment">
+                          <Button className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700">
+                            <Sparkles className="mr-2 h-4 w-4" />
+                            Take Assessment
+                          </Button>
+                        </Link>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {user.validatedSkills && user.validatedSkills.length > 0 ? (
+                        <div className="flex flex-wrap gap-4">
+                          {user.validatedSkills.map((skill) => (
+                            <div 
+                              key={skill}
+                              className="flex items-center gap-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white px-4 py-3 rounded-xl shadow-lg"
+                            >
+                              <Award className="h-5 w-5" />
+                              <span className="font-semibold">{skill}</span>
+                              <Badge variant="secondary" className="bg-white/20 text-white border-0">
+                                Verified
+                              </Badge>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <Award className="h-16 w-16 text-teal-300 mx-auto mb-4" />
+                          <p className="text-muted-foreground mb-4">
+                            No validated skills yet. Take skill assessments to earn badges!
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            Validated skills improve your job match scores and make you stand out to employers
+                          </p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
 
