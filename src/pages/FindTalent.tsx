@@ -193,7 +193,11 @@ const FindTalent = () => {
 
               <div className="space-y-4">
                 {talents.map(talent => (
-                  <Card key={talent.id} className="hover:shadow-lg transition-all cursor-pointer">
+                  <Card 
+                    key={talent.id} 
+                    className="hover:shadow-lg transition-all cursor-pointer"
+                    onClick={() => navigate(`/talent/${talent.id}`)}
+                  >
                     <CardContent className="p-6">
                       <div className="flex gap-6">
                         {/* Avatar */}
@@ -274,21 +278,20 @@ const FindTalent = () => {
                             </div>
                           </div>
 
-                          {/* Actions */}
-                          <div className="flex items-center gap-3">
-                            <span className="text-lg font-bold text-teal-600">
+                          {/* Rate */}
+                          <div className="flex items-center justify-between">
+                            <span className="text-xl font-bold text-teal-600">
                               {talent.rate}
                             </span>
-                            <div className="flex gap-2 ml-auto">
-                              <Button variant="outline">
-                                <MessageSquare className="h-4 w-4 mr-2" />
-                                Message
-                              </Button>
-                              <Button className="bg-gradient-to-r from-teal-600 to-teal-800">
-                                <Calendar className="h-4 w-4 mr-2" />
-                                Schedule Interview
-                              </Button>
-                            </div>
+                            <Button 
+                              className="bg-gradient-to-r from-teal-600 to-teal-800"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/talent/${talent.id}`);
+                              }}
+                            >
+                              View Profile
+                            </Button>
                           </div>
                         </div>
                       </div>

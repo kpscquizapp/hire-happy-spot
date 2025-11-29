@@ -10,6 +10,8 @@ import NotFound from "./pages/NotFound";
 import CareerPath from "./pages/CareerPath";
 import Marketplace from "./pages/Marketplace";
 import FindTalent from "./pages/FindTalent";
+import TalentProfile from "./pages/TalentProfile";
+import RegisterTalent from "./pages/RegisterTalent";
 import EmployerLogin from "./pages/EmployerLogin";
 import Register from "./pages/Register";
 import JobSearch from "./pages/JobSearch";
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/career-path" element={<CareerPath />} />
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/find-talent" element={<FindTalent />} />
+            <Route path="/talent/:id" element={<TalentProfile />} />
+            <Route path="/register-talent" element={<RegisterTalent />} />
             <Route path="/employer" element={<EmployerLogin />} />
             <Route path="/register" element={<Register />} />
         <Route path="/jobs" element={<JobSearch />} />
