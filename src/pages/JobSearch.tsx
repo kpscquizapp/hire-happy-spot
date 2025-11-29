@@ -147,13 +147,13 @@ const JobSearch = () => {
                              selectedWorkModes.length + selectedExperience.length;
 
   return (
-    <div className="min-h-screen flex flex-col bg-neutral-50">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
       
-      <main className="flex-1 pt-20">
+      <main className="flex-1 pt-20 bg-neutral-50">
         {/* Header Bar */}
-        <div className="bg-white border-b border-neutral-200 sticky top-16 z-20">
-          <div className="container mx-auto px-4 py-4">
+        <div className="bg-white border-b shadow-sm sticky top-16 z-20">
+          <div className="container mx-auto px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <h1 className="text-xl font-semibold text-neutral-900">

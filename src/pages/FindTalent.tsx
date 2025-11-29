@@ -2,203 +2,305 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, MapPin, Clock, DollarSign, ArrowLeft, User } from 'lucide-react';
-
-const mockTalents = [
-  {
-    id: 1,
-    name: "Anna Kowalska",
-    skills: ["React", "TypeScript", "Node.js"],
-    experience: 5,
-    availability: "Immediate",
-    location: "Warsaw, Poland",
-    rate: 180,
-    workMode: "Remote",
-    description: "Full-stack developer with expertise in modern web technologies"
-  },
-  {
-    id: 2,
-    name: "Jan Nowak",
-    skills: ["Python", "Django", "PostgreSQL"],
-    experience: 7,
-    availability: "Within 1 Week",
-    location: "Krakow, Poland",
-    rate: 200,
-    workMode: "Hybrid",
-    description: "Backend specialist with strong database optimization skills"
-  },
-  {
-    id: 3,
-    name: "Maria Wiśniewska",
-    skills: ["Vue.js", "JavaScript", "CSS"],
-    experience: 4,
-    availability: "Immediate",
-    location: "Gdansk, Poland",
-    rate: 150,
-    workMode: "Remote",
-    description: "Frontend developer focused on creating beautiful user interfaces"
-  },
-  {
-    id: 4,
-    name: "Piotr Lewandowski",
-    skills: ["Java", "Spring Boot", "Microservices"],
-    experience: 8,
-    availability: "Within 2 Weeks",
-    location: "Wroclaw, Poland",
-    rate: 220,
-    workMode: "On-site",
-    description: "Enterprise architect with deep microservices experience"
-  }
-];
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { 
+  Search, 
+  MapPin, 
+  Star, 
+  Bookmark,
+  Calendar,
+  ArrowLeft,
+  Filter,
+  Sparkles,
+  MessageSquare
+} from 'lucide-react';
 
 const FindTalent = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [workModeFilter, setWorkModeFilter] = useState('all');
-  const [availabilityFilter, setAvailabilityFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
 
-  const filteredTalents = mockTalents.filter(talent => {
-    const matchesSearch = searchTerm === '' || 
-      talent.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      talent.name.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesWorkMode = workModeFilter === 'all' || talent.workMode.toLowerCase() === workModeFilter;
-    const matchesAvailability = availabilityFilter === 'all' || talent.availability === availabilityFilter;
-    
-    return matchesSearch && matchesWorkMode && matchesAvailability;
-  });
+  // Mock data
+  const skills = ['Java', 'Python', 'React', 'Node.js', 'AWS', 'DevOps', 'Data Science', 'UI/UX'];
+  const locations = ['Bangalore', 'Hyderabad', 'Pune', 'Mumbai', 'Remote'];
+  
+  const talents = [
+    {
+      id: 1,
+      name: 'Rajesh Kumar',
+      title: 'Senior Java Developer',
+      skills: ['Java', 'Spring Boot', 'Microservices', 'AWS'],
+      experience: '8 years',
+      location: 'Bangalore',
+      availability: 'Immediate',
+      rate: '₹2,500/hour',
+      rating: 4.8,
+      matchScore: 95,
+      type: 'Freelancer'
+    },
+    {
+      id: 2,
+      name: 'Priya Sharma',
+      title: 'Full Stack Developer',
+      skills: ['React', 'Node.js', 'MongoDB', 'TypeScript'],
+      experience: '5 years',
+      location: 'Hyderabad',
+      availability: '2 weeks',
+      rate: '₹1,800/hour',
+      rating: 4.9,
+      matchScore: 88,
+      type: 'Bench Resource'
+    },
+    {
+      id: 3,
+      name: 'Amit Patel',
+      title: 'DevOps Engineer',
+      skills: ['AWS', 'Docker', 'Kubernetes', 'Jenkins'],
+      experience: '6 years',
+      location: 'Pune',
+      availability: 'Immediate',
+      rate: '₹2,200/hour',
+      rating: 4.7,
+      matchScore: 92,
+      type: 'Freelancer'
+    },
+  ];
+
+  const toggleFilter = (value: string, current: string[], setter: (val: string[]) => void) => {
+    if (current.includes(value)) {
+      setter(current.filter(v => v !== value));
+    } else {
+      setter([...current, value]);
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-neutral-50">
       <Header />
       
-      <main className="flex-1 pt-32 pb-20 bg-gradient-to-br from-primary/5 via-accent/5 to-background">
-        <div className="container mx-auto px-4">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/marketplace')}
-            className="mb-6"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Marketplace
-          </Button>
+      <main className="flex-1 pt-20">
+        {/* Header */}
+        <div className="bg-white border-b shadow-sm">
+          <div className="container mx-auto px-4 py-6">
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/marketplace')}
+              className="mb-4"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Marketplace
+            </Button>
+            
+            <h1 className="text-3xl font-bold text-neutral-900 mb-4">Find Talent</h1>
+            
+            {/* Search Bar */}
+            <div className="flex gap-4 max-w-4xl">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-neutral-400" />
+                <Input
+                  type="text"
+                  placeholder="Search by skills, role, or keywords..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-12 py-6 text-lg"
+                />
+              </div>
+              <Button 
+                size="lg"
+                className="px-8 bg-gradient-to-r from-teal-600 to-teal-800"
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                AI Match
+              </Button>
+            </div>
+          </div>
+        </div>
 
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold mb-4">Find Bench Talent</h1>
-              <p className="text-muted-foreground text-lg">
-                Search and filter available professionals for your projects
-              </p>
+        {/* Content */}
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex gap-6">
+            {/* Filters Sidebar */}
+            <div className="w-80 flex-shrink-0">
+              <Card className="sticky top-24">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Filter className="h-5 w-5" />
+                    Filters
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Skills */}
+                  <div>
+                    <h3 className="font-semibold mb-3">Skills</h3>
+                    <div className="space-y-2">
+                      {skills.map(skill => (
+                        <div key={skill} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`skill-${skill}`}
+                            checked={selectedSkills.includes(skill)}
+                            onCheckedChange={() => toggleFilter(skill, selectedSkills, setSelectedSkills)}
+                          />
+                          <Label htmlFor={`skill-${skill}`} className="cursor-pointer">
+                            {skill}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Location */}
+                  <div>
+                    <h3 className="font-semibold mb-3">Location</h3>
+                    <div className="space-y-2">
+                      {locations.map(loc => (
+                        <div key={loc} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`loc-${loc}`}
+                            checked={selectedLocations.includes(loc)}
+                            onCheckedChange={() => toggleFilter(loc, selectedLocations, setSelectedLocations)}
+                          />
+                          <Label htmlFor={`loc-${loc}`} className="cursor-pointer">
+                            {loc}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Button variant="outline" className="w-full">
+                    Clear All Filters
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Search and Filters */}
-            <Card className="glass-card border-0 shadow-elegant mb-8">
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="relative md:col-span-1">
-                    <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      placeholder="Search by skills or name..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
-                  
-                  <Select value={workModeFilter} onValueChange={setWorkModeFilter}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Work Mode" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Work Modes</SelectItem>
-                      <SelectItem value="remote">Remote</SelectItem>
-                      <SelectItem value="hybrid">Hybrid</SelectItem>
-                      <SelectItem value="on-site">On-site</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  
-                  <Select value={availabilityFilter} onValueChange={setAvailabilityFilter}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Availability" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Availability</SelectItem>
-                      <SelectItem value="Immediate">Immediate</SelectItem>
-                      <SelectItem value="Within 1 Week">Within 1 Week</SelectItem>
-                      <SelectItem value="Within 2 Weeks">Within 2 Weeks</SelectItem>
-                      <SelectItem value="Within 1 Month">Within 1 Month</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Talent List */}
+            <div className="flex-1">
+              <div className="mb-4 flex items-center justify-between">
+                <p className="text-neutral-600">
+                  {talents.length} talents found
+                </p>
+              </div>
 
-            {/* Results */}
-            <div className="space-y-4">
-              {filteredTalents.length === 0 ? (
-                <Card className="glass-card border-0 shadow-elegant">
-                  <CardContent className="p-12 text-center">
-                    <p className="text-muted-foreground">No talents found matching your criteria</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                filteredTalents.map(talent => (
-                  <Card key={talent.id} className="glass-card border-0 shadow-elegant hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                            <User className="h-6 w-6 text-primary" />
+              <div className="space-y-4">
+                {talents.map(talent => (
+                  <Card key={talent.id} className="hover:shadow-lg transition-all cursor-pointer">
+                    <CardContent className="p-6">
+                      <div className="flex gap-6">
+                        {/* Avatar */}
+                        <div className="w-20 h-20 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                          {talent.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <div className="flex items-center gap-3 mb-1">
+                                <h3 className="text-xl font-semibold text-neutral-900">
+                                  {talent.name}
+                                </h3>
+                                <Badge 
+                                  className={talent.type === 'Freelancer' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}
+                                >
+                                  {talent.type}
+                                </Badge>
+                              </div>
+                              <p className="text-neutral-600">{talent.title}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-1 bg-amber-50 px-3 py-1 rounded-full">
+                                <Star className="h-4 w-4 fill-amber-500 text-amber-500" />
+                                <span className="font-semibold text-amber-700">{talent.rating}</span>
+                              </div>
+                              <Button variant="ghost" size="icon">
+                                <Bookmark className="h-5 w-5" />
+                              </Button>
+                            </div>
                           </div>
-                          <div>
-                            <CardTitle className="text-xl">{talent.name}</CardTitle>
-                            <CardDescription>{talent.experience} years of experience</CardDescription>
+
+                          {/* Match Score */}
+                          <div className="mb-3">
+                            <div className="flex items-center gap-2 mb-1">
+                              <Sparkles className="h-4 w-4 text-teal-600" />
+                              <span className="text-sm font-semibold text-teal-600">
+                                {talent.matchScore}% Match
+                              </span>
+                            </div>
+                            <div className="h-2 bg-neutral-100 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-gradient-to-r from-teal-500 to-teal-600 rounded-full"
+                                style={{ width: `${talent.matchScore}%` }}
+                              />
+                            </div>
+                          </div>
+
+                          {/* Details */}
+                          <div className="grid grid-cols-3 gap-4 mb-4 text-sm">
+                            <div>
+                              <span className="text-neutral-500">Experience</span>
+                              <p className="font-medium">{talent.experience}</p>
+                            </div>
+                            <div>
+                              <span className="text-neutral-500">Location</span>
+                              <p className="font-medium flex items-center gap-1">
+                                <MapPin className="h-3 w-3" />
+                                {talent.location}
+                              </p>
+                            </div>
+                            <div>
+                              <span className="text-neutral-500">Availability</span>
+                              <p className="font-medium text-green-600">{talent.availability}</p>
+                            </div>
+                          </div>
+
+                          {/* Skills */}
+                          <div className="mb-4">
+                            <div className="flex flex-wrap gap-2">
+                              {talent.skills.map(skill => (
+                                <Badge key={skill} variant="secondary">
+                                  {skill}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Actions */}
+                          <div className="flex items-center gap-3">
+                            <span className="text-lg font-bold text-teal-600">
+                              {talent.rate}
+                            </span>
+                            <div className="flex gap-2 ml-auto">
+                              <Button variant="outline">
+                                <MessageSquare className="h-4 w-4 mr-2" />
+                                Message
+                              </Button>
+                              <Button className="bg-gradient-to-r from-teal-600 to-teal-800">
+                                <Calendar className="h-4 w-4 mr-2" />
+                                Schedule Interview
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                        <Badge variant="secondary">{talent.workMode}</Badge>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground mb-4">{talent.description}</p>
-                      
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {talent.skills.map(skill => (
-                          <Badge key={skill} variant="outline">{skill}</Badge>
-                        ))}
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          {talent.location}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="h-4 w-4" />
-                          {talent.availability}
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="h-4 w-4" />
-                          {talent.rate} PLN/hour
-                        </div>
-                      </div>
-                      
-                      <Button className="w-full mt-4 bg-primary hover:bg-primary/90">
-                        Contact & Request
-                      </Button>
                     </CardContent>
                   </Card>
-                ))
-              )}
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );
