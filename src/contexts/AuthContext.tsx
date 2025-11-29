@@ -13,6 +13,7 @@ interface User {
   resumeUrl?: string;
   skills?: string[];
   lookingForContract?: boolean;
+  validatedSkills?: string[];
 }
 
 interface AuthContextType {

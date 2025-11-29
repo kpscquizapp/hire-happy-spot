@@ -76,6 +76,9 @@ const DesktopNavigation = () => {
                     <Link to="/interview-prep" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.interviewPrep}</Link>
                     <Link to="/salary-insights" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.salaryInsights}</Link>
                     <Link to="/skill-tests" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.skillTests}</Link>
+                    <Link to="/skills-assessment" className="block text-sm text-teal-600 hover:text-teal-700 py-1 font-medium">
+                      Skills Assessment ✨
+                    </Link>
                     <Link to="/career-guidance" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.careerGuidance}</Link>
                     <Link to="/applications" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.applicationTracker}</Link>
                   </div>

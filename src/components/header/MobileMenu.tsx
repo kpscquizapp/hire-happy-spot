@@ -44,6 +44,7 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
                 <Link to="/jobs" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.jobsByCategory}</Link>
                 <Link to="/jobs/locations" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.jobsByLocation}</Link>
                 <Link to="/career-path" className="block text-sm text-teal-600 font-medium py-1">{translations.careerPathVisualization} ✨</Link>
+                <Link to="/skills-assessment" className="block text-sm text-teal-600 font-medium py-1">Skills Assessment ✨</Link>
                 <Link to="/resume-builder" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.resumeBuilder}</Link>
                 <Link to="/interview-prep" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.interviewPrep}</Link>
               </div>
