@@ -60,7 +60,7 @@ const MobileMenu = ({ isOpen }: MobileMenuProps) => {
               <div className="pl-4 mt-2 space-y-2">
                 <Link to="/find-talent" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.findTalent}</Link>
                 <Link to="/list-bench-talent" className="block text-sm text-neutral-600 hover:text-teal-600 py-1">{translations.registerTalent}</Link>
-                <Link to="/ai-matching" className="block text-sm text-teal-600 hover:text-teal-700 py-1 font-medium">{translations.aiTalentMatching}</Link>
+                <Link to="/find-talent" className="block text-sm text-teal-600 hover:text-teal-700 py-1 font-medium">{translations.aiTalentMatching}</Link>
               </div>
             )}
           </div>
