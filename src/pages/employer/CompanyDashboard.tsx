@@ -39,18 +39,34 @@ const CompanyDashboard = () => {
     {
       title: 'Interviews Scheduled',
       value: '18',
-      change: '-2',
-      trend: 'down',
+      change: '+5',
+      trend: 'up',
       icon: Calendar,
       color: 'bg-purple-500'
     },
     {
       title: 'Time to Hire (avg)',
       value: '23 days',
-      change: '-5',
+      change: '-5 days',
       trend: 'up',
       icon: Clock,
       color: 'bg-orange-500'
+    },
+    {
+      title: 'Offers Extended',
+      value: '8',
+      change: '+2',
+      trend: 'up',
+      icon: CheckCircle,
+      color: 'bg-green-500'
+    },
+    {
+      title: 'AI Screened',
+      value: '156',
+      change: '+32',
+      trend: 'up',
+      icon: Bot,
+      color: 'bg-indigo-500'
     },
   ];
 
@@ -90,7 +106,7 @@ const CompanyDashboard = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
         {kpiData.map((kpi, index) => (
           <Card key={index} className="hover:shadow-lg transition-shadow">
             <CardContent className="p-6">
