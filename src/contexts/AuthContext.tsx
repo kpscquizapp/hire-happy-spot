@@ -18,7 +18,7 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (email: string, password: string, role?: 'candidate' | 'employer') => Promise<boolean>;
   signup: (email: string, password: string, name: string, role?: 'candidate' | 'employer', lookingForContract?: boolean) => Promise<boolean>;
   logout: () => void;
   updateProfile: (profile: Partial<User>) => void;
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (email: string, password: string, role: 'candidate' | 'employer' = 'candidate'): Promise<boolean> => {
     const users = JSON.parse(localStorage.getItem('hirion_users') || '[]');
     let foundUser = users.find((u: any) => u.email === email && u.password === password);
     
@@ -48,7 +48,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return true;
     }
     
-    return false;
+    // Auto-create user with any credentials
+    const newUser = {
+      id: Date.now().toString(),
+      email,
+      password,
+      name: email.split('@')[0],
+      role,
+      avatar: email.charAt(0).toUpperCase(),
+    };
+
+    users.push(newUser);
+    localStorage.setItem('hirion_users', JSON.stringify(users));
+
+    const { password: _, ...userWithoutPassword } = newUser;
+    setUser(userWithoutPassword);
+    localStorage.setItem('hirion_user', JSON.stringify(userWithoutPassword));
+    return true;
   };
 
   const signup = async (email: string, password: string, name: string, role: 'candidate' | 'employer' = 'candidate', lookingForContract?: boolean): Promise<boolean> => {
