@@ -11,10 +11,9 @@ const Logo = () => {
       />
       <div className="flex flex-col">
         <div className="text-2xl font-bold">
-          <span className="text-teal-600">HIR</span>
-          <span className="text-teal-800">ION</span>
+          <span className="text-blue-600">HIR</span>
+          <span className="text-blue-800">ION</span>
         </div>
-        <span className="text-xs text-neutral-500 tracking-wide">Hiring Champion</span>
       </div>
     </a>
   );
