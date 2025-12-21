@@ -23,6 +23,16 @@ import CandidateProfile from "./pages/CandidateProfile";
 import JobRecommendations from "./pages/JobRecommendations";
 import SkillsAssessment from "./pages/SkillsAssessment";
 
+// Employer Dashboard
+import EmployerLayout from "./components/employer/EmployerLayout";
+import CompanyDashboard from "./pages/employer/CompanyDashboard";
+import PostJob from "./pages/employer/PostJob";
+import AIScreening from "./pages/employer/AIScreening";
+import HireFullTime from "./pages/employer/HireFullTime";
+import HireInterns from "./pages/employer/HireInterns";
+import ContractHiring from "./pages/employer/ContractHiring";
+import TalentMarketplace from "./pages/employer/TalentMarketplace";
+
 const queryClient = new QueryClient();
 
 // Scroll to top on route change
@@ -63,6 +73,18 @@ const App = () => (
               <Route path="/profile" element={<CandidateProfile />} />
               <Route path="/job-recommendations" element={<JobRecommendations />} />
               <Route path="/skills-assessment" element={<SkillsAssessment />} />
+              
+              {/* Employer Dashboard Routes */}
+              <Route path="/employer-dashboard" element={<EmployerLayout />}>
+                <Route index element={<CompanyDashboard />} />
+                <Route path="post-job" element={<PostJob />} />
+                <Route path="hire-fulltime" element={<HireFullTime />} />
+                <Route path="hire-interns" element={<HireInterns />} />
+                <Route path="contract-hiring" element={<ContractHiring />} />
+                <Route path="talent-marketplace" element={<TalentMarketplace />} />
+                <Route path="ai-screening" element={<AIScreening />} />
+              </Route>
+              
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
