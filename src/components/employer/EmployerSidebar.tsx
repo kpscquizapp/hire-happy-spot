@@ -10,7 +10,8 @@ import {
   LayoutDashboard,
   ChevronLeft,
   ChevronRight,
-  Building2
+  Users,
+  ClipboardCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -32,6 +33,12 @@ const menuItems = [
     title: 'Post a Job', 
     icon: FileText, 
     path: '/employer-dashboard/post-job',
+    isAI: false 
+  },
+  { 
+    title: 'Job Candidates', 
+    icon: Users, 
+    path: '/employer-dashboard/job/1/candidates',
     isAI: false 
   },
   { 
@@ -62,6 +69,12 @@ const menuItems = [
     title: 'AI Screening', 
     icon: Bot, 
     path: '/employer-dashboard/ai-screening',
+    isAI: true 
+  },
+  { 
+    title: 'Interview Results', 
+    icon: ClipboardCheck, 
+    path: '/employer-dashboard/interview-results/1',
     isAI: true 
   },
 ];
