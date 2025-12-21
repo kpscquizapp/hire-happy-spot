@@ -32,6 +32,8 @@ import HireFullTime from "./pages/employer/HireFullTime";
 import HireInterns from "./pages/employer/HireInterns";
 import ContractHiring from "./pages/employer/ContractHiring";
 import TalentMarketplace from "./pages/employer/TalentMarketplace";
+import JobCandidates from "./pages/employer/JobCandidates";
+import AIInterviewResults from "./pages/employer/AIInterviewResults";
 
 const queryClient = new QueryClient();
 
@@ -74,7 +76,7 @@ const App = () => (
               <Route path="/job-recommendations" element={<JobRecommendations />} />
               <Route path="/skills-assessment" element={<SkillsAssessment />} />
               
-              {/* Employer Dashboard Routes */}
+{/* Employer Dashboard Routes */}
               <Route path="/employer-dashboard" element={<EmployerLayout />}>
                 <Route index element={<CompanyDashboard />} />
                 <Route path="post-job" element={<PostJob />} />
@@ -83,6 +85,8 @@ const App = () => (
                 <Route path="contract-hiring" element={<ContractHiring />} />
                 <Route path="talent-marketplace" element={<TalentMarketplace />} />
                 <Route path="ai-screening" element={<AIScreening />} />
+                <Route path="job/:jobId/candidates" element={<JobCandidates />} />
+                <Route path="interview-results/:candidateId" element={<AIInterviewResults />} />
               </Route>
 
               {/* Standalone employer routes (redirect to dashboard) */}
