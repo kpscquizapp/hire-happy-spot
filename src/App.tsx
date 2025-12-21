@@ -84,6 +84,29 @@ const App = () => (
                 <Route path="talent-marketplace" element={<TalentMarketplace />} />
                 <Route path="ai-screening" element={<AIScreening />} />
               </Route>
+
+              {/* Standalone employer routes (redirect to dashboard) */}
+              <Route path="/post-job" element={<EmployerLayout />}>
+                <Route index element={<PostJob />} />
+              </Route>
+              <Route path="/hire-fulltime" element={<EmployerLayout />}>
+                <Route index element={<HireFullTime />} />
+              </Route>
+              <Route path="/hire-interns" element={<EmployerLayout />}>
+                <Route index element={<HireInterns />} />
+              </Route>
+              <Route path="/contract-hiring" element={<EmployerLayout />}>
+                <Route index element={<ContractHiring />} />
+              </Route>
+              <Route path="/talent-marketplace" element={<EmployerLayout />}>
+                <Route index element={<TalentMarketplace />} />
+              </Route>
+              <Route path="/ai-screening" element={<EmployerLayout />}>
+                <Route index element={<AIScreening />} />
+              </Route>
+              <Route path="/company-dashboard" element={<EmployerLayout />}>
+                <Route index element={<CompanyDashboard />} />
+              </Route>
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
