@@ -1,9 +1,9 @@
-
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
@@ -25,6 +25,17 @@ import SkillsAssessment from "./pages/SkillsAssessment";
 
 const queryClient = new QueryClient();
 
+// Scroll to top on route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -33,28 +44,29 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/career-path" element={<CareerPath />} />
-            <Route path="/marketplace" element={<Marketplace />} />
-            <Route path="/find-talent" element={<FindTalent />} />
-            <Route path="/talent/:id" element={<TalentProfile />} />
-            <Route path="/register-talent" element={<RegisterTalent />} />
-            <Route path="/employer" element={<EmployerLogin />} />
-            <Route path="/employer-login" element={<EmployerLogin />} />
-            <Route path="/register" element={<Register />} />
-        <Route path="/jobs" element={<JobSearch />} />
-        <Route path="/jobs/:id" element={<JobDetails />} />
-        <Route path="/job/:id" element={<JobDetails />} />
-            <Route path="/list-bench-talent" element={<ListBenchTalent />} />
-            <Route path="/candidate-login" element={<CandidateLogin />} />
-            <Route path="/profile" element={<CandidateProfile />} />
-            <Route path="/job-recommendations" element={<JobRecommendations />} />
-            <Route path="/skills-assessment" element={<SkillsAssessment />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/career-path" element={<CareerPath />} />
+              <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/find-talent" element={<FindTalent />} />
+              <Route path="/talent/:id" element={<TalentProfile />} />
+              <Route path="/register-talent" element={<RegisterTalent />} />
+              <Route path="/employer" element={<EmployerLogin />} />
+              <Route path="/employer-login" element={<EmployerLogin />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/jobs" element={<JobSearch />} />
+              <Route path="/jobs/:id" element={<JobDetails />} />
+              <Route path="/job/:id" element={<JobDetails />} />
+              <Route path="/list-bench-talent" element={<ListBenchTalent />} />
+              <Route path="/candidate-login" element={<CandidateLogin />} />
+              <Route path="/profile" element={<CandidateProfile />} />
+              <Route path="/job-recommendations" element={<JobRecommendations />} />
+              <Route path="/skills-assessment" element={<SkillsAssessment />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
         </AuthProvider>
       </LanguageProvider>
     </TooltipProvider>
