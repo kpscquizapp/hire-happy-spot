@@ -23,6 +23,12 @@ interface EmployerSidebarProps {
 
 const menuItems = [
   { 
+    title: 'Dashboard', 
+    icon: LayoutDashboard, 
+    path: '/employer-dashboard',
+    isAI: false 
+  },
+  { 
     title: 'Post a Job', 
     icon: FileText, 
     path: '/employer-dashboard/post-job',
@@ -57,12 +63,6 @@ const menuItems = [
     icon: Bot, 
     path: '/employer-dashboard/ai-screening',
     isAI: true 
-  },
-  { 
-    title: 'Company Dashboard', 
-    icon: LayoutDashboard, 
-    path: '/employer-dashboard',
-    isAI: false 
   },
 ];
 

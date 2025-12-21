@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,6 +37,7 @@ const steps = [
 ];
 
 const PostJob = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [skills, setSkills] = useState<string[]>(['React', 'TypeScript']);
   const [skillInput, setSkillInput] = useState('');
@@ -77,7 +79,10 @@ const PostJob = () => {
   };
 
   const handlePublish = () => {
-    toast.success('Job posted successfully!');
+    toast.success('Job posted successfully! Redirecting to dashboard...');
+    setTimeout(() => {
+      navigate('/employer-dashboard');
+    }, 1500);
   };
 
   const suggestedSkills = ['Node.js', 'AWS', 'Docker', 'GraphQL', 'PostgreSQL'];
