@@ -25,43 +25,43 @@ const menuItems = [
   { 
     title: 'Post a Job', 
     icon: FileText, 
-    path: '/employer/post-job',
+    path: '/employer-dashboard/post-job',
     isAI: false 
   },
   { 
     title: 'Hire Full-Time', 
     icon: Briefcase, 
-    path: '/employer/hire-fulltime',
+    path: '/employer-dashboard/hire-fulltime',
     isAI: false 
   },
   { 
     title: 'Hire Interns', 
     icon: GraduationCap, 
-    path: '/employer/hire-interns',
+    path: '/employer-dashboard/hire-interns',
     isAI: false 
   },
   { 
     title: 'Short-Term Contract', 
     icon: Clock, 
-    path: '/employer/contract-hiring',
+    path: '/employer-dashboard/contract-hiring',
     isAI: false 
   },
   { 
     title: 'Talent Marketplace', 
     icon: Globe, 
-    path: '/employer/talent-marketplace',
+    path: '/employer-dashboard/talent-marketplace',
     isAI: false 
   },
   { 
     title: 'AI Screening', 
     icon: Bot, 
-    path: '/employer/ai-screening',
+    path: '/employer-dashboard/ai-screening',
     isAI: true 
   },
   { 
     title: 'Company Dashboard', 
     icon: LayoutDashboard, 
-    path: '/employer/dashboard',
+    path: '/employer-dashboard',
     isAI: false 
   },
 ];
