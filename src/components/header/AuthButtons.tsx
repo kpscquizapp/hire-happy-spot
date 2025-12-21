@@ -82,7 +82,7 @@ const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
           </DropdownMenuLabel>
           <DropdownMenuItem asChild className="cursor-pointer rounded-lg focus:bg-secondary/80">
             <Link to="/candidate-login" className="flex items-center gap-3 px-3 py-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 text-white shadow-md">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-md">
                 <User className="h-5 w-5" />
               </div>
               <div className="flex flex-col">
@@ -93,7 +93,7 @@ const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="cursor-pointer rounded-lg focus:bg-secondary/80">
             <Link to="/employer-login" className="flex items-center gap-3 px-3 py-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 text-white shadow-md">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-accent to-accent/70 text-accent-foreground shadow-md">
                 <Briefcase className="h-5 w-5" />
               </div>
               <div className="flex flex-col">

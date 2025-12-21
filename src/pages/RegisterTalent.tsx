@@ -106,12 +106,12 @@ const RegisterTalent = () => {
 
                   <TabsContent value="individual" className="mt-6">
                     <div className="text-center p-8">
-                      <User className="h-16 w-16 text-teal-600 mx-auto mb-4" />
+                      <User className="h-16 w-16 text-primary mx-auto mb-4" />
                       <h3 className="text-xl font-semibold mb-2">Register as Individual</h3>
                       <p className="text-neutral-600 mb-6">
                         Create your professional profile and get matched with projects
                       </p>
-                      <Button size="lg" onClick={() => setStep(2)} className="bg-gradient-to-r from-teal-600 to-teal-800">
+                      <Button size="lg" onClick={() => setStep(2)}>
                         Continue
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
@@ -120,12 +120,12 @@ const RegisterTalent = () => {
 
                   <TabsContent value="company" className="mt-6">
                     <div className="text-center p-8">
-                      <Briefcase className="h-16 w-16 text-blue-600 mx-auto mb-4" />
+                      <Briefcase className="h-16 w-16 text-primary mx-auto mb-4" />
                       <h3 className="text-xl font-semibold mb-2">Register Bench Resources</h3>
                       <p className="text-neutral-600 mb-6">
                         List your available bench employees for short-term opportunities
                       </p>
-                      <Button size="lg" onClick={() => setStep(2)} className="bg-gradient-to-r from-blue-600 to-blue-800">
+                      <Button size="lg" onClick={() => setStep(2)}>
                         Continue
                         <ArrowRight className="ml-2 h-5 w-5" />
                       </Button>
@@ -339,15 +339,15 @@ const RegisterTalent = () => {
                     Choose File
                   </Button>
                 </div>
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h4 className="font-semibold text-blue-900 mb-2">Required Columns:</h4>
-                  <p className="text-sm text-blue-700">
+                <div className="bg-primary/10 p-4 rounded-lg">
+                  <h4 className="font-semibold text-foreground mb-2">Required Columns:</h4>
+                  <p className="text-sm text-muted-foreground">
                     Name, Email, Skills, Experience, Location, Availability, Rate
                   </p>
                 </div>
                 <div className="flex gap-3 justify-end">
                   <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
-                  <Button onClick={handleSubmit} className="bg-gradient-to-r from-blue-600 to-blue-800">
+                  <Button onClick={handleSubmit}>
                     Upload & Submit
                   </Button>
                 </div>
