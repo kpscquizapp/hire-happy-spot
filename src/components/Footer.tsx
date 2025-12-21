@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <div>
             <h3 className="text-xl font-semibold mb-4">
-              work<span className="text-blue">wave</span>
+              HIR<span className="text-primary">ION</span>
             </h3>
             <p className="text-neutral-400 mb-6">
               Connecting talent with opportunity. We help professionals find meaningful careers and companies find the best talent.
@@ -109,11 +109,11 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="Your email"
-                className="rounded-l-full px-4 py-2 bg-neutral-800 text-white border-0 focus:outline-none focus:ring-1 focus:ring-blue w-full"
+                className="rounded-l-full px-4 py-2 bg-neutral-800 text-white border-0 focus:outline-none focus:ring-1 focus:ring-primary w-full"
               />
               <button
                 type="submit"
-                className="bg-blue hover:bg-blue-600 text-white px-4 py-2 rounded-r-full transition-colors duration-300"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-r-full transition-colors duration-300"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
@@ -124,7 +124,7 @@ const Footer = () => {
         <div className="border-t border-neutral-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-neutral-400 text-sm mb-4 md:mb-0">
-              © 2023 workwave. All rights reserved.
+              © 2024 HIRION. All rights reserved.
             </div>
             <div className="flex space-x-6 text-sm">
               <a href="#" className="text-neutral-400 hover:text-white transition-colors duration-300">

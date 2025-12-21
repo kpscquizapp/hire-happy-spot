@@ -58,18 +58,18 @@ const EmployerLogin = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 flex items-center justify-center py-12 px-4 sm:py-20 bg-gradient-to-br from-blue-50 via-white to-blue-50">
+      <main className="flex-1 flex items-center justify-center py-12 px-4 sm:py-20 bg-gradient-to-br from-primary/5 via-white to-primary/5">
         <div className="container mx-auto">
           <div className="max-w-md mx-auto w-full">
-            <Card className="border-blue-100 shadow-2xl">
-              <CardHeader className="text-center pb-6 bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-t-lg p-4 sm:p-6">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
-                  <Building2 className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+            <Card className="border-primary/20 shadow-2xl">
+              <CardHeader className="text-center pb-6 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-t-lg p-4 sm:p-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary-foreground/20 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+                  <Building2 className="h-8 w-8 sm:h-10 sm:w-10 text-primary-foreground" />
                 </div>
                 <CardTitle className="text-2xl sm:text-3xl font-bold">
                   {isLogin ? 'Employer Login' : 'Employer Sign Up'}
                 </CardTitle>
-                <CardDescription className="text-blue-50 text-sm sm:text-base">
+                <CardDescription className="text-primary-foreground/80 text-sm sm:text-base">
                   {isLogin ? 'Access your employer dashboard and manage your hiring' : 'Create an account to start hiring top talent'}
                 </CardDescription>
               </CardHeader>
@@ -133,7 +133,7 @@ const EmployerLogin = () => {
                   
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-medium py-5 sm:py-6"
+                    className="w-full py-5 sm:py-6"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Processing...' : isLogin ? 'Sign In to Dashboard' : 'Create Account'}
@@ -144,7 +144,7 @@ const EmployerLogin = () => {
                     <button
                       type="button"
                       onClick={() => setIsLogin(!isLogin)}
-                      className="text-blue-600 hover:underline font-medium"
+                      className="text-primary hover:underline font-medium"
                     >
                       {isLogin ? 'Sign Up' : 'Sign In'}
                     </button>
@@ -155,14 +155,14 @@ const EmployerLogin = () => {
 
             {/* Candidate Login Link */}
             <div className="mt-6 text-center">
-              <Card className="border-blue-200 bg-blue-50/50">
+              <Card className="border-primary/20 bg-primary/5">
                 <CardContent className="py-4">
                   <p className="text-sm text-neutral-600 mb-2">
                     Looking for a job?
                   </p>
                   <Link 
                     to="/candidate-login" 
-                    className="text-blue-600 hover:text-blue-700 font-semibold inline-flex items-center gap-2"
+                    className="text-primary hover:text-primary/80 font-semibold inline-flex items-center gap-2"
                   >
                     Candidate Login →
                   </Link>

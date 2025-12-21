@@ -48,18 +48,18 @@ const CandidateLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-neutral-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-primary/5 via-white to-neutral-50">
       <Header />
       
       <main className="flex-1 pt-24 pb-12 px-4 sm:pt-32 sm:pb-20">
         <div className="container mx-auto">
           <div className="max-w-md mx-auto w-full">
             <Card className="shadow-xl border-0 w-full">
-              <CardHeader className="space-y-2 text-center bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-t-lg p-4 sm:p-6">
+              <CardHeader className="space-y-2 text-center bg-gradient-to-br from-primary to-primary/80 text-primary-foreground rounded-t-lg p-4 sm:p-6">
                 <CardTitle className="text-xl sm:text-2xl font-bold">
                   {isLogin ? 'Welcome Back' : 'Create Account'}
                 </CardTitle>
-                <CardDescription className="text-blue-50 text-sm sm:text-base">
+                <CardDescription className="text-primary-foreground/80 text-sm sm:text-base">
                   {isLogin ? 'Sign in to continue your job search' : 'Join HIRION to find your dream job'}
                 </CardDescription>
               </CardHeader>
@@ -137,13 +137,13 @@ const CandidateLogin = () => {
 
                   {isLogin && (
                     <div className="flex justify-end">
-                      <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700">
+                      <Link to="/forgot-password" className="text-sm text-primary hover:text-primary/80">
                         Forgot password?
                       </Link>
                     </div>
                   )}
 
-                  <Button type="submit" className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700">
+                  <Button type="submit" className="w-full">
                     {isLogin ? 'Sign In' : 'Create Account'}
                   </Button>
 
@@ -154,7 +154,7 @@ const CandidateLogin = () => {
                     <button
                       type="button"
                       onClick={() => setIsLogin(!isLogin)}
-                      className="text-blue-600 hover:text-blue-700 font-medium"
+                      className="text-primary hover:text-primary/80 font-medium"
                     >
                       {isLogin ? 'Sign up' : 'Sign in'}
                     </button>
