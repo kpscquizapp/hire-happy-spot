@@ -28,23 +28,24 @@ const Header = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
         isScrolled 
-          ? "py-3 bg-white/90 backdrop-blur-lg shadow-sm" 
-          : "py-5 bg-transparent"
+          ? "py-2 bg-background/95 backdrop-blur-lg shadow-sm border-border" 
+          : "py-3 bg-background border-transparent"
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
+          {/* Logo */}
           <div className="flex items-center">
             <Logo />
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Centered */}
           <DesktopNavigation />
 
-          {/* Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Auth Buttons - Right side */}
+          <div className="hidden md:flex items-center gap-3">
             <AuthButtons />
           </div>
 
