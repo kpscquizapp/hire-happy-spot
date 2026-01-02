@@ -19,12 +19,12 @@ const DesktopNavigation = () => {
   const isEmployer = user?.role === 'employer';
 
   return (
-    <NavigationMenu className="hidden md:flex mr-auto ml-8">
-      <NavigationMenuList className="space-x-1">
+    <NavigationMenu className="hidden md:flex">
+      <NavigationMenuList className="gap-1">
         {/* Candidates Menu - Show only to candidates or non-logged users */}
         {(!user || isCandidate) && (
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <NavigationMenuTrigger className="bg-transparent text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-primary font-medium text-sm px-3 py-2">
             {translations.candidates}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -92,9 +92,8 @@ const DesktopNavigation = () => {
         {/* Talent Marketplace Menu - Show only to employers or non-logged users */}
         {(!user || isEmployer) && (
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <NavigationMenuTrigger className="bg-transparent text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-primary font-medium text-sm px-3 py-2">
             {translations.talentMarketplace}
-            <span className="ml-2 text-xs bg-teal-100 text-teal-700 px-2 py-0.5 rounded-full">New</span>
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="w-[600px] p-6">
@@ -134,7 +133,7 @@ const DesktopNavigation = () => {
         {/* Employers Menu - Show only to employers or non-logged users */}
         {(!user || isEmployer) && (
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <NavigationMenuTrigger className="bg-transparent text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-primary font-medium text-sm px-3 py-2">
             {translations.employers}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -157,7 +156,7 @@ const DesktopNavigation = () => {
         {/* Services Menu - Show only to employers or non-logged users */}
         {(!user || isEmployer) && (
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <NavigationMenuTrigger className="bg-transparent text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-primary font-medium text-sm px-3 py-2">
             {translations.services}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -179,7 +178,7 @@ const DesktopNavigation = () => {
         {/* Resources Menu - Show only to employers or non-logged users */}
         {(!user || isEmployer) && (
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <NavigationMenuTrigger className="bg-transparent text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-primary font-medium text-sm px-3 py-2">
             {translations.resources}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -201,7 +200,7 @@ const DesktopNavigation = () => {
         {/* About Menu - Show only to employers or non-logged users */}
         {(!user || isEmployer) && (
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="text-neutral-600 hover:text-teal-600 transition-colors duration-300 px-4 py-2">
+          <NavigationMenuTrigger className="bg-transparent text-foreground/80 hover:text-primary hover:bg-transparent data-[state=open]:bg-transparent data-[state=open]:text-primary font-medium text-sm px-3 py-2">
             {translations.aboutUs}
           </NavigationMenuTrigger>
           <NavigationMenuContent>
