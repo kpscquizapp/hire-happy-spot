@@ -28,10 +28,10 @@ const Header = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background border-b",
         isScrolled 
-          ? "py-2 bg-background/95 backdrop-blur-lg shadow-sm border-border" 
-          : "py-3 bg-background border-transparent"
+          ? "py-2 shadow-md border-border" 
+          : "py-3 shadow-sm border-border/50"
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
