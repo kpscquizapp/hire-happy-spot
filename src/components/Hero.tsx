@@ -1,75 +1,85 @@
 
 import React, { useState } from 'react';
-import { Search, MapPin, Briefcase } from 'lucide-react';
+import { Search, MapPin } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const Hero = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [location, setLocation] = useState('');
+  const [category, setCategory] = useState('');
   const [experience, setExperience] = useState('');
+  const [location, setLocation] = useState('');
+  const [remoteOnly, setRemoteOnly] = useState(false);
   const { translations } = useLanguage();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
     if (searchQuery) params.append('query', searchQuery);
-    if (location) params.append('location', location);
+    if (category) params.append('category', category);
     if (experience) params.append('experience', experience);
+    if (location) params.append('location', location);
+    if (remoteOnly) params.append('remote', 'true');
     window.location.href = `/jobs?${params.toString()}`;
   };
 
   return (
-    <section className="pt-32 pb-24 relative overflow-hidden bg-gradient-to-br from-primary/15 via-primary/8 to-primary/3">
-      {/* Decorative gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-primary/5"></div>
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/40 to-transparent"></div>
-      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[100px]"></div>
-      <div className="absolute -bottom-48 -left-48 w-[600px] h-[600px] bg-primary/15 rounded-full blur-[120px]"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 rounded-full blur-[80px]"></div>
+    <section className="pt-32 pb-28 relative overflow-hidden bg-primary">
+      {/* Decorative circular overlays */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary/90"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/4 w-[800px] h-[800px] bg-primary-foreground/5 rounded-full"></div>
+      <div className="absolute bottom-0 left-0 -translate-x-1/3 translate-y-1/3 w-[600px] h-[600px] bg-primary-foreground/5 rounded-full"></div>
+      <div className="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 w-[500px] h-[500px] bg-primary-foreground/5 rounded-full"></div>
+      <div className="absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-primary-foreground/5 rounded-full"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-3xl mx-auto text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-neutral-900 mb-4 tracking-tight">
+        <div className="max-w-4xl mx-auto text-center mb-10 animate-fade-in">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-foreground mb-4 tracking-tight">
             {translations.findDreamJob}
           </h1>
-          <p className="text-lg md:text-xl text-neutral-600 mb-8">
+          <p className="text-lg md:text-xl text-primary-foreground/80 mb-10">
             {translations.discoverOpportunities}
           </p>
 
-          <form onSubmit={handleSearch} className="bg-white/90 backdrop-blur-sm rounded-xl p-4 md:p-6 shadow-lg border border-primary/10">
-            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-              <div className="relative flex-1">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-neutral-400" />
-                </div>
+          <form onSubmit={handleSearch} className="bg-white rounded-lg p-3 shadow-xl max-w-4xl mx-auto">
+            <div className="flex flex-col lg:flex-row gap-2">
+              {/* Skill/Company Input */}
+              <div className="relative flex-1 min-w-0">
                 <input
                   type="text"
-                  placeholder={translations.positionSkillsCompany}
-                  className="input-primary pl-11 w-full"
+                  placeholder="Skill, company, tag"
+                  className="w-full h-11 px-4 text-sm text-foreground bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               
-              <div className="relative flex-1">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <MapPin className="h-5 w-5 text-neutral-400" />
+              {/* Categories Dropdown */}
+              <div className="relative flex-1 min-w-0">
+                <select
+                  className="w-full h-11 px-4 text-sm text-foreground bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  <option value="">All categories</option>
+                  <option value="technology">Technology</option>
+                  <option value="healthcare">Healthcare</option>
+                  <option value="finance">Finance</option>
+                  <option value="marketing">Marketing</option>
+                  <option value="design">Design</option>
+                  <option value="sales">Sales</option>
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
-                <input
-                  type="text"
-                  placeholder={translations.location}
-                  className="input-primary pl-11 w-full"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
               </div>
               
-              <div className="relative flex-1">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Briefcase className="h-5 w-5 text-neutral-400" />
-                </div>
+              {/* Experience Level Dropdown */}
+              <div className="relative flex-1 min-w-0">
                 <select
-                  className="input-primary pl-11 w-full appearance-none"
+                  className="w-full h-11 px-4 text-sm text-foreground bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer"
                   value={experience}
                   onChange={(e) => setExperience(e.target.value)}
                 >
@@ -79,17 +89,49 @@ const Hero = () => {
                   <option value="senior">{translations.senior}</option>
                   <option value="executive">{translations.executive}</option>
                 </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                  <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
               
-              <button type="submit" className="button-primary whitespace-nowrap">
+              {/* Location Input */}
+              <div className="relative flex-1 min-w-0">
+                <input
+                  type="text"
+                  placeholder={translations.location}
+                  className="w-full h-11 px-4 text-sm text-foreground bg-background border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </div>
+              
+              {/* Search Button */}
+              <button 
+                type="submit" 
+                className="h-11 px-8 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-md transition-colors whitespace-nowrap"
+              >
                 {translations.searchJobs}
               </button>
             </div>
+            
+            {/* Remote Jobs Checkbox */}
+            <div className="flex items-center justify-center mt-3 gap-2">
+              <Checkbox 
+                id="remote-only" 
+                checked={remoteOnly}
+                onCheckedChange={(checked) => setRemoteOnly(checked as boolean)}
+                className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+              />
+              <label 
+                htmlFor="remote-only" 
+                className="text-sm text-muted-foreground cursor-pointer"
+              >
+                Only remote jobs
+              </label>
+            </div>
           </form>
-          
-          <div className="mt-6 text-neutral-500 text-sm">
-            {translations.popular}
-          </div>
         </div>
       </div>
     </section>
