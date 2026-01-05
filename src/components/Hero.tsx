@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, MapPin, Layers, ArrowRight, Briefcase, Users, CheckCircle } from 'lucide-react';
+import { Search, MapPin, ChevronDown, Briefcase, Users, Bot, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 const Hero = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [category, setCategory] = useState('');
+  const [experienceLevel, setExperienceLevel] = useState('');
+  const [jobType, setJobType] = useState('');
   const [location, setLocation] = useState('');
   const [remoteOnly, setRemoteOnly] = useState(false);
   const { translations } = useLanguage();
@@ -17,57 +19,71 @@ const Hero = () => {
     const params = new URLSearchParams();
     if (searchQuery) params.append('query', searchQuery);
     if (category) params.append('category', category);
+    if (experienceLevel) params.append('experience', experienceLevel);
+    if (jobType) params.append('type', jobType);
     if (location) params.append('location', location);
     if (remoteOnly) params.append('remote', 'true');
     window.location.href = `/jobs?${params.toString()}`;
   };
 
   return (
-    <section className="pt-24 pb-12 relative overflow-hidden bg-gradient-to-br from-violet-50 via-purple-50/50 to-background">
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-violet-100/30 via-transparent to-purple-100/20"></div>
-      
+    <section className="pt-24 pb-16 relative overflow-hidden bg-background">
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        {/* Active Jobs Badge */}
+        <div className="mb-6">
+          <span className="inline-flex items-center gap-2 text-sm font-medium text-primary bg-primary/10 px-3 py-1.5 rounded-full">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            50,000+ Active Jobs Available
+          </span>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Left Content */}
           <div className="animate-fade-in">
-            {/* AI Badge */}
-            <div className="inline-flex items-center gap-2 mb-6">
-              <span className="bg-green-500 text-white text-xs font-bold px-2 py-0.5 rounded">NEW</span>
-              <span className="text-primary font-medium text-sm">AI-Powered Career Matching</span>
-            </div>
-            
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-2 tracking-tight">
               Find Your
             </h1>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary mb-6 tracking-tight">
-              Dream Job
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
+              <span className="bg-gradient-to-r from-primary via-violet-500 to-purple-500 bg-clip-text text-transparent">
+                Dream Job
+              </span>
             </h1>
             
-            <p className="text-lg text-muted-foreground mb-8 max-w-xl">
-              Discover opportunities matching your skills and aspirations with AI-powered recommendations
+            <p className="text-base text-muted-foreground mb-8 max-w-lg leading-relaxed">
+              Discover opportunities matching your skills and aspirations with AI-powered job matching, assessments, and instant interview scheduling.
             </p>
 
             {/* Search Form */}
-            <form onSubmit={handleSearch} className="bg-card rounded-xl p-5 shadow-lg border border-border/50 max-w-xl">
-              {/* Job Title Input */}
-              <div className="relative mb-4">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Job title, skill, or company"
-                  className="w-full h-12 pl-12 pr-4 text-sm text-foreground bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+            <form onSubmit={handleSearch} className="bg-card rounded-2xl p-6 shadow-xl border border-border/30 max-w-xl">
+              {/* Row 1: Job Title & Location */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="Job title, keywords, or company"
+                    className="w-full h-11 pl-10 pr-4 text-sm text-foreground bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <input
+                    type="text"
+                    placeholder="City or remote"
+                    className="w-full h-11 pl-10 pr-4 text-sm text-foreground bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                  />
+                </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                {/* Categories Dropdown */}
+              {/* Row 2: Dropdowns */}
+              <div className="grid grid-cols-3 gap-3 mb-4">
                 <div className="relative">
-                  <Layers className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <select
-                    className="w-full h-12 pl-11 pr-4 text-sm text-foreground bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer"
+                    className="w-full h-11 pl-3 pr-8 text-sm text-foreground bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                   >
@@ -79,18 +95,39 @@ const Hero = () => {
                     <option value="design">Design</option>
                     <option value="sales">Sales</option>
                   </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 </div>
                 
-                {/* Location Input */}
                 <div className="relative">
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <input
-                    type="text"
-                    placeholder="Location"
-                    className="w-full h-12 pl-11 pr-4 text-sm text-foreground bg-muted/30 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all placeholder:text-muted-foreground"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
+                  <select
+                    className="w-full h-11 pl-3 pr-8 text-sm text-foreground bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer"
+                    value={experienceLevel}
+                    onChange={(e) => setExperienceLevel(e.target.value)}
+                  >
+                    <option value="">Experience Level</option>
+                    <option value="entry">Entry Level</option>
+                    <option value="mid">Mid Level</option>
+                    <option value="senior">Senior Level</option>
+                    <option value="lead">Lead / Manager</option>
+                    <option value="executive">Executive</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+                </div>
+                
+                <div className="relative">
+                  <select
+                    className="w-full h-11 pl-3 pr-8 text-sm text-foreground bg-muted/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer"
+                    value={jobType}
+                    onChange={(e) => setJobType(e.target.value)}
+                  >
+                    <option value="">Job Type</option>
+                    <option value="full-time">Full Time</option>
+                    <option value="part-time">Part Time</option>
+                    <option value="contract">Contract</option>
+                    <option value="freelance">Freelance</option>
+                    <option value="internship">Internship</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
                 </div>
               </div>
               
@@ -114,63 +151,77 @@ const Hero = () => {
                 {/* Search Button */}
                 <Button 
                   type="submit" 
-                  className="h-11 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition-all"
+                  className="h-11 px-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition-all shadow-lg shadow-primary/25"
                 >
-                  Search Jobs <ArrowRight className="ml-2 h-4 w-4" />
+                  <Search className="mr-2 h-4 w-4" />
+                  Search Jobs
                 </Button>
               </div>
             </form>
             
-            {/* Stats */}
-            <div className="flex items-center gap-6 mt-6">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>50,000+ Active Jobs</span>
+            {/* Stats Row */}
+            <div className="flex items-center gap-8 mt-8">
+              <div className="flex items-center gap-3">
+                <div className="flex -space-x-2">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 border-2 border-background flex items-center justify-center text-white text-xs font-bold">J</div>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-cyan-500 border-2 border-background flex items-center justify-center text-white text-xs font-bold">M</div>
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 border-2 border-background flex items-center justify-center text-white text-xs font-bold">S</div>
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-foreground">2M+ Job Seekers</div>
+                  <div className="text-xs text-muted-foreground">Trust HIRION</div>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>AI-Powered Matching</span>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Briefcase className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <div className="text-sm font-bold text-foreground">15,000+ Companies</div>
+                  <div className="text-xs text-muted-foreground">Hiring Now</div>
+                </div>
               </div>
             </div>
           </div>
           
-          {/* Right Content - Illustration Area */}
+          {/* Right Content - Hero Image Area */}
           <div className="relative hidden lg:block">
             <div className="relative">
-              {/* Main illustration placeholder with gradient */}
-              <div className="w-full aspect-[4/3] bg-gradient-to-br from-violet-200 via-purple-100 to-pink-100 rounded-3xl overflow-hidden relative">
-                {/* Decorative elements */}
-                <div className="absolute top-4 right-4 w-32 h-32 bg-yellow-200/40 rounded-full blur-2xl"></div>
-                <div className="absolute bottom-8 left-8 w-24 h-24 bg-blue-200/50 rounded-full blur-xl"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-purple-200/40 rounded-full blur-2xl"></div>
-                
-                {/* Illustration overlay pattern */}
-                <div className="absolute inset-0 opacity-20" 
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-                  }}
-                ></div>
+              {/* Main Image Placeholder */}
+              <div className="w-full aspect-[4/3] bg-gradient-to-br from-violet-100 via-purple-50 to-pink-50 rounded-3xl overflow-hidden relative shadow-2xl">
+                {/* Professional team illustration placeholder */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <Users className="h-24 w-24 text-primary/30 mx-auto mb-4" />
+                    <p className="text-muted-foreground/50 text-sm">Professional Team Image</p>
+                  </div>
+                </div>
+                {/* Decorative gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent"></div>
               </div>
               
-              {/* Floating Stats Card - Jobs Posted */}
-              <div className="absolute -top-2 -right-4 bg-card rounded-xl shadow-lg p-4 flex items-center gap-3 animate-fade-in border border-border/50">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Briefcase className="h-5 w-5 text-green-600" />
+              {/* Floating AI Interview Badge */}
+              <div className="absolute -top-2 right-4 bg-card rounded-xl shadow-xl p-3 flex items-center gap-2 animate-fade-in border border-border/50">
+                <div className="w-9 h-9 bg-violet-100 rounded-lg flex items-center justify-center">
+                  <Bot className="h-5 w-5 text-violet-600" />
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-foreground">5,240+</div>
-                  <div className="text-xs text-muted-foreground">Jobs Posted</div>
+                  <div className="text-sm font-semibold text-foreground">AI Interview</div>
+                  <div className="text-xs text-muted-foreground">Schedule in 1 click</div>
                 </div>
               </div>
               
-              {/* Floating Stats Card - Candidates */}
-              <div className="absolute -bottom-4 left-8 bg-card rounded-xl shadow-lg p-4 flex items-center gap-3 animate-fade-in border border-border/50" style={{ animationDelay: '0.2s' }}>
-                <div className="w-10 h-10 bg-violet-100 rounded-lg flex items-center justify-center">
-                  <Users className="h-5 w-5 text-violet-600" />
+              {/* Floating Success Rate Badge */}
+              <div className="absolute bottom-8 right-0 bg-card rounded-xl shadow-xl p-4 flex items-center gap-3 animate-fade-in border border-border/50" style={{ animationDelay: '0.2s' }}>
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-foreground">12,500+</div>
-                  <div className="text-xs text-muted-foreground">Candidates</div>
+                  <div className="text-2xl font-bold text-green-600">98%</div>
+                  <div className="text-xs text-muted-foreground">Success Rate</div>
+                </div>
+                <div className="text-xs text-muted-foreground border-l border-border pl-3">
+                  AI-Powered<br/>Matching
                 </div>
               </div>
             </div>

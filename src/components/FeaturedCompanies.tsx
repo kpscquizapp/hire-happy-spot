@@ -1,23 +1,23 @@
 
-import React, { useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useRef } from 'react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 interface Company {
   id: number;
   name: string;
-  logo: string;
-  jobCount: number;
+  jobCount: string;
+  color: string;
 }
 
 const companies: Company[] = [
-  { id: 2, name: 'Infosys', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Infosys_logo.svg/1280px-Infosys_logo.svg.png', jobCount: 78 },
-  { id: 4, name: 'TCS', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Tata_Consultancy_Services_Logo.svg/1280px-Tata_Consultancy_Services_Logo.svg.png', jobCount: 120 },
-  { id: 5, name: 'Wipro', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Wipro_Primary_Logo_Color_RGB.svg/1280px-Wipro_Primary_Logo_Color_RGB.svg.png', jobCount: 67 },
-  { id: 6, name: 'Accenture', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Accenture.svg/1280px-Accenture.svg.png', jobCount: 93 },
-  { id: 7, name: 'IBM', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IBM_logo.svg/1280px-IBM_logo.svg.png', jobCount: 84 },
-  { id: 8, name: 'Microsoft', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1280px-Microsoft_logo.svg.png', jobCount: 56 },
-  { id: 9, name: 'CD Projekt', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/6/68/CD_Projekt_logo.svg/1200px-CD_Projekt_logo.svg.png', jobCount: 42 },
-  { id: 10, name: 'Asseco Poland', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Asseco_logo.svg/2560px-Asseco_logo.svg.png', jobCount: 65 },
+  { id: 1, name: 'Infosys', jobCount: '250+ Jobs', color: 'text-blue-600' },
+  { id: 2, name: 'TCS', jobCount: '180+ Jobs', color: 'text-slate-800' },
+  { id: 3, name: 'Wipro', jobCount: '300+ Jobs', color: 'text-violet-600' },
+  { id: 4, name: 'Accenture', jobCount: '290+ Jobs', color: 'text-purple-600' },
+  { id: 5, name: 'IBM', jobCount: '140+ Jobs', color: 'text-blue-700' },
+  { id: 6, name: 'Oracle', jobCount: '95+ Jobs', color: 'text-red-600' },
+  { id: 7, name: 'Microsoft', jobCount: '120+ Jobs', color: 'text-cyan-600' },
+  { id: 8, name: 'Google', jobCount: '85+ Jobs', color: 'text-green-600' },
 ];
 
 const FeaturedCompanies = () => {
@@ -25,86 +25,78 @@ const FeaturedCompanies = () => {
   
   const scrollLeft = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: -280, behavior: 'smooth' });
     }
   };
   
   const scrollRight = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+      carouselRef.current.scrollBy({ left: 280, behavior: 'smooth' });
     }
   };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    const sections = document.querySelectorAll('.fade-in-section');
-    sections.forEach(section => {
-      observer.observe(section);
-    });
-
-    return () => {
-      sections.forEach(section => {
-        observer.unobserve(section);
-      });
-    };
-  }, []);
   
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-background border-t border-border/30">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between mb-8 fade-in-section">
-          <h2 className="text-2xl md:text-3xl font-bold text-neutral-900">
-            Featured Companies
+        {/* Section Header */}
+        <div className="text-center mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+            Featured Companies Hiring Now
           </h2>
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={scrollLeft}
-              className="p-2.5 rounded-full bg-teal-50 hover:bg-teal-100 transition-colors duration-300"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft className="h-5 w-5 text-teal-600" />
-            </button>
-            <button
-              onClick={scrollRight}
-              className="p-2.5 rounded-full bg-teal-50 hover:bg-teal-100 transition-colors duration-300"
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="h-5 w-5 text-teal-600" />
-            </button>
-          </div>
+          <p className="text-muted-foreground">
+            Join industry leaders and fast-growing startups
+          </p>
         </div>
         
-        <div
-          ref={carouselRef}
-          className="flex overflow-x-auto scrollbar-hide space-x-6 pb-4 -mx-4 px-4 scroll-smooth"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {companies.map((company) => (
-            <div
-              key={company.id}
-              className="flex-none w-60 glass-card p-5 fade-in-section group hover:border-teal-200"
-            >
-              <div className="bg-white p-4 rounded-xl mb-4 flex items-center justify-center h-24 group-hover:shadow-sm transition-all duration-300">
-                <img
-                  src={company.logo}
-                  alt={company.name}
-                  className="max-h-16 max-w-full object-contain"
-                />
-              </div>
-              <h3 className="font-medium text-neutral-900 mb-1">{company.name}</h3>
-              <p className="text-sm text-neutral-500">{company.jobCount} open positions</p>
-            </div>
-          ))}
+        {/* Carousel Container */}
+        <div className="relative">
+          {/* Left Arrow */}
+          <button
+            onClick={scrollLeft}
+            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-card border border-border rounded-full shadow-lg flex items-center justify-center hover:bg-muted transition-colors"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="h-5 w-5 text-muted-foreground" />
+          </button>
+          
+          {/* Companies Carousel */}
+          <div
+            ref={carouselRef}
+            className="flex overflow-x-auto scrollbar-hide gap-4 pb-4 scroll-smooth px-2"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {companies.map((company) => (
+              <a
+                key={company.id}
+                href={`/jobs?company=${company.name.toLowerCase()}`}
+                className="flex-none w-36 bg-card border border-border/50 rounded-xl p-5 hover:shadow-lg hover:border-primary/30 transition-all duration-300 group text-center"
+              >
+                <h3 className={`font-bold text-lg ${company.color} mb-1 group-hover:scale-105 transition-transform`}>
+                  {company.name}
+                </h3>
+                <p className="text-xs text-muted-foreground">{company.jobCount}</p>
+              </a>
+            ))}
+          </div>
+          
+          {/* Right Arrow */}
+          <button
+            onClick={scrollRight}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-card border border-border rounded-full shadow-lg flex items-center justify-center hover:bg-muted transition-colors"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+          </button>
+        </div>
+        
+        {/* View All Link */}
+        <div className="text-center mt-8">
+          <a 
+            href="/companies" 
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          >
+            View all 15,000+ companies <ArrowRight className="h-4 w-4" />
+          </a>
         </div>
       </div>
     </section>
