@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Code, Headphones, Building2, TrendingUp, Heart, Palette, Database, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,7 @@ const categories: Category[] = [
     name: 'IT & Software',
     subtitle: 'Development, Testing, DevOps',
     icon: <Code className="h-5 w-5" />,
-    iconBg: 'bg-blue-100',
+    iconBg: 'bg-blue-50',
     iconColor: 'text-blue-600',
     jobCount: '12,450'
   },
@@ -28,8 +27,8 @@ const categories: Category[] = [
     name: 'BPO / KPO',
     subtitle: 'Customer Service, Support',
     icon: <Headphones className="h-5 w-5" />,
-    iconBg: 'bg-green-100',
-    iconColor: 'text-green-600',
+    iconBg: 'bg-emerald-50',
+    iconColor: 'text-emerald-600',
     jobCount: '8,230'
   },
   {
@@ -37,8 +36,8 @@ const categories: Category[] = [
     name: 'Banking & Finance',
     subtitle: 'Accounting, Investment',
     icon: <Building2 className="h-5 w-5" />,
-    iconBg: 'bg-pink-100',
-    iconColor: 'text-pink-600',
+    iconBg: 'bg-rose-50',
+    iconColor: 'text-rose-500',
     jobCount: '5,890'
   },
   {
@@ -46,8 +45,8 @@ const categories: Category[] = [
     name: 'Sales & Marketing',
     subtitle: 'Digital Marketing, Brand Dev',
     icon: <TrendingUp className="h-5 w-5" />,
-    iconBg: 'bg-purple-100',
-    iconColor: 'text-purple-600',
+    iconBg: 'bg-slate-100',
+    iconColor: 'text-slate-700',
     jobCount: '9,340'
   },
   {
@@ -55,8 +54,8 @@ const categories: Category[] = [
     name: 'Healthcare',
     subtitle: 'Medical, Pharma, Nursing',
     icon: <Heart className="h-5 w-5" />,
-    iconBg: 'bg-red-100',
-    iconColor: 'text-red-600',
+    iconBg: 'bg-pink-50',
+    iconColor: 'text-pink-500',
     jobCount: '4,120'
   },
   {
@@ -64,8 +63,8 @@ const categories: Category[] = [
     name: 'Design & Creative',
     subtitle: 'UI/UX, Graphic Design',
     icon: <Palette className="h-5 w-5" />,
-    iconBg: 'bg-orange-100',
-    iconColor: 'text-orange-600',
+    iconBg: 'bg-orange-50',
+    iconColor: 'text-orange-500',
     jobCount: '3,670'
   },
   {
@@ -73,8 +72,8 @@ const categories: Category[] = [
     name: 'Data & Analytics',
     subtitle: 'Data Science, ML, AI',
     icon: <Database className="h-5 w-5" />,
-    iconBg: 'bg-teal-100',
-    iconColor: 'text-teal-600',
+    iconBg: 'bg-cyan-50',
+    iconColor: 'text-cyan-600',
     jobCount: '6,780'
   },
   {
@@ -82,47 +81,47 @@ const categories: Category[] = [
     name: 'HR & Recruitment',
     subtitle: 'Talent Acquisition, Training',
     icon: <Users className="h-5 w-5" />,
-    iconBg: 'bg-indigo-100',
-    iconColor: 'text-indigo-600',
+    iconBg: 'bg-violet-50',
+    iconColor: 'text-violet-600',
     jobCount: '2,340'
   }
 ];
 
 const JobCategories = () => {
   return (
-    <section className="py-16 bg-background">
+    <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Browse Jobs by Category
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-lg">
             Explore opportunities across diverse industries and roles
           </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
           {categories.map((category) => (
             <a
               key={category.id}
               href={`/jobs?category=${category.name.toLowerCase().replace(/ /g, '-')}`}
-              className="bg-card border border-border/50 rounded-xl p-5 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group"
+              className="bg-card border border-border/40 rounded-2xl p-6 hover:shadow-xl hover:border-primary/20 hover:-translate-y-1 transition-all duration-300 group"
             >
-              <div className={`w-11 h-11 ${category.iconBg} ${category.iconColor} flex items-center justify-center rounded-xl mb-4`}>
+              <div className={`w-12 h-12 ${category.iconBg} ${category.iconColor} flex items-center justify-center rounded-xl mb-5`}>
                 {category.icon}
               </div>
-              <h3 className="font-semibold text-foreground mb-0.5">{category.name}</h3>
-              <p className="text-xs text-muted-foreground mb-3">{category.subtitle}</p>
-              <div className="flex items-baseline gap-1">
-                <span className="text-xl font-bold text-primary">{category.jobCount}</span>
-                <span className="text-xs text-muted-foreground">jobs</span>
+              <h3 className="font-semibold text-foreground text-lg mb-1">{category.name}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{category.subtitle}</p>
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-bold text-primary">{category.jobCount}</span>
+                <span className="text-sm text-muted-foreground">jobs</span>
               </div>
             </a>
           ))}
         </div>
         
-        <div className="text-center mt-10">
-          <Button variant="outline" className="rounded-full px-8 py-5 border-primary/30 text-primary hover:bg-primary/5">
+        <div className="text-center mt-12">
+          <Button variant="outline" className="rounded-full px-8 py-6 border-border text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all">
             View All Categories
           </Button>
         </div>
