@@ -487,12 +487,12 @@ const HomeJobsSection = () => {
             {/* Recommended Jobs Header */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center animate-pulse">
-                  <Zap className="h-5 w-5 text-white" />
+                <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-primary-foreground" />
                 </div>
                 Recommended Jobs
               </h2>
-              <span className="text-sm text-muted-foreground bg-muted px-4 py-2 rounded-full">
+              <span className="text-sm text-muted-foreground bg-secondary px-4 py-2 rounded-full">
                 Showing <span className="font-semibold text-foreground">428</span> jobs
               </span>
             </div>
@@ -503,16 +503,16 @@ const HomeJobsSection = () => {
                 <a
                   key={job.id}
                   href={`/jobs/${job.id}`}
-                  className="block bg-card border border-border/50 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/40 transition-all duration-500 group hover:-translate-y-1"
+                  className="block bg-card border border-border/50 rounded-2xl overflow-hidden hover:shadow-xl hover:border-primary/30 transition-all duration-500 group hover:-translate-y-1"
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  {/* Gradient Top Border with animation */}
-                  <div className={`h-1 bg-gradient-to-r ${job.accentColor} group-hover:h-1.5 transition-all duration-300`} />
+                  {/* Top Border */}
+                  <div className="h-1 bg-primary group-hover:h-1.5 transition-all duration-300" />
                   
                   <div className="p-6">
                     <div className="flex items-start gap-5">
-                      {/* Company Logo with hover effect */}
-                      <div className="w-14 h-14 bg-gradient-to-br from-muted to-muted/50 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden border border-border/30 group-hover:scale-110 group-hover:shadow-lg group-hover:border-primary/30 transition-all duration-300">
+                      {/* Company Logo */}
+                      <div className="w-14 h-14 bg-secondary rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden border border-border/30 group-hover:scale-105 group-hover:border-primary/30 transition-all duration-300">
                         <img 
                           src={job.companyLogo} 
                           alt={job.company}
@@ -535,26 +535,26 @@ const HomeJobsSection = () => {
                                 <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
                               </h3>
                               {job.isFeatured && (
-                                <span className="px-2 py-0.5 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 text-xs font-semibold rounded-full flex items-center gap-1 animate-pulse">
+                                <span className="px-2 py-0.5 bg-primary/10 text-primary text-xs font-semibold rounded-full flex items-center gap-1">
                                   <Sparkles className="h-3 w-3" />
                                   Featured
                                 </span>
                               )}
                             </div>
                             <div className="flex items-center gap-3 text-sm mb-3">
-                              <span className="font-medium text-foreground group-hover:text-primary/80 transition-colors">{job.company}</span>
+                              <span className="font-medium text-foreground">{job.company}</span>
                               {job.isNew && (
-                                <span className="px-2.5 py-0.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full animate-pulse">
+                                <span className="px-2.5 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded-full">
                                   NEW
                                 </span>
                               )}
                             </div>
                             <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                              <span className="flex items-center gap-1.5 bg-muted/50 px-3 py-1 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                              <span className="flex items-center gap-1.5 bg-secondary px-3 py-1 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-all">
                                 <MapPin className="h-3.5 w-3.5 text-primary" />
                                 {job.location}
                               </span>
-                              <span className="flex items-center gap-1.5 bg-muted/50 px-3 py-1 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                              <span className="flex items-center gap-1.5 bg-secondary px-3 py-1 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-all">
                                 <Building2 className="h-3.5 w-3.5 text-primary" />
                                 {job.type}
                               </span>
@@ -562,18 +562,18 @@ const HomeJobsSection = () => {
                           </div>
 
                           <div className="text-right flex-shrink-0">
-                            <div className="text-lg font-bold bg-gradient-to-r from-primary to-violet-600 bg-clip-text text-transparent mb-2 group-hover:scale-105 transition-transform origin-right">
+                            <div className="text-lg font-bold text-primary mb-2">
                               {job.salary}
                             </div>
                             <button 
                               onClick={(e) => toggleSaveJob(job.id, e)}
                               className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-110 ${
                                 savedJobs.includes(job.id)
-                                  ? 'bg-primary/10 text-primary shadow-lg shadow-primary/20'
-                                  : 'hover:bg-muted text-muted-foreground hover:text-primary'
+                                  ? 'bg-primary/10 text-primary'
+                                  : 'hover:bg-secondary text-muted-foreground hover:text-primary'
                               }`}
                             >
-                              <Bookmark className={`h-5 w-5 transition-all duration-300 ${savedJobs.includes(job.id) ? 'fill-current scale-110' : ''}`} />
+                              <Bookmark className={`h-5 w-5 transition-all duration-300 ${savedJobs.includes(job.id) ? 'fill-current' : ''}`} />
                             </button>
                           </div>
                         </div>
@@ -584,14 +584,13 @@ const HomeJobsSection = () => {
                             {job.skills.map((skill, skillIndex) => (
                               <span 
                                 key={skillIndex}
-                                className="px-3 py-1.5 bg-gradient-to-r from-muted to-muted/70 text-foreground text-xs font-medium rounded-lg border border-border/30 hover:border-primary/50 hover:from-primary/10 hover:to-violet-500/10 hover:text-primary hover:scale-105 transition-all duration-300 cursor-default"
-                                style={{ transitionDelay: `${skillIndex * 50}ms` }}
+                                className="px-3 py-1.5 bg-secondary text-foreground text-xs font-medium rounded-lg border border-border/30 hover:border-primary/50 hover:bg-primary/10 hover:text-primary transition-all duration-300 cursor-default"
                               >
                                 {skill}
                               </span>
                             ))}
                           </div>
-                          <span className="text-xs text-muted-foreground flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-all">
+                          <span className="text-xs text-muted-foreground flex items-center gap-1.5 bg-secondary px-3 py-1.5 rounded-full">
                             <Clock className="h-3.5 w-3.5" />
                             {job.postedTime}
                           </span>
@@ -605,7 +604,7 @@ const HomeJobsSection = () => {
 
             {/* Load More */}
             <div className="text-center mt-10">
-              <Button className="px-10 py-6 bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-semibold rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300">
+              <Button className="px-10 py-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300">
                 Load More Jobs
               </Button>
             </div>
