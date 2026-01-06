@@ -5,6 +5,7 @@ import DesktopNavigation from './header/DesktopNavigation';
 import AuthButtons from './header/AuthButtons';
 import MobileMenuToggle from './header/MobileMenuToggle';
 import MobileMenu from './header/MobileMenu';
+import ThemeToggle from './header/ThemeToggle';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,13 +45,15 @@ const Header = () => {
             <DesktopNavigation isDark />
           </div>
 
-          {/* Auth Buttons - Right side */}
+          {/* Auth Buttons & Theme Toggle - Right side */}
           <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
+            <ThemeToggle isDark />
             <AuthButtons isDark />
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center">
+          {/* Mobile Menu Button & Theme Toggle */}
+          <div className="lg:hidden flex items-center gap-2">
+            <ThemeToggle isDark />
             <MobileMenuToggle isOpen={mobileMenuOpen} onToggle={toggleMobileMenu} isDark />
           </div>
         </div>
