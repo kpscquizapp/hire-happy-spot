@@ -1,12 +1,9 @@
-
 import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 import Hero from '@/components/Hero';
+import HomeJobsSection from '@/components/HomeJobsSection';
 import FeaturedCompanies from '@/components/FeaturedCompanies';
-import JobCategories from '@/components/JobCategories';
-import JobLocations from '@/components/JobLocations';
 import SmartCareerTools from '@/components/SmartCareerTools';
-import TalentMarketplace from '@/components/TalentMarketplace';
 import Footer from '@/components/Footer';
 
 const Index = () => {
@@ -40,11 +37,9 @@ const Index = () => {
       <Header />
       <main>
         <Hero />
+        <HomeJobsSection />
         <FeaturedCompanies />
-        <JobCategories />
-        <JobLocations />
         <SmartCareerTools />
-        <TalentMarketplace />
       </main>
       <Footer />
     </div>
