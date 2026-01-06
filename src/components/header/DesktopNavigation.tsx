@@ -72,7 +72,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           title: 'Register',
           items: [
             { label: 'List Your Talent', href: '/list-bench-talent', description: 'Add bench resources' },
-            { label: 'Register as Talent', href: '/register-talent', description: 'Create your profile' },
+            { label: 'Register as Talent', href: '/candidate-register', description: 'Create your profile' },
           ]
         }
       ]
