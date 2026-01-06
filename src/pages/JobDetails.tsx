@@ -367,9 +367,101 @@ const JobDetails = () => {
             </div>
           </div>
         </div>
+
+        {/* Similar Jobs Section */}
+        <SimilarJobs currentJob={job} />
       </main>
       
       <Footer />
+    </div>
+  );
+};
+
+// Similar Jobs Component
+const SimilarJobs = ({ currentJob }: { currentJob: typeof jobListings[0] }) => {
+  const navigate = useNavigate();
+  
+  // Find similar jobs based on skills, industry, or job type
+  const similarJobs = jobListings
+    .filter(job => {
+      if (job.id === currentJob.id) return false;
+      
+      // Match by skills
+      const sharedSkills = job.skills?.filter(skill => 
+        currentJob.skills?.includes(skill)
+      ) || [];
+      if (sharedSkills.length > 0) return true;
+      
+      // Match by industry
+      if (job.industry && job.industry === currentJob.industry) return true;
+      
+      // Match by job type
+      if (job.type.en === currentJob.type.en) return true;
+      
+      return false;
+    })
+    .slice(0, 4);
+
+  if (similarJobs.length === 0) return null;
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-foreground">Similar Jobs</h2>
+        <p className="text-sm text-muted-foreground mt-1">Other positions you might be interested in</p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {similarJobs.map((job) => (
+          <div 
+            key={job.id}
+            onClick={() => navigate(`/jobs/${job.id}`)}
+            className="bg-card rounded-xl p-5 border border-border/50 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all cursor-pointer group"
+          >
+            {/* Company Logo & Badge */}
+            <div className="flex items-start justify-between mb-4">
+              <div className="w-11 h-11 bg-gradient-to-br from-primary/10 to-violet-500/10 rounded-lg flex items-center justify-center border border-primary/20">
+                <span className="text-lg font-bold text-primary">{job.company[0]}</span>
+              </div>
+              {job.featured && (
+                <Badge className="bg-amber-100 text-amber-700 text-xs">Featured</Badge>
+              )}
+            </div>
+
+            {/* Job Info */}
+            <h3 className="font-semibold text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors">
+              {job.title.en}
+            </h3>
+            <p className="text-sm text-muted-foreground mb-3">{job.company}</p>
+            
+            {/* Location & Type */}
+            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+              <MapPin className="h-3.5 w-3.5" />
+              <span className="truncate">{job.location}</span>
+            </div>
+            
+            {/* Salary & Type */}
+            <div className="flex items-center justify-between pt-3 border-t border-border/50">
+              <span className="text-sm font-semibold text-primary">₹{job.salary}</span>
+              <Badge variant="outline" className="text-xs">
+                {job.type.en}
+              </Badge>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {/* View All Button */}
+      <div className="text-center mt-6">
+        <Button 
+          variant="outline" 
+          onClick={() => navigate('/jobs')}
+          className="rounded-xl px-8"
+        >
+          View All Jobs
+          <ArrowRight className="h-4 w-4 ml-2" />
+        </Button>
+      </div>
     </div>
   );
 };
