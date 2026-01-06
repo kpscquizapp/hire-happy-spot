@@ -272,31 +272,69 @@ const FilterContent: React.FC<{
 };
 
 const topCompanies = [
-  { name: 'Infosys', logo: 'https://logo.clearbit.com/infosys.com' },
-  { name: 'TCS', logo: 'https://logo.clearbit.com/tcs.com' },
-  { name: 'Wipro', logo: 'https://logo.clearbit.com/wipro.com' },
-  { name: 'Accenture', logo: 'https://logo.clearbit.com/accenture.com' },
-  { name: 'IBM', logo: 'https://logo.clearbit.com/ibm.com' },
+  { name: 'Infosys', logo: 'https://companieslogo.com/img/orig/INFY-1f0d6412.png?t=1720244492' },
+  { name: 'Wipro', logo: 'https://companieslogo.com/img/orig/WIT-a3015b82.png?t=1720244495' },
+  { name: 'HCL', logo: 'https://companieslogo.com/img/orig/HCLTECH.NS-29c68f6e.png?t=1720244493' },
+  { name: 'TCS', logo: 'https://companieslogo.com/img/orig/TCS.NS-7401f1bd.png?t=1720244494' },
+  { name: 'Cognizant', logo: 'https://companieslogo.com/img/orig/CTSH-82a8444b.png?t=1720244491' },
+  { name: 'Mindtree', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Mindtree_logo.svg/320px-Mindtree_logo.svg.png' },
 ];
 
 const JobSearch = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const query = searchParams.get('query') || '';
   const quickFilter = searchParams.get('filter') || '';
   
-  const [sortBy, setSortBy] = useState('default');
+  // Parse URL filter parameters
+  const getFiltersFromURL = () => {
+    const filters: Record<string, string[]> = {
+      category: [],
+      salary: [],
+      experience: [],
+      type: [],
+      location: [],
+      skills: [],
+    };
+    
+    Object.keys(filters).forEach(key => {
+      const value = searchParams.get(key);
+      if (value) {
+        filters[key] = value.split(',');
+      }
+    });
+    
+    return filters;
+  };
+
+  const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'default');
   const [savedJobs, setSavedJobs] = useState<number[]>([]);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [openFilters, setOpenFilters] = useState<string[]>(['category', 'skills']);
-  const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
-    category: [],
-    salary: [],
-    experience: [],
-    type: [],
-    location: [],
-    skills: [],
-  });
+  const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>(getFiltersFromURL());
+
+  // Update URL when filters change
+  const updateURLParams = (newFilters: Record<string, string[]>, newSort?: string) => {
+    const params = new URLSearchParams(searchParams);
+    
+    // Update filter params
+    Object.keys(newFilters).forEach(key => {
+      if (newFilters[key].length > 0) {
+        params.set(key, newFilters[key].join(','));
+      } else {
+        params.delete(key);
+      }
+    });
+    
+    // Update sort param
+    if (newSort && newSort !== 'default') {
+      params.set('sort', newSort);
+    } else if (newSort === 'default') {
+      params.delete('sort');
+    }
+    
+    setSearchParams(params);
+  };
 
   const toggleFilter = (filter: string) => {
     setOpenFilters(prev => 
@@ -307,27 +345,35 @@ const JobSearch = () => {
   };
 
   const handleFilterChange = (category: string, filterId: string) => {
-    setSelectedFilters(prev => ({
-      ...prev,
-      [category]: prev[category].includes(filterId)
-        ? prev[category].filter(f => f !== filterId)
-        : [...prev[category], filterId]
-    }));
+    const newFilters = {
+      ...selectedFilters,
+      [category]: selectedFilters[category].includes(filterId)
+        ? selectedFilters[category].filter(f => f !== filterId)
+        : [...selectedFilters[category], filterId]
+    };
+    setSelectedFilters(newFilters);
+    updateURLParams(newFilters);
+  };
+
+  const handleSortChange = (newSort: string) => {
+    setSortBy(newSort);
+    updateURLParams(selectedFilters, newSort);
   };
 
   const clearAllFilters = () => {
-    setSelectedFilters({
+    const emptyFilters = {
       category: [],
       salary: [],
       experience: [],
       type: [],
       location: [],
       skills: [],
-    });
-    // Also clear URL filter
-    if (quickFilter) {
-      navigate('/jobs');
-    }
+    };
+    setSelectedFilters(emptyFilters);
+    // Clear all URL params
+    const params = new URLSearchParams();
+    if (query) params.set('query', query);
+    setSearchParams(params);
   };
 
   const totalSelected = Object.values(selectedFilters).flat().length + (quickFilter ? 1 : 0);
@@ -371,26 +417,86 @@ const JobSearch = () => {
             break;
         }
       }
+
+      // URL-based filter matching
+      let matchesCategoryFilter = selectedFilters.category.length === 0;
+      if (!matchesCategoryFilter) {
+        const categoryMap: Record<string, string[]> = {
+          'it': ['IT & Software', 'Blockchain'],
+          'finance': ['Banking & Finance', 'FinTech'],
+          'marketing': ['Marketing'],
+          'healthcare': ['Healthcare'],
+          'design': ['Design', 'EdTech', 'Gaming & Sports'],
+        };
+        matchesCategoryFilter = selectedFilters.category.some(cat => 
+          categoryMap[cat]?.some(ind => job.industry?.toLowerCase().includes(ind.toLowerCase()))
+        );
+      }
+
+      let matchesTypeFilter = selectedFilters.type.length === 0;
+      if (!matchesTypeFilter) {
+        matchesTypeFilter = selectedFilters.type.some(type => 
+          job.contractType === type || job.type.en.toLowerCase().includes(type)
+        );
+      }
+
+      let matchesLocationFilter = selectedFilters.location.length === 0;
+      if (!matchesLocationFilter) {
+        matchesLocationFilter = selectedFilters.location.some(loc => 
+          job.location.toLowerCase().includes(loc.toLowerCase())
+        );
+      }
+
+      let matchesExperienceFilter = selectedFilters.experience.length === 0;
+      if (!matchesExperienceFilter) {
+        const expMap: Record<string, (exp: string) => boolean> = {
+          'fresher': (exp) => exp.includes('0') || exp.toLowerCase().includes('fresher'),
+          '1-3': (exp) => exp.includes('1') || exp.includes('2') || exp.includes('3'),
+          '3-5': (exp) => exp.includes('3') || exp.includes('4') || exp.includes('5'),
+          '5-10': (exp) => exp.includes('5') || exp.includes('6') || exp.includes('7') || exp.includes('8') || exp.includes('9') || exp.includes('10'),
+          '10+': (exp) => parseInt(exp.split('-')[0]) >= 10 || exp.includes('10') || exp.includes('12') || exp.includes('15'),
+        };
+        matchesExperienceFilter = selectedFilters.experience.some(exp => 
+          job.experience && expMap[exp]?.(job.experience)
+        );
+      }
+
+      let matchesSkillsFilter = selectedFilters.skills.length === 0;
+      if (!matchesSkillsFilter) {
+        const skillMap: Record<string, string[]> = {
+          'javascript': ['JavaScript', 'TypeScript', 'React', 'Node.js'],
+          'python': ['Python'],
+          'react': ['React'],
+          'java': ['Java', 'Spring Boot'],
+          'nodejs': ['Node.js'],
+          'aws': ['AWS'],
+          'sql': ['SQL', 'MySQL', 'PostgreSQL'],
+          'typescript': ['TypeScript'],
+        };
+        matchesSkillsFilter = selectedFilters.skills.some(skill =>
+          job.skills?.some(s => skillMap[skill]?.some(mapped => s.toLowerCase().includes(mapped.toLowerCase())))
+        );
+      }
       
-      return matchesQuery && matchesQuickFilter;
+      return matchesQuery && matchesQuickFilter && matchesCategoryFilter && matchesTypeFilter && matchesLocationFilter && matchesExperienceFilter && matchesSkillsFilter;
     });
 
     if (sortBy === 'salary-high') {
       jobs.sort((a, b) => {
-        const salaryA = parseInt(a.salary.split('-')[0]);
-        const salaryB = parseInt(b.salary.split('-')[0]);
+        const salaryA = parseInt(a.salary.split('-')[0]) || 0;
+        const salaryB = parseInt(b.salary.split('-')[0]) || 0;
         return salaryB - salaryA;
       });
     } else if (sortBy === 'salary-low') {
       jobs.sort((a, b) => {
-        const salaryA = parseInt(a.salary.split('-')[0]);
-        const salaryB = parseInt(b.salary.split('-')[0]);
+        const salaryA = parseInt(a.salary.split('-')[0]) || 0;
+        const salaryB = parseInt(b.salary.split('-')[0]) || 0;
         return salaryA - salaryB;
       });
     }
 
     return jobs;
-  }, [query, sortBy, quickFilter]);
+  }, [query, sortBy, quickFilter, selectedFilters]);
 
   const toggleSaveJob = (jobId: number, e: React.MouseEvent) => {
     e.preventDefault();
@@ -533,7 +639,7 @@ const JobSearch = () => {
                     <span className="text-xs sm:text-sm text-muted-foreground bg-secondary px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
                       <span className="font-semibold text-foreground">{filteredJobs.length}</span> jobs
                     </span>
-                    <Select value={sortBy} onValueChange={setSortBy}>
+                    <Select value={sortBy} onValueChange={handleSortChange}>
                       <SelectTrigger className="w-[140px] sm:w-[160px] bg-card border-border/50 text-sm">
                         <SelectValue placeholder="Sort by" />
                       </SelectTrigger>
