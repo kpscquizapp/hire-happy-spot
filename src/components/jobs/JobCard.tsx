@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { ChevronRight, Clock, MapPin, Briefcase, Star } from 'lucide-react';
+import { ChevronRight, Clock, MapPin, Briefcase, Star, Bookmark } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -12,56 +12,83 @@ interface JobCardProps {
 
 const JobCard = ({ job }: JobCardProps) => {
   const { translations } = useLanguage();
+  const [isSaved, setIsSaved] = React.useState(false);
 
   return (
-    <Card key={job.id} className="fade-in-section bg-white rounded-2xl p-0 overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border-0 group h-full">
-      <div className="absolute inset-0 bg-gradient-to-br from-teal-600/[0.01] to-sky-400/[0.03] group-hover:opacity-100 opacity-0 transition-opacity"></div>
-      
-      <div className="relative p-8 flex flex-col h-full">
+    <Card 
+      key={job.id} 
+      className="premium-card bg-card p-0 overflow-hidden border-border/50 group h-full"
+    >
+      <div className="relative p-6 flex flex-col h-full">
+        {/* Header */}
         <div className="flex justify-between items-start mb-4">
-          <div className="flex items-center gap-2">
-            <span className="inline-block bg-teal-50 text-teal-600 px-3 py-1 rounded-full text-sm font-medium border border-teal-100/50">
-              {job.company}
-            </span>
-            {job.featured && (
-              <span className="inline-flex items-center bg-amber-50 text-amber-600 px-3 py-1 rounded-full text-sm font-medium border border-amber-100/50">
-                <Star className="h-3.5 w-3.5 mr-1 text-amber-500" />
-                {translations.featured}
-              </span>
-            )}
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+              <span className="text-primary font-bold text-lg">{job.company.charAt(0)}</span>
+            </div>
+            <div>
+              <span className="text-sm font-medium text-foreground">{job.company}</span>
+              {job.featured && (
+                <div className="flex items-center gap-1 mt-0.5">
+                  <Star className="h-3 w-3 text-primary fill-primary" />
+                  <span className="text-xs text-primary font-medium">{translations.featured}</span>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="w-3 h-3 rounded-full bg-teal-500 animate-pulse"></div>
+          <button 
+            onClick={() => setIsSaved(!isSaved)}
+            className={`p-2 rounded-lg transition-all ${
+              isSaved 
+                ? 'bg-primary/10 text-primary' 
+                : 'bg-secondary text-muted-foreground hover:bg-primary/10 hover:text-primary'
+            }`}
+          >
+            <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-current' : ''}`} />
+          </button>
         </div>
         
-        <h3 className="text-2xl font-bold text-neutral-900 mb-3 leading-tight group-hover:text-teal-600 transition-colors">
+        {/* Title */}
+        <h3 className="text-xl font-bold text-foreground mb-3 leading-tight group-hover:text-primary transition-colors">
           {job.title.en}
         </h3>
         
-        <p className="text-neutral-600 mb-6 line-clamp-3 flex-grow">
+        {/* Description */}
+        <p className="text-muted-foreground text-sm mb-5 line-clamp-2 flex-grow leading-relaxed">
           {job.description.en}
         </p>
         
-        <div className="flex flex-wrap gap-3 mb-6">
-          <div className="flex items-center bg-neutral-50 px-3 py-2 rounded-lg text-sm text-neutral-700 border border-neutral-100">
-            <Briefcase className="h-4 w-4 mr-2 text-teal-500" />
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mb-5">
+          <div className="flex items-center bg-secondary px-3 py-1.5 rounded-lg text-xs font-medium text-foreground">
+            <Briefcase className="h-3.5 w-3.5 mr-1.5 text-primary" />
             {job.salary}
           </div>
-          <div className="flex items-center bg-neutral-50 px-3 py-2 rounded-lg text-sm text-neutral-700 border border-neutral-100">
-            <MapPin className="h-4 w-4 mr-2 text-teal-500" />
+          <div className="flex items-center bg-secondary px-3 py-1.5 rounded-lg text-xs font-medium text-foreground">
+            <MapPin className="h-3.5 w-3.5 mr-1.5 text-primary" />
             {job.location}
           </div>
-          <div className="flex items-center bg-neutral-50 px-3 py-2 rounded-lg text-sm text-neutral-700 border border-neutral-100">
-            <Clock className="h-4 w-4 mr-2 text-teal-500" />
+          <div className="flex items-center bg-secondary px-3 py-1.5 rounded-lg text-xs font-medium text-foreground">
+            <Clock className="h-3.5 w-3.5 mr-1.5 text-primary" />
             {job.type.en}
           </div>
         </div>
         
-        <div className="flex justify-between items-center mt-auto pt-4 border-t border-neutral-100">
-          <a href={`/company/${job.company.toLowerCase()}`} className="text-neutral-600 hover:text-teal-600 transition-colors text-sm font-medium">
+        {/* Footer */}
+        <div className="flex justify-between items-center pt-4 border-t border-border">
+          <a 
+            href={`/company/${job.company.toLowerCase()}`} 
+            className="text-muted-foreground hover:text-primary transition-colors text-sm font-medium"
+          >
             {translations.aboutCompany} {job.company}
           </a>
-          <Button variant="default" size="sm" className="bg-teal-600 hover:bg-teal-700 text-white rounded-full">
-            {translations.apply} <ChevronRight className="ml-1 h-4 w-4 inline" />
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/25 transition-all hover:-translate-y-0.5"
+          >
+            {translations.apply} 
+            <ChevronRight className="ml-1 h-4 w-4" />
           </Button>
         </div>
       </div>
