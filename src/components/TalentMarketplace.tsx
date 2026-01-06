@@ -1,6 +1,6 @@
-
 import React from 'react';
-import { Users, CheckCircle, ArrowRight, Search, Briefcase } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Users, CheckCircle, Search, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const features = [
@@ -19,6 +19,8 @@ const features = [
 ];
 
 const TalentMarketplace = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-16 bg-background overflow-hidden">
       <div className="container mx-auto px-4">
@@ -53,10 +55,17 @@ const TalentMarketplace = () => {
             
             {/* CTA Buttons */}
             <div className="flex flex-wrap gap-4">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-5 rounded-lg">
+              <Button 
+                onClick={() => navigate('/find-talent')}
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-5 rounded-lg"
+              >
                 Find Talent
               </Button>
-              <Button variant="outline" className="border-border text-foreground px-6 py-5 rounded-lg hover:bg-muted">
+              <Button 
+                variant="outline" 
+                onClick={() => navigate('/register-talent')}
+                className="border-border text-foreground px-6 py-5 rounded-lg hover:bg-muted"
+              >
                 Register as Talent
               </Button>
             </div>
@@ -107,12 +116,14 @@ const TalentMarketplace = () => {
           <div className="flex flex-wrap justify-center gap-4">
             <Button 
               variant="outline" 
+              onClick={() => navigate('/jobs')}
               className="bg-white text-primary hover:bg-white/90 border-white px-6 py-5 rounded-lg font-semibold"
             >
               <Search className="mr-2 h-4 w-4" />
               Find Jobs
             </Button>
             <Button 
+              onClick={() => navigate('/employer-dashboard/post-job')}
               className="bg-primary/20 hover:bg-primary/30 text-white border border-white/20 px-6 py-5 rounded-lg font-semibold"
             >
               <Briefcase className="mr-2 h-4 w-4" />

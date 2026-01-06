@@ -298,6 +298,7 @@ const Hero = () => {
             <Button
               variant="outline"
               size="sm"
+              onClick={() => navigate('/jobs')}
               className="rounded-xl bg-white text-foreground border-white hover:bg-white/90 font-medium shadow-lg transition-all hover:-translate-y-0.5"
             >
               <SlidersHorizontal className="h-4 w-4 mr-2" />
@@ -309,7 +310,12 @@ const Hero = () => {
                 key={filter.id}
                 variant="outline"
                 size="sm"
-                onClick={() => setActiveFilter(activeFilter === filter.id ? null : filter.id)}
+                onClick={() => {
+                  // Navigate to jobs page with filter
+                  const params = new URLSearchParams();
+                  params.append('filter', filter.id);
+                  navigate(`/jobs?${params.toString()}`);
+                }}
                 className={`rounded-xl font-medium transition-all hover:-translate-y-0.5 ${
                   activeFilter === filter.id
                     ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25'

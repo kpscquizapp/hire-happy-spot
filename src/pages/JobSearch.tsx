@@ -283,6 +283,7 @@ const JobSearch = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const query = searchParams.get('query') || '';
+  const quickFilter = searchParams.get('filter') || '';
   
   const [sortBy, setSortBy] = useState('default');
   const [savedJobs, setSavedJobs] = useState<number[]>([]);
@@ -323,17 +324,55 @@ const JobSearch = () => {
       location: [],
       skills: [],
     });
+    // Also clear URL filter
+    if (quickFilter) {
+      navigate('/jobs');
+    }
   };
 
-  const totalSelected = Object.values(selectedFilters).flat().length;
+  const totalSelected = Object.values(selectedFilters).flat().length + (quickFilter ? 1 : 0);
 
   const filteredJobs = useMemo(() => {
     let jobs = jobListings.filter(job => {
+      // Text search
       const matchesQuery = query === '' || 
         job.title.en.toLowerCase().includes(query.toLowerCase()) ||
         job.company.toLowerCase().includes(query.toLowerCase()) ||
         job.skills?.some(skill => skill.toLowerCase().includes(query.toLowerCase()));
-      return matchesQuery;
+      
+      // Quick filter matching
+      let matchesQuickFilter = true;
+      if (quickFilter) {
+        switch (quickFilter) {
+          case 'remote':
+            matchesQuickFilter = job.type.en.toLowerCase().includes('remote') || 
+                                 job.location.toLowerCase().includes('remote');
+            break;
+          case 'engineering':
+            matchesQuickFilter = job.title.en.toLowerCase().includes('engineer') ||
+                                 job.title.en.toLowerCase().includes('developer') ||
+                                 job.industry?.toLowerCase().includes('software') ||
+                                 job.skills?.some(s => ['React', 'Node.js', 'Java', 'Python', 'AWS', 'Docker', 'Kubernetes'].includes(s));
+            break;
+          case 'product':
+            matchesQuickFilter = job.title.en.toLowerCase().includes('product') ||
+                                 job.skills?.some(s => s.toLowerCase().includes('product'));
+            break;
+          case 'design':
+            matchesQuickFilter = job.title.en.toLowerCase().includes('design') ||
+                                 job.title.en.toLowerCase().includes('ui') ||
+                                 job.title.en.toLowerCase().includes('ux') ||
+                                 job.skills?.some(s => ['Figma', 'UI Design', 'UX', 'Prototyping'].includes(s));
+            break;
+          case 'marketing':
+            matchesQuickFilter = job.title.en.toLowerCase().includes('marketing') ||
+                                 job.industry?.toLowerCase().includes('marketing') ||
+                                 job.skills?.some(s => s.toLowerCase().includes('marketing'));
+            break;
+        }
+      }
+      
+      return matchesQuery && matchesQuickFilter;
     });
 
     if (sortBy === 'salary-high') {
@@ -351,7 +390,7 @@ const JobSearch = () => {
     }
 
     return jobs;
-  }, [query, sortBy]);
+  }, [query, sortBy, quickFilter]);
 
   const toggleSaveJob = (jobId: number, e: React.MouseEvent) => {
     e.preventDefault();
@@ -468,12 +507,28 @@ const JobSearch = () => {
 
                 {/* Jobs Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
-                  <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 sm:gap-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg sm:rounded-xl flex items-center justify-center">
-                      <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
-                    </div>
-                    {query ? `Results for "${query}"` : 'All Jobs'}
-                  </h2>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 sm:gap-3">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg sm:rounded-xl flex items-center justify-center">
+                        <Zap className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
+                      </div>
+                      {query ? `Results for "${query}"` : quickFilter ? `${quickFilter.charAt(0).toUpperCase() + quickFilter.slice(1)} Jobs` : 'All Jobs'}
+                    </h2>
+                    {quickFilter && (
+                      <div className="flex items-center gap-2 mt-2 ml-12">
+                        <span className="text-xs bg-primary/10 text-primary px-3 py-1 rounded-full font-medium flex items-center gap-1">
+                          Filter: {quickFilter.charAt(0).toUpperCase() + quickFilter.slice(1)}
+                          <button 
+                            onClick={() => navigate('/jobs')}
+                            className="ml-1 hover:bg-primary/20 rounded-full p-0.5"
+                          >
+                            <span className="sr-only">Remove filter</span>
+                            ×
+                          </button>
+                        </span>
+                      </div>
+                    )}
+                  </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs sm:text-sm text-muted-foreground bg-secondary px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
                       <span className="font-semibold text-foreground">{filteredJobs.length}</span> jobs
