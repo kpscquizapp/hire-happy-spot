@@ -21,7 +21,7 @@ const AuthButtons = ({ isMobile = false, isDark = false }: AuthButtonsProps) => 
     return (
       <div className="flex flex-col space-y-3">
         <Link 
-          to="/register-talent" 
+          to="/candidate-register" 
           className="flex items-center justify-center px-4 py-3 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors font-medium text-sm"
         >
           Upload CV
@@ -56,7 +56,7 @@ const AuthButtons = ({ isMobile = false, isDark = false }: AuthButtonsProps) => 
         )}
         asChild
       >
-        <Link to="/register-talent">
+        <Link to="/candidate-register">
           Upload CV
         </Link>
       </Button>

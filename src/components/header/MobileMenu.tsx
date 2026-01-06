@@ -36,7 +36,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
       items: [
         { label: 'Browse Talent', href: '/find-talent' },
         { label: 'List Your Talent', href: '/list-bench-talent' },
-        { label: 'Register as Talent', href: '/register-talent' },
+        { label: 'Register as Talent', href: '/candidate-register' },
       ]
     },
     {

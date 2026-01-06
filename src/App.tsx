@@ -22,6 +22,7 @@ import JobDetails from "./pages/JobDetails";
 import ListBenchTalent from "./pages/ListBenchTalent";
 import CandidateLogin from "./pages/CandidateLogin";
 import CandidateProfile from "./pages/CandidateProfile";
+import CandidateRegistration from "./pages/CandidateRegistration";
 import JobRecommendations from "./pages/JobRecommendations";
 import SkillsAssessment from "./pages/SkillsAssessment";
 import SavedJobs from "./pages/SavedJobs";
@@ -77,6 +78,7 @@ const App = () => (
                 <Route path="/job/:id" element={<JobDetails />} />
                 <Route path="/list-bench-talent" element={<ListBenchTalent />} />
                 <Route path="/candidate-login" element={<CandidateLogin />} />
+                <Route path="/candidate-register" element={<CandidateRegistration />} />
                 <Route path="/profile" element={<CandidateProfile />} />
                 <Route path="/job-recommendations" element={<JobRecommendations />} />
                 <Route path="/skills-assessment" element={<SkillsAssessment />} />
