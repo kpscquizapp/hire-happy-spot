@@ -5,40 +5,40 @@
 
 @layer base {
   :root {
-    /* 3-Color Premium Palette: Navy, Emerald, White */
-    --background: 0 0% 99%;
+    /* Premium Palette: Navy, Emerald, Soft Cream */
+    --background: 40 30% 96%;
     --foreground: 222 47% 11%;
 
-    --card: 0 0% 100%;
+    --card: 40 25% 98%;
     --card-foreground: 222 47% 11%;
 
-    --popover: 0 0% 100%;
+    --popover: 40 25% 98%;
     --popover-foreground: 222 47% 11%;
 
     /* Primary: Emerald/Teal - The accent color */
     --primary: 160 84% 39%;
-    --primary-foreground: 0 0% 100%;
+    --primary-foreground: 40 25% 98%;
     --primary-glow: 160 74% 45%;
 
-    /* Secondary: Light neutral */
-    --secondary: 220 14% 96%;
+    /* Secondary: Warm neutral */
+    --secondary: 40 20% 93%;
     --secondary-foreground: 222 47% 11%;
 
-    /* Muted: Soft grays */
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    /* Muted: Warm soft tones */
+    --muted: 40 15% 92%;
+    --muted-foreground: 30 10% 40%;
 
     /* Accent: Same as primary for consistency */
     --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 100%;
+    --accent-foreground: 40 25% 98%;
     --accent-glow: 160 74% 45%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 40 25% 98%;
 
     /* Borders and inputs */
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
     --ring: 160 84% 39%;
 
     --radius: 0.75rem;
@@ -46,21 +46,21 @@
     /* Premium Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(160 84% 39%), hsl(160 74% 45%));
     --gradient-dark: linear-gradient(135deg, hsl(222 47% 11%), hsl(222 47% 18%));
-    --gradient-soft: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 14% 98%));
+    --gradient-soft: linear-gradient(180deg, hsl(40 25% 98%), hsl(40 20% 95%));
     
     /* Premium Shadows */
-    --shadow-elegant: 0 4px 20px -4px hsl(222 47% 11% / 0.08);
-    --shadow-card: 0 1px 3px hsl(222 47% 11% / 0.04), 0 8px 24px -4px hsl(222 47% 11% / 0.06);
+    --shadow-elegant: 0 4px 20px -4px hsl(30 20% 20% / 0.1);
+    --shadow-card: 0 1px 3px hsl(30 20% 20% / 0.05), 0 8px 24px -4px hsl(30 20% 20% / 0.08);
     --shadow-glow: 0 0 40px hsl(160 84% 39% / 0.15);
 
     /* Sidebar */
-    --sidebar-background: 0 0% 99%;
+    --sidebar-background: 40 30% 96%;
     --sidebar-foreground: 222 47% 11%;
     --sidebar-primary: 160 84% 39%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 160 20% 96%;
+    --sidebar-primary-foreground: 40 25% 98%;
+    --sidebar-accent: 160 20% 94%;
     --sidebar-accent-foreground: 160 84% 30%;
-    --sidebar-border: 220 13% 91%;
+    --sidebar-border: 40 15% 88%;
     --sidebar-ring: 160 84% 39%;
 
     /* Navy color for dark backgrounds */
@@ -132,7 +132,7 @@
 @layer components {
   /* Premium Glass Effects */
   .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-white/20;
+    @apply bg-[hsl(40,25%,98%)]/80 backdrop-blur-xl border border-[hsl(40,20%,90%)]/50;
   }
   
   .glass-dark {
@@ -140,7 +140,7 @@
   }
 
   .glass-card {
-    @apply bg-white rounded-2xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elegant)] transition-all duration-300 border border-border/50;
+    @apply bg-card rounded-2xl shadow-[var(--shadow-card)] hover:shadow-[var(--shadow-elegant)] transition-all duration-300 border border-border/50;
   }
   
   /* Premium Buttons */
@@ -158,7 +158,7 @@
   
   /* Premium Input */
   .input-primary {
-    @apply rounded-xl border-border bg-white px-4 py-3 text-foreground shadow-sm transition-all duration-300 placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:ring-offset-0;
+    @apply rounded-xl border-border bg-card px-4 py-3 text-foreground shadow-sm transition-all duration-300 placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 focus:ring-offset-0;
   }
   
   /* Fade Animation */
@@ -172,7 +172,7 @@
 
   /* Premium Card Hover */
   .premium-card {
-    @apply bg-white rounded-2xl border border-border/50 shadow-[var(--shadow-card)] transition-all duration-500;
+    @apply bg-card rounded-2xl border border-border/50 shadow-[var(--shadow-card)] transition-all duration-500;
   }
   
   .premium-card:hover {
