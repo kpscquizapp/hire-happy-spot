@@ -1,16 +1,19 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 
 interface MobileMenuToggleProps {
   isOpen: boolean;
   onToggle: () => void;
+  isDark?: boolean;
 }
 
-const MobileMenuToggle = ({ isOpen, onToggle }: MobileMenuToggleProps) => {
+const MobileMenuToggle = ({ isOpen, onToggle, isDark = false }: MobileMenuToggleProps) => {
   return (
     <button 
-      className="flex items-center text-neutral-900" 
+      className={cn(
+        "flex items-center",
+        isDark ? "text-white" : "text-neutral-900"
+      )}
       onClick={onToggle}
       aria-label="Toggle menu"
     >

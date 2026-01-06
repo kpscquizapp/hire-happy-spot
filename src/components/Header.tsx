@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import Logo from './header/Logo';
 import DesktopNavigation from './header/DesktopNavigation';
-import LanguageSelector from './header/LanguageSelector';
 import AuthButtons from './header/AuthButtons';
 import MobileMenuToggle from './header/MobileMenuToggle';
 import MobileMenu from './header/MobileMenu';
@@ -28,30 +26,30 @@ const Header = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background border-b",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[hsl(222,47%,11%)]",
         isScrolled 
-          ? "py-2 shadow-md border-border" 
-          : "py-3 shadow-sm border-border/50"
+          ? "py-2 shadow-lg" 
+          : "py-3"
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <Logo />
+            <Logo isDark />
           </div>
 
           {/* Desktop Navigation - Centered */}
-          <DesktopNavigation />
+          <DesktopNavigation isDark />
 
           {/* Auth Buttons - Right side */}
           <div className="hidden md:flex items-center gap-3">
-            <AuthButtons />
+            <AuthButtons isDark />
           </div>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
-            <MobileMenuToggle isOpen={mobileMenuOpen} onToggle={toggleMobileMenu} />
+            <MobileMenuToggle isOpen={mobileMenuOpen} onToggle={toggleMobileMenu} isDark />
           </div>
         </div>
       </div>

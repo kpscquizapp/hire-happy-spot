@@ -25,7 +25,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="pt-32 pb-20 bg-[hsl(222,47%,11%)]">
+    <section className="pt-28 pb-12 bg-[hsl(222,47%,11%)]">
       <div className="container mx-auto px-4">
         {/* Hero Content - Centered */}
         <div className="max-w-3xl mx-auto text-center">
