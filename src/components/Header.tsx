@@ -26,36 +26,38 @@ const Header = () => {
   return (
     <header 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-navy-900",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled 
-          ? "py-2 shadow-xl backdrop-blur-xl bg-navy-900/95" 
-          : "py-4"
+          ? "py-2 bg-navy-900/98 backdrop-blur-xl shadow-lg border-b border-white/5" 
+          : "py-3 bg-navy-900"
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between h-12">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center flex-shrink-0">
             <Logo isDark />
           </div>
 
           {/* Desktop Navigation - Centered */}
-          <DesktopNavigation isDark />
+          <div className="hidden lg:flex flex-1 justify-center">
+            <DesktopNavigation isDark />
+          </div>
 
           {/* Auth Buttons - Right side */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
             <AuthButtons isDark />
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <MobileMenuToggle isOpen={mobileMenuOpen} onToggle={toggleMobileMenu} isDark />
           </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <MobileMenu isOpen={mobileMenuOpen} />
+      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     </header>
   );
 };

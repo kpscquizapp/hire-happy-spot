@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Upload } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import UserMenu from './UserMenu';
 import { Button } from '@/components/ui/button';
@@ -20,23 +19,22 @@ const AuthButtons = ({ isMobile = false, isDark = false }: AuthButtonsProps) => 
 
   if (isMobile) {
     return (
-      <div className="mt-6 flex flex-col space-y-3">
+      <div className="flex flex-col space-y-3">
         <Link 
           to="/register-talent" 
-          className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gray-800 text-white hover:bg-gray-700 transition-colors font-medium"
+          className="flex items-center justify-center px-4 py-3 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors font-medium text-sm"
         >
-          <Upload className="h-4 w-4" />
           Upload CV
         </Link>
         <Link 
           to="/candidate-login" 
-          className="flex items-center justify-center px-4 py-3 rounded-lg text-white hover:bg-gray-800 transition-colors font-medium"
+          className="flex items-center justify-center px-4 py-3 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-colors font-medium text-sm"
         >
           Login
         </Link>
         <Link 
           to="/post-job" 
-          className="flex items-center justify-center px-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
+          className="flex items-center justify-center px-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors text-sm"
         >
           Post a Job
         </Link>
@@ -45,15 +43,16 @@ const AuthButtons = ({ isMobile = false, isDark = false }: AuthButtonsProps) => 
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2">
       {/* Upload CV Button */}
       <Button 
-        variant="outline"
+        variant="ghost"
+        size="sm"
         className={cn(
-          "rounded-lg font-medium text-sm px-5",
+          "rounded-lg font-medium text-sm h-9 px-4",
           isDark 
-            ? "bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white" 
-            : "border-primary text-primary hover:bg-primary/5"
+            ? "text-white/80 hover:text-white hover:bg-white/10" 
+            : "text-foreground hover:text-primary hover:bg-primary/5"
         )}
         asChild
       >
@@ -63,21 +62,26 @@ const AuthButtons = ({ isMobile = false, isDark = false }: AuthButtonsProps) => 
       </Button>
 
       {/* Login Link */}
-      <Link 
-        to="/candidate-login"
+      <Button 
+        variant="ghost"
+        size="sm"
         className={cn(
-          "font-medium text-sm transition-colors px-3",
+          "rounded-lg font-medium text-sm h-9 px-4",
           isDark 
-            ? "text-white hover:text-gray-300" 
-            : "text-foreground hover:text-primary"
+            ? "text-white/80 hover:text-white hover:bg-white/10" 
+            : "text-foreground hover:text-primary hover:bg-primary/5"
         )}
+        asChild
       >
-        Login
-      </Link>
+        <Link to="/candidate-login">
+          Login
+        </Link>
+      </Button>
 
       {/* Post a Job Button */}
       <Button 
-        className="rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm px-5"
+        size="sm"
+        className="rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm h-9 px-5"
         asChild
       >
         <Link to="/post-job">

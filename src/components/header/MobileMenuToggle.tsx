@@ -9,27 +9,32 @@ interface MobileMenuToggleProps {
 
 const MobileMenuToggle = ({ isOpen, onToggle, isDark = false }: MobileMenuToggleProps) => {
   return (
-    <button 
-      className={cn(
-        "flex items-center",
-        isDark ? "text-white" : "text-neutral-900"
-      )}
+    <button
       onClick={onToggle}
+      className={cn(
+        "w-10 h-10 flex items-center justify-center rounded-lg transition-colors",
+        isDark 
+          ? "text-white hover:bg-white/10" 
+          : "text-foreground hover:bg-neutral-100"
+      )}
       aria-label="Toggle menu"
     >
-      <div className="space-y-1.5">
+      <div className="w-5 h-4 flex flex-col justify-between">
         <span className={cn(
-          "block h-0.5 w-6 bg-current transition-all duration-300",
-          isOpen && "translate-y-2 rotate-45"
-        )}></span>
+          "block h-0.5 rounded-full transition-all duration-300",
+          isDark ? "bg-white" : "bg-foreground",
+          isOpen && "rotate-45 translate-y-1.5"
+        )} />
         <span className={cn(
-          "block h-0.5 w-6 bg-current transition-all duration-300",
+          "block h-0.5 rounded-full transition-all duration-300",
+          isDark ? "bg-white" : "bg-foreground",
           isOpen && "opacity-0"
-        )}></span>
+        )} />
         <span className={cn(
-          "block h-0.5 w-6 bg-current transition-all duration-300",
-          isOpen && "-translate-y-2 -rotate-45"
-        )}></span>
+          "block h-0.5 rounded-full transition-all duration-300",
+          isDark ? "bg-white" : "bg-foreground",
+          isOpen && "-rotate-45 -translate-y-1.5"
+        )} />
       </div>
     </button>
   );
