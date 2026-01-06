@@ -25,6 +25,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
       items: [
         { label: 'Browse Jobs', href: '/jobs' },
         { label: 'Job Recommendations', href: '/job-recommendations' },
+        { label: 'Saved Jobs', href: '/saved-jobs' },
         { label: 'Career Path Planner', href: '/career-path' },
         { label: 'Skills Assessment', href: '/skills-assessment' },
       ]

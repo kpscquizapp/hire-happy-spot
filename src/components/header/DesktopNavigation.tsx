@@ -43,7 +43,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           items: [
             { label: 'Browse Jobs', href: '/jobs', description: 'Explore opportunities' },
             { label: 'Job Recommendations', href: '/job-recommendations', description: 'AI-powered matches' },
-            { label: 'Saved Jobs', href: '/jobs?saved=true', description: 'Your bookmarked jobs' },
+            { label: 'Saved Jobs', href: '/saved-jobs', description: 'Your bookmarked jobs' },
           ]
         },
         {
