@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
@@ -16,441 +17,660 @@ import {
 } from '@/components/ui/select';
 import {
   FileText,
+  MapPin,
+  CheckCircle2,
+  X,
+  Save,
+  Eye,
+  Send,
+  Bold,
+  Italic,
+  List,
+  Link2,
   Briefcase,
   Settings,
-  Eye,
-  CheckCircle,
-  X,
-  Sparkles,
-  ArrowLeft,
-  ArrowRight,
-  Save,
-  Lightbulb
+  Shield
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-const steps = [
-  { id: 1, title: 'Job Details', icon: FileText },
-  { id: 2, title: 'Skills & Requirements', icon: Briefcase },
-  { id: 3, title: 'Hiring Preferences', icon: Settings },
-  { id: 4, title: 'Review & Publish', icon: Eye },
-];
+interface JobFormData {
+  // Basic Information
+  jobTitle: string;
+  jobDescription: string;
+  jobCategory: string;
+  jobRole: string;
+  
+  // Employment & Location
+  employmentType: string;
+  workMode: string;
+  duration: string;
+  city: string;
+  state: string;
+  country: string;
+  multipleLocations: boolean;
+  
+  // Experience & Skills
+  minExperience: string;
+  maxExperience: string;
+  fresherAllowed: boolean;
+  mandatorySkills: string[];
+  educationQualification: string;
+  languagesKnown: string;
+  
+  // Compensation & Benefits
+  salaryType: string;
+  minSalary: string;
+  maxSalary: string;
+  showSalary: boolean;
+  perks: {
+    healthInsurance: boolean;
+    esops: boolean;
+    performanceBonus: boolean;
+    remoteAllowance: boolean;
+  };
+  
+  // AI & Application Settings
+  enableAIMatching: boolean;
+  autoScreenCandidates: boolean;
+  enableSkillAssessment: boolean;
+  scheduleAIInterview: boolean;
+  applicationDeadline: string;
+  numberOfOpenings: string;
+  
+  // Compliance & Publishing
+  equalOpportunityEmployer: boolean;
+  agreeToPrivacy: boolean;
+  acceptTerms: boolean;
+  jobVisibility: string;
+  urgency: string;
+}
 
 const PostJob = () => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(1);
-  const [skills, setSkills] = useState<string[]>(['React', 'TypeScript']);
   const [skillInput, setSkillInput] = useState('');
-  const [jobData, setJobData] = useState({
-    title: '',
-    department: '',
-    location: '',
-    type: '',
-    experience: '',
-    salary: '',
-    description: '',
-    responsibilities: '',
-    requirements: '',
+  
+  const [formData, setFormData] = useState<JobFormData>({
+    jobTitle: '',
+    jobDescription: '',
+    jobCategory: '',
+    jobRole: '',
+    employmentType: '',
+    workMode: '',
+    duration: '',
+    city: '',
+    state: '',
+    country: 'India',
+    multipleLocations: false,
+    minExperience: '',
+    maxExperience: '',
+    fresherAllowed: false,
+    mandatorySkills: [],
+    educationQualification: '',
+    languagesKnown: '',
+    salaryType: '',
+    minSalary: '',
+    maxSalary: '',
+    showSalary: true,
+    perks: {
+      healthInsurance: false,
+      esops: false,
+      performanceBonus: false,
+      remoteAllowance: false,
+    },
+    enableAIMatching: true,
+    autoScreenCandidates: false,
+    enableSkillAssessment: true,
+    scheduleAIInterview: false,
+    applicationDeadline: '',
+    numberOfOpenings: '1',
+    equalOpportunityEmployer: true,
+    agreeToPrivacy: true,
+    acceptTerms: false,
+    jobVisibility: 'public',
+    urgency: 'normal',
   });
 
-  const jdScore = 75; // Mock JD quality score
+  const updateFormData = (field: keyof JobFormData, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updatePerks = (perk: keyof JobFormData['perks'], value: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      perks: { ...prev.perks, [perk]: value }
+    }));
+  };
 
   const addSkill = () => {
-    if (skillInput.trim() && !skills.includes(skillInput.trim())) {
-      setSkills([...skills, skillInput.trim()]);
+    if (skillInput.trim() && !formData.mandatorySkills.includes(skillInput.trim())) {
+      updateFormData('mandatorySkills', [...formData.mandatorySkills, skillInput.trim()]);
       setSkillInput('');
     }
   };
 
   const removeSkill = (skill: string) => {
-    setSkills(skills.filter(s => s !== skill));
+    updateFormData('mandatorySkills', formData.mandatorySkills.filter(s => s !== skill));
   };
 
-  const handleNext = () => {
-    if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-    }
+  const handleSaveDraft = () => {
+    toast.success('Job saved as draft');
   };
 
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
+  const handlePreview = () => {
+    toast.info('Preview functionality coming soon');
   };
 
   const handlePublish = () => {
+    if (!formData.acceptTerms) {
+      toast.error('Please accept Terms & Conditions to publish');
+      return;
+    }
     toast.success('Job posted successfully! Redirecting to dashboard...');
     setTimeout(() => {
       navigate('/employer-dashboard');
     }, 1500);
   };
 
-  const suggestedSkills = ['Node.js', 'AWS', 'Docker', 'GraphQL', 'PostgreSQL'];
-
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
+    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-24">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-navy-900">Post a Job</h1>
-          <p className="text-neutral-600">Create a compelling job listing to attract top talent</p>
-        </div>
-        <Button variant="outline">
-          <Save className="h-4 w-4 mr-2" />
-          Save as Draft
-        </Button>
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Create New Job Post</h1>
+        <p className="text-muted-foreground">Fill in the details to publish a new opportunity for candidates.</p>
       </div>
 
-      {/* Progress Steps */}
-      <div className="flex items-center justify-between">
-        {steps.map((step, index) => (
-          <React.Fragment key={step.id}>
-            <div 
-              className={`flex items-center gap-2 ${
-                currentStep >= step.id ? 'text-teal-600' : 'text-neutral-400'
-              }`}
-            >
-              <div 
-                className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                  currentStep >= step.id 
-                    ? 'bg-teal-500 text-white' 
-                    : 'bg-neutral-200 text-neutral-500'
-                }`}
-              >
-                {currentStep > step.id ? (
-                  <CheckCircle className="h-5 w-5" />
-                ) : (
-                  <step.icon className="h-5 w-5" />
-                )}
-              </div>
-              <span className="font-medium text-sm hidden md:inline">{step.title}</span>
-            </div>
-            {index < steps.length - 1 && (
-              <div 
-                className={`flex-1 h-1 mx-2 rounded ${
-                  currentStep > step.id ? 'bg-teal-500' : 'bg-neutral-200'
-                }`}
-              />
-            )}
-          </React.Fragment>
-        ))}
-      </div>
+      {/* Basic Information */}
+      <Card>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg flex items-center gap-2 text-primary">
+            <FileText className="h-5 w-5" />
+            Basic Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="jobTitle">Job Title <span className="text-destructive">*</span></Label>
+            <Input
+              id="jobTitle"
+              placeholder="e.g. Senior Product Designer"
+              value={formData.jobTitle}
+              onChange={(e) => updateFormData('jobTitle', e.target.value)}
+            />
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Form */}
-        <div className="lg:col-span-2">
-          <Card>
-            <CardContent className="p-6">
-              {/* Step 1: Job Details */}
-              {currentStep === 1 && (
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Job Title *</Label>
-                    <Input 
-                      id="title" 
-                      placeholder="e.g., Senior Frontend Developer"
-                      value={jobData.title}
-                      onChange={(e) => setJobData({ ...jobData, title: e.target.value })}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Department</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="engineering">Engineering</SelectItem>
-                          <SelectItem value="design">Design</SelectItem>
-                          <SelectItem value="product">Product</SelectItem>
-                          <SelectItem value="marketing">Marketing</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Location</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select location" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="bangalore">Bangalore</SelectItem>
-                          <SelectItem value="mumbai">Mumbai</SelectItem>
-                          <SelectItem value="delhi">Delhi NCR</SelectItem>
-                          <SelectItem value="remote">Remote</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Employment Type</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="fulltime">Full-time</SelectItem>
-                          <SelectItem value="contract">Contract</SelectItem>
-                          <SelectItem value="intern">Internship</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Experience Level</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select experience" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="entry">Entry Level (0-2 years)</SelectItem>
-                          <SelectItem value="mid">Mid Level (3-5 years)</SelectItem>
-                          <SelectItem value="senior">Senior (5-8 years)</SelectItem>
-                          <SelectItem value="lead">Lead (8+ years)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Job Description</Label>
-                    <Textarea 
-                      placeholder="Describe the role, responsibilities, and what makes this opportunity exciting..."
-                      rows={6}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Step 2: Skills */}
-              {currentStep === 2 && (
-                <div className="space-y-6">
-                  <div className="space-y-2">
-                    <Label>Required Skills</Label>
-                    <div className="flex gap-2">
-                      <Input 
-                        placeholder="Add a skill..."
-                        value={skillInput}
-                        onChange={(e) => setSkillInput(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && addSkill()}
-                      />
-                      <Button onClick={addSkill} className="bg-teal-600 hover:bg-teal-700">
-                        Add
-                      </Button>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {skills.map((skill) => (
-                        <Badge 
-                          key={skill} 
-                          variant="secondary"
-                          className="px-3 py-1 bg-teal-100 text-teal-700"
-                        >
-                          {skill}
-                          <button onClick={() => removeSkill(skill)} className="ml-2">
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
-                    <div className="flex items-center gap-2 mb-3">
-                      <Sparkles className="h-5 w-5 text-teal-600" />
-                      <span className="font-medium text-teal-800">AI Suggested Skills</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {suggestedSkills.map((skill) => (
-                        <Badge 
-                          key={skill}
-                          variant="outline"
-                          className="cursor-pointer hover:bg-teal-100 border-teal-300"
-                          onClick={() => !skills.includes(skill) && setSkills([...skills, skill])}
-                        >
-                          + {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Requirements</Label>
-                    <Textarea 
-                      placeholder="List the requirements for this position..."
-                      rows={4}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label>Nice to Have</Label>
-                    <Textarea 
-                      placeholder="Additional skills or experience that would be beneficial..."
-                      rows={3}
-                    />
-                  </div>
-                </div>
-              )}
-
-              {/* Step 3: Preferences */}
-              {currentStep === 3 && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Salary Range</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select range" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="5-10">₹5-10 LPA</SelectItem>
-                          <SelectItem value="10-20">₹10-20 LPA</SelectItem>
-                          <SelectItem value="20-35">₹20-35 LPA</SelectItem>
-                          <SelectItem value="35+">₹35+ LPA</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Application Deadline</Label>
-                      <Input type="date" />
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label>Enable AI Features</Label>
-                    <div className="space-y-3">
-                      <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-neutral-50">
-                        <input type="checkbox" className="w-4 h-4 text-teal-600" defaultChecked />
-                        <div>
-                          <p className="font-medium text-sm">AI Resume Screening</p>
-                          <p className="text-xs text-neutral-500">Automatically screen and rank candidates</p>
-                        </div>
-                      </label>
-                      <label className="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-neutral-50">
-                        <input type="checkbox" className="w-4 h-4 text-teal-600" />
-                        <div>
-                          <p className="font-medium text-sm">Video Screening</p>
-                          <p className="text-xs text-neutral-500">Include AI-powered video interviews</p>
-                        </div>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Step 4: Review */}
-              {currentStep === 4 && (
-                <div className="space-y-6">
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                      <span className="font-medium text-green-800">Ready to publish!</span>
-                    </div>
-                    <p className="text-sm text-green-700 mt-1">
-                      Your job listing looks great. Review the details below before publishing.
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="p-4 border rounded-lg">
-                      <h3 className="font-semibold text-navy-800 mb-2">Senior Frontend Developer</h3>
-                      <div className="flex flex-wrap gap-2 text-sm text-neutral-600">
-                        <span>Engineering</span>
-                        <span>•</span>
-                        <span>Bangalore</span>
-                        <span>•</span>
-                        <span>Full-time</span>
-                        <span>•</span>
-                        <span>5-8 years</span>
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                      {skills.map((skill) => (
-                        <Badge key={skill} className="bg-teal-100 text-teal-700">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Navigation */}
-              <div className="flex items-center justify-between mt-8 pt-6 border-t">
-                <Button 
-                  variant="outline" 
-                  onClick={handleBack}
-                  disabled={currentStep === 1}
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
+          <div className="space-y-2">
+            <Label>Job Description <span className="text-destructive">*</span></Label>
+            <div className="border rounded-lg overflow-hidden">
+              <div className="flex items-center gap-1 p-2 bg-muted/50 border-b">
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Bold className="h-4 w-4" />
                 </Button>
-                {currentStep < 4 ? (
-                  <Button onClick={handleNext} className="bg-navy-800 hover:bg-navy-900">
-                    Next
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                ) : (
-                  <Button onClick={handlePublish} className="bg-teal-600 hover:bg-teal-700">
-                    <CheckCircle className="h-4 w-4 mr-2" />
-                    Publish Job
-                  </Button>
-                )}
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Italic className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <List className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <Link2 className="h-4 w-4" />
+                </Button>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+              <Textarea
+                placeholder="Write the job overview, responsibilities, and key requirements..."
+                className="border-0 rounded-none min-h-[120px] focus-visible:ring-0"
+                value={formData.jobDescription}
+                onChange={(e) => updateFormData('jobDescription', e.target.value)}
+              />
+            </div>
+          </div>
 
-        {/* JD Quality Score */}
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Lightbulb className="h-5 w-5 text-yellow-500" />
-                JD Quality Score
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center mb-4">
-                <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500">
-                  <span className="text-3xl font-bold text-white">{jdScore}</span>
-                </div>
-                <p className="mt-2 font-medium text-neutral-700">Average</p>
-              </div>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Clear job title</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Skills specified</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <X className="h-4 w-4 text-red-500" />
-                  <span>Add more details about role</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <X className="h-4 w-4 text-red-500" />
-                  <span>Include benefits & perks</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Job Category <span className="text-destructive">*</span></Label>
+              <Select value={formData.jobCategory} onValueChange={(v) => updateFormData('jobCategory', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="it-software">IT & Software</SelectItem>
+                  <SelectItem value="design">Design</SelectItem>
+                  <SelectItem value="marketing">Marketing</SelectItem>
+                  <SelectItem value="sales">Sales</SelectItem>
+                  <SelectItem value="hr">HR & Admin</SelectItem>
+                  <SelectItem value="finance">Finance & Accounting</SelectItem>
+                  <SelectItem value="operations">Operations</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Job Role <span className="text-destructive">*</span></Label>
+              <Select value={formData.jobRole} onValueChange={(v) => updateFormData('jobRole', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="developer">Developer</SelectItem>
+                  <SelectItem value="designer">Designer</SelectItem>
+                  <SelectItem value="manager">Manager</SelectItem>
+                  <SelectItem value="analyst">Analyst</SelectItem>
+                  <SelectItem value="engineer">Engineer</SelectItem>
+                  <SelectItem value="consultant">Consultant</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-          <Card className="bg-teal-50 border-teal-200">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <Sparkles className="h-5 w-5 text-teal-600 mt-0.5" />
-                <div>
-                  <p className="font-medium text-teal-800 text-sm">Pro Tip</p>
-                  <p className="text-xs text-teal-700 mt-1">
-                    Jobs with detailed descriptions receive 40% more qualified applications.
-                  </p>
-                </div>
+      {/* Employment & Location */}
+      <Card>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg flex items-center gap-2 text-primary">
+            <MapPin className="h-5 w-5" />
+            Employment & Location
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label>Employment Type <span className="text-destructive">*</span></Label>
+              <Select value={formData.employmentType} onValueChange={(v) => updateFormData('employmentType', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="full-time">Full-Time</SelectItem>
+                  <SelectItem value="part-time">Part-Time</SelectItem>
+                  <SelectItem value="contract">Contract</SelectItem>
+                  <SelectItem value="internship">Internship</SelectItem>
+                  <SelectItem value="freelance">Freelance</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Work Mode <span className="text-destructive">*</span></Label>
+              <Select value={formData.workMode} onValueChange={(v) => updateFormData('workMode', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="onsite">Onsite</SelectItem>
+                  <SelectItem value="remote">Remote</SelectItem>
+                  <SelectItem value="hybrid">Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-orange-600">Duration (if Contract)</Label>
+              <Input
+                placeholder="e.g. 6 Months"
+                value={formData.duration}
+                onChange={(e) => updateFormData('duration', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label>City <span className="text-destructive">*</span></Label>
+              <Input
+                placeholder="e.g. Bangalore"
+                value={formData.city}
+                onChange={(e) => updateFormData('city', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>State</Label>
+              <Input
+                placeholder="e.g. Karnataka"
+                value={formData.state}
+                onChange={(e) => updateFormData('state', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-orange-600">Country</Label>
+              <Input
+                value={formData.country}
+                onChange={(e) => updateFormData('country', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="multipleLocations"
+              checked={formData.multipleLocations}
+              onCheckedChange={(checked) => updateFormData('multipleLocations', checked)}
+            />
+            <Label htmlFor="multipleLocations" className="cursor-pointer text-sm">
+              Multiple Locations Allowed
+            </Label>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Experience & Skills */}
+      <Card>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg flex items-center gap-2 text-primary">
+            <CheckCircle2 className="h-5 w-5" />
+            Experience & Skills
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Min Experience (Years) <span className="text-destructive">*</span></Label>
+              <Input
+                type="number"
+                placeholder="2"
+                value={formData.minExperience}
+                onChange={(e) => updateFormData('minExperience', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-orange-600">Max Experience (Years)</Label>
+              <Input
+                type="number"
+                placeholder="5"
+                value={formData.maxExperience}
+                onChange={(e) => updateFormData('maxExperience', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="fresherAllowed"
+              checked={formData.fresherAllowed}
+              onCheckedChange={(checked) => updateFormData('fresherAllowed', checked)}
+            />
+            <Label htmlFor="fresherAllowed" className="cursor-pointer text-sm">
+              Fresher Allowed
+            </Label>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Mandatory Skills <span className="text-destructive">*</span></Label>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {formData.mandatorySkills.map((skill) => (
+                <Badge key={skill} className="bg-primary text-primary-foreground gap-1 py-1.5 px-3">
+                  {skill}
+                  <X className="h-3 w-3 cursor-pointer ml-1" onClick={() => removeSkill(skill)} />
+                </Badge>
+              ))}
+            </div>
+            <Input
+              placeholder="Type and press enter..."
+              value={skillInput}
+              onChange={(e) => setSkillInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addSkill())}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-orange-600">Education Qualification</Label>
+              <Input
+                placeholder="e.g. B.Tech / MCA"
+                value={formData.educationQualification}
+                onChange={(e) => updateFormData('educationQualification', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-orange-600">Languages Known</Label>
+              <Input
+                placeholder="e.g. English, Hindi"
+                value={formData.languagesKnown}
+                onChange={(e) => updateFormData('languagesKnown', e.target.value)}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Compensation & Benefits */}
+      <Card>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg flex items-center gap-2 text-primary">
+            <Briefcase className="h-5 w-5" />
+            Compensation & Benefits
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label>Salary Type <span className="text-destructive">*</span></Label>
+              <Select value={formData.salaryType} onValueChange={(v) => updateFormData('salaryType', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fixed">Fixed Range</SelectItem>
+                  <SelectItem value="negotiable">Negotiable</SelectItem>
+                  <SelectItem value="not-disclosed">Not Disclosed</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-orange-600">Min Salary</Label>
+              <Input
+                placeholder="₹ 5,00,000"
+                value={formData.minSalary}
+                onChange={(e) => updateFormData('minSalary', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-orange-600">Max Salary</Label>
+              <Input
+                placeholder="₹ 12,00,000"
+                value={formData.maxSalary}
+                onChange={(e) => updateFormData('maxSalary', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="showSalary"
+              checked={formData.showSalary}
+              onCheckedChange={(checked) => updateFormData('showSalary', checked)}
+            />
+            <Label htmlFor="showSalary" className="cursor-pointer text-sm text-primary">
+              Show Salary to Candidates
+            </Label>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-orange-600">Additional Perks</Label>
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="healthInsurance"
+                  checked={formData.perks.healthInsurance}
+                  onCheckedChange={(checked) => updatePerks('healthInsurance', !!checked)}
+                />
+                <Label htmlFor="healthInsurance" className="cursor-pointer text-sm">Health Insurance</Label>
               </div>
-            </CardContent>
-          </Card>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="esops"
+                  checked={formData.perks.esops}
+                  onCheckedChange={(checked) => updatePerks('esops', !!checked)}
+                />
+                <Label htmlFor="esops" className="cursor-pointer text-sm">ESOPs</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="performanceBonus"
+                  checked={formData.perks.performanceBonus}
+                  onCheckedChange={(checked) => updatePerks('performanceBonus', !!checked)}
+                />
+                <Label htmlFor="performanceBonus" className="cursor-pointer text-sm">Performance Bonus</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  id="remoteAllowance"
+                  checked={formData.perks.remoteAllowance}
+                  onCheckedChange={(checked) => updatePerks('remoteAllowance', !!checked)}
+                />
+                <Label htmlFor="remoteAllowance" className="cursor-pointer text-sm">Remote Allowance</Label>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* AI & Application Settings */}
+      <Card>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg flex items-center gap-2 text-primary">
+            <Settings className="h-5 w-5" />
+            AI & Application Settings
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <Label className="cursor-pointer">Enable AI Talent Matching</Label>
+              <Switch
+                checked={formData.enableAIMatching}
+                onCheckedChange={(checked) => updateFormData('enableAIMatching', checked)}
+              />
+            </div>
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <Label className="cursor-pointer">Auto-Screen Candidates</Label>
+              <Switch
+                checked={formData.autoScreenCandidates}
+                onCheckedChange={(checked) => updateFormData('autoScreenCandidates', checked)}
+              />
+            </div>
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <Label className="cursor-pointer">Enable Skill Assessment</Label>
+              <Switch
+                checked={formData.enableSkillAssessment}
+                onCheckedChange={(checked) => updateFormData('enableSkillAssessment', checked)}
+              />
+            </div>
+            <div className="flex items-center justify-between p-4 border rounded-lg">
+              <Label className="cursor-pointer">Schedule AI Interview</Label>
+              <Switch
+                checked={formData.scheduleAIInterview}
+                onCheckedChange={(checked) => updateFormData('scheduleAIInterview', checked)}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-orange-600">Application Deadline</Label>
+              <Input
+                type="date"
+                value={formData.applicationDeadline}
+                onChange={(e) => updateFormData('applicationDeadline', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Number of Openings <span className="text-destructive">*</span></Label>
+              <Input
+                type="number"
+                placeholder="1"
+                value={formData.numberOfOpenings}
+                onChange={(e) => updateFormData('numberOfOpenings', e.target.value)}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Compliance & Publishing */}
+      <Card>
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg flex items-center gap-2 text-primary">
+            <Shield className="h-5 w-5" />
+            Compliance & Publishing
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="flex flex-wrap gap-6">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="equalOpportunity"
+                checked={formData.equalOpportunityEmployer}
+                onCheckedChange={(checked) => updateFormData('equalOpportunityEmployer', checked)}
+              />
+              <Label htmlFor="equalOpportunity" className="cursor-pointer text-sm text-primary">
+                Equal Opportunity Employer
+              </Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="privacyPolicy"
+                checked={formData.agreeToPrivacy}
+                onCheckedChange={(checked) => updateFormData('agreeToPrivacy', checked)}
+              />
+              <Label htmlFor="privacyPolicy" className="cursor-pointer text-sm">
+                I agree to <span className="text-primary hover:underline cursor-pointer">Data Privacy Policies</span>
+              </Label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="termsConditions"
+                checked={formData.acceptTerms}
+                onCheckedChange={(checked) => updateFormData('acceptTerms', checked)}
+              />
+              <Label htmlFor="termsConditions" className="cursor-pointer text-sm">
+                I accept <span className="text-destructive hover:underline cursor-pointer">Terms & Conditions</span> <span className="text-destructive">*</span>
+              </Label>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Job Visibility <span className="text-destructive">*</span></Label>
+              <Select value={formData.jobVisibility} onValueChange={(v) => updateFormData('jobVisibility', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select visibility" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="public">Public (Visible to all)</SelectItem>
+                  <SelectItem value="private">Private (Invite only)</SelectItem>
+                  <SelectItem value="unlisted">Unlisted</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-orange-600">Urgency</Label>
+              <Select value={formData.urgency} onValueChange={(v) => updateFormData('urgency', v)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select urgency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                  <SelectItem value="critical">Critical</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Action Buttons - Fixed at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 z-50">
+        <div className="max-w-4xl mx-auto flex items-center justify-end gap-3">
+          <Button variant="outline" onClick={handleSaveDraft}>
+            <Save className="h-4 w-4 mr-2" />
+            Save as Draft
+          </Button>
+          <Button variant="outline" onClick={handlePreview}>
+            <Eye className="h-4 w-4 mr-2" />
+            Preview
+          </Button>
+          <Button onClick={handlePublish} className="bg-primary hover:bg-primary/90">
+            Publish Job Post
+            <Send className="h-4 w-4 ml-2" />
+          </Button>
         </div>
       </div>
     </div>
