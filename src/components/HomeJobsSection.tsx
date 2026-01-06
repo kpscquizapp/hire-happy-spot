@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronLeft, ChevronRight, MapPin, Building2, Clock, Bookmark, Zap, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, MapPin, Building2, Clock, Bookmark, Zap, Sparkles, Briefcase, DollarSign, Award, Clock3, Navigation, Code } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 
@@ -129,11 +129,73 @@ const filterData = {
     { id: 'hyderabad', label: 'Hyderabad', count: 8650 },
     { id: 'remote', label: 'Remote', count: 6780 },
   ],
+  skills: [
+    { id: 'javascript', label: 'JavaScript', count: 15420 },
+    { id: 'python', label: 'Python', count: 12350 },
+    { id: 'react', label: 'React', count: 9870 },
+    { id: 'java', label: 'Java', count: 11650 },
+    { id: 'nodejs', label: 'Node.js', count: 8780 },
+    { id: 'aws', label: 'AWS', count: 7650 },
+    { id: 'sql', label: 'SQL', count: 14320 },
+    { id: 'typescript', label: 'TypeScript', count: 6540 },
+  ],
 };
 
-interface FilterSectionProps {
+interface FilterConfig {
+  key: keyof typeof filterData;
   title: string;
-  filterKey: keyof typeof filterData;
+  icon: React.ReactNode;
+  iconBg: string;
+  iconColor: string;
+}
+
+const filterConfigs: FilterConfig[] = [
+  { 
+    key: 'category', 
+    title: 'Job Category', 
+    icon: <Briefcase className="h-4 w-4" />,
+    iconBg: 'bg-blue-100',
+    iconColor: 'text-blue-600'
+  },
+  { 
+    key: 'skills', 
+    title: 'Skills', 
+    icon: <Code className="h-4 w-4" />,
+    iconBg: 'bg-purple-100',
+    iconColor: 'text-purple-600'
+  },
+  { 
+    key: 'salary', 
+    title: 'Salary Range', 
+    icon: <DollarSign className="h-4 w-4" />,
+    iconBg: 'bg-green-100',
+    iconColor: 'text-green-600'
+  },
+  { 
+    key: 'experience', 
+    title: 'Experience Level', 
+    icon: <Award className="h-4 w-4" />,
+    iconBg: 'bg-orange-100',
+    iconColor: 'text-orange-600'
+  },
+  { 
+    key: 'type', 
+    title: 'Job Type', 
+    icon: <Clock3 className="h-4 w-4" />,
+    iconBg: 'bg-pink-100',
+    iconColor: 'text-pink-600'
+  },
+  { 
+    key: 'location', 
+    title: 'Location', 
+    icon: <Navigation className="h-4 w-4" />,
+    iconBg: 'bg-cyan-100',
+    iconColor: 'text-cyan-600'
+  },
+];
+
+interface FilterSectionProps {
+  config: FilterConfig;
   isOpen: boolean;
   onToggle: () => void;
   selectedFilters: string[];
@@ -141,58 +203,84 @@ interface FilterSectionProps {
 }
 
 const FilterSection: React.FC<FilterSectionProps> = ({ 
-  title, 
-  filterKey, 
+  config,
   isOpen, 
   onToggle, 
   selectedFilters, 
   onFilterChange 
-}) => (
-  <div className="border-b border-border/50">
-    <button
-      onClick={onToggle}
-      className="w-full flex items-center justify-between py-4 hover:bg-muted/30 px-2 -mx-2 rounded transition-colors"
-    >
-      <span className="font-medium text-foreground">{title}</span>
-      <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-    </button>
-    
-    {isOpen && (
-      <div className="pb-4 space-y-3 animate-fade-in">
-        {filterData[filterKey].map((option) => (
-          <label 
-            key={option.id}
-            className="flex items-center justify-between cursor-pointer group"
-          >
-            <div className="flex items-center gap-3">
-              <Checkbox 
-                id={option.id}
-                checked={selectedFilters.includes(option.id)}
-                onCheckedChange={() => onFilterChange(option.id)}
-                className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-              />
-              <span className="text-sm text-foreground group-hover:text-primary transition-colors">
-                {option.label}
-              </span>
-            </div>
-            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-              {option.count.toLocaleString()}
+}) => {
+  const selectedCount = selectedFilters.length;
+  
+  return (
+    <div className="mb-2">
+      <button
+        onClick={onToggle}
+        className={`w-full flex items-center justify-between p-3 rounded-xl transition-all duration-200 ${
+          isOpen 
+            ? 'bg-gradient-to-r from-primary/10 to-violet-500/10 border border-primary/20' 
+            : 'hover:bg-muted/50 border border-transparent'
+        }`}
+      >
+        <div className="flex items-center gap-3">
+          <div className={`w-8 h-8 ${config.iconBg} ${config.iconColor} flex items-center justify-center rounded-lg`}>
+            {config.icon}
+          </div>
+          <span className={`font-medium ${isOpen ? 'text-primary' : 'text-foreground'}`}>
+            {config.title}
+          </span>
+          {selectedCount > 0 && (
+            <span className="px-2 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded-full">
+              {selectedCount}
             </span>
-          </label>
-        ))}
-      </div>
-    )}
-  </div>
-);
+          )}
+        </div>
+        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
+          isOpen ? 'rotate-180 text-primary' : 'text-muted-foreground'
+        }`} />
+      </button>
+      
+      {isOpen && (
+        <div className="mt-2 ml-3 pl-8 border-l-2 border-primary/20 space-y-2 pb-2 animate-fade-in">
+          {filterData[config.key].map((option) => (
+            <label 
+              key={option.id}
+              className="flex items-center justify-between cursor-pointer group py-1.5 px-2 rounded-lg hover:bg-muted/50 transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <Checkbox 
+                  id={option.id}
+                  checked={selectedFilters.includes(option.id)}
+                  onCheckedChange={() => onFilterChange(option.id)}
+                  className="border-border data-[state=checked]:bg-primary data-[state=checked]:border-primary h-4 w-4"
+                />
+                <span className={`text-sm transition-colors ${
+                  selectedFilters.includes(option.id) 
+                    ? 'text-primary font-medium' 
+                    : 'text-foreground group-hover:text-primary'
+                }`}>
+                  {option.label}
+                </span>
+              </div>
+              <span className="text-xs text-muted-foreground bg-muted/70 px-2 py-1 rounded-full font-medium">
+                {option.count.toLocaleString()}
+              </span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const HomeJobsSection = () => {
-  const [openFilters, setOpenFilters] = useState<string[]>(['category', 'experience']);
+  const [openFilters, setOpenFilters] = useState<string[]>(['category', 'skills']);
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
     category: [],
     salary: [],
     experience: [],
     type: [],
     location: [],
+    skills: [],
   });
   const [savedJobs, setSavedJobs] = useState<number[]>([]);
 
@@ -220,6 +308,7 @@ const HomeJobsSection = () => {
       experience: [],
       type: [],
       location: [],
+      skills: [],
     });
   };
 
@@ -239,65 +328,53 @@ const HomeJobsSection = () => {
       <div className="container mx-auto px-4">
         <div className="flex gap-8">
           {/* Filters Sidebar */}
-          <aside className="w-72 flex-shrink-0 hidden lg:block">
-            <div className="bg-card border border-border/50 rounded-2xl p-6 sticky top-24 shadow-sm">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-foreground text-lg">Filters</h3>
-                  {totalSelected > 0 && (
-                    <span className="px-2 py-0.5 bg-primary text-primary-foreground text-xs font-medium rounded-full">
-                      {totalSelected}
-                    </span>
-                  )}
+          <aside className="w-80 flex-shrink-0 hidden lg:block">
+            <div className="bg-card border border-border/50 rounded-2xl p-5 sticky top-24 shadow-lg">
+              {/* Filter Header */}
+              <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/50">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-violet-600 rounded-xl flex items-center justify-center">
+                    <Sparkles className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-foreground text-lg">Filters</h3>
+                    {totalSelected > 0 && (
+                      <p className="text-xs text-muted-foreground">{totalSelected} filters applied</p>
+                    )}
+                  </div>
                 </div>
-                <button 
-                  onClick={clearAllFilters}
-                  className="text-sm text-primary hover:underline font-medium"
-                >
-                  Clear all
-                </button>
+                {totalSelected > 0 && (
+                  <button 
+                    onClick={clearAllFilters}
+                    className="text-sm text-primary hover:text-primary/80 font-semibold bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors"
+                  >
+                    Clear all
+                  </button>
+                )}
               </div>
               
-              <FilterSection 
-                title="Job Category" 
-                filterKey="category"
-                isOpen={openFilters.includes('category')} 
-                onToggle={() => toggleFilter('category')}
-                selectedFilters={selectedFilters.category}
-                onFilterChange={(id) => handleFilterChange('category', id)}
-              />
-              <FilterSection 
-                title="Salary Range" 
-                filterKey="salary"
-                isOpen={openFilters.includes('salary')} 
-                onToggle={() => toggleFilter('salary')}
-                selectedFilters={selectedFilters.salary}
-                onFilterChange={(id) => handleFilterChange('salary', id)}
-              />
-              <FilterSection 
-                title="Experience Level" 
-                filterKey="experience"
-                isOpen={openFilters.includes('experience')} 
-                onToggle={() => toggleFilter('experience')}
-                selectedFilters={selectedFilters.experience}
-                onFilterChange={(id) => handleFilterChange('experience', id)}
-              />
-              <FilterSection 
-                title="Job Type" 
-                filterKey="type"
-                isOpen={openFilters.includes('type')} 
-                onToggle={() => toggleFilter('type')}
-                selectedFilters={selectedFilters.type}
-                onFilterChange={(id) => handleFilterChange('type', id)}
-              />
-              <FilterSection 
-                title="Location" 
-                filterKey="location"
-                isOpen={openFilters.includes('location')} 
-                onToggle={() => toggleFilter('location')}
-                selectedFilters={selectedFilters.location}
-                onFilterChange={(id) => handleFilterChange('location', id)}
-              />
+              {/* Filter Sections */}
+              <div className="space-y-1">
+                {filterConfigs.map((config) => (
+                  <FilterSection 
+                    key={config.key}
+                    config={config}
+                    isOpen={openFilters.includes(config.key)} 
+                    onToggle={() => toggleFilter(config.key)}
+                    selectedFilters={selectedFilters[config.key]}
+                    onFilterChange={(id) => handleFilterChange(config.key, id)}
+                  />
+                ))}
+              </div>
+
+              {/* Apply Filters Button */}
+              {totalSelected > 0 && (
+                <div className="mt-5 pt-4 border-t border-border/50">
+                  <Button className="w-full bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-semibold py-5 rounded-xl shadow-lg shadow-primary/25">
+                    Apply Filters ({totalSelected})
+                  </Button>
+                </div>
+              )}
             </div>
           </aside>
 
