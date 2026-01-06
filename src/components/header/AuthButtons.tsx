@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { User, Briefcase, UserPlus, Upload } from 'lucide-react';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { Upload } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import UserMenu from './UserMenu';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface AuthButtonsProps {
   isMobile?: boolean;
+  isDark?: boolean;
 }
 
-const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
-  const { translations } = useLanguage();
+const AuthButtons = ({ isMobile = false, isDark = false }: AuthButtonsProps) => {
   const { user } = useAuth();
 
   if (user) {
@@ -21,64 +21,67 @@ const AuthButtons = ({ isMobile = false }: AuthButtonsProps) => {
   if (isMobile) {
     return (
       <div className="mt-6 flex flex-col space-y-3">
-        <p className="text-sm font-medium text-muted-foreground px-2">Sign In</p>
+        <Link 
+          to="/register-talent" 
+          className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-gray-800 text-white hover:bg-gray-700 transition-colors font-medium"
+        >
+          <Upload className="h-4 w-4" />
+          Upload CV
+        </Link>
         <Link 
           to="/candidate-login" 
-          className="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
+          className="flex items-center justify-center px-4 py-3 rounded-lg text-white hover:bg-gray-800 transition-colors font-medium"
         >
-          <User className="h-5 w-5 text-primary" />
-          <span className="font-medium">Candidate Sign In</span>
+          Login
         </Link>
         <Link 
-          to="/employer-login" 
-          className="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
+          to="/post-job" 
+          className="flex items-center justify-center px-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
         >
-          <Briefcase className="h-5 w-5 text-primary" />
-          <span className="font-medium">Employer Sign In</span>
+          Post a Job
         </Link>
-        <div className="pt-2">
-          <p className="text-sm font-medium text-muted-foreground px-2 mb-2">New Here?</p>
-          <Link 
-            to="/candidate-login" 
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors"
-          >
-            <UserPlus className="h-5 w-5" />
-            Register Now
-          </Link>
-        </div>
       </div>
     );
   }
 
   return (
     <div className="flex items-center gap-3">
-      {/* Upload CV Link */}
-      <Link 
-        to="/register-talent" 
-        className="text-primary hover:text-primary/80 font-medium text-sm transition-colors hidden lg:flex items-center gap-1.5"
-      >
-        <Upload className="h-4 w-4" />
-        Upload your CV
-      </Link>
-
-      {/* Login / Register Button */}
+      {/* Upload CV Button */}
       <Button 
-        variant="outline" 
-        className="rounded-lg border-primary text-primary hover:bg-primary/5 font-medium text-sm px-5"
+        variant="outline"
+        className={cn(
+          "rounded-lg font-medium text-sm px-5",
+          isDark 
+            ? "bg-gray-800 border-gray-700 text-white hover:bg-gray-700 hover:text-white" 
+            : "border-primary text-primary hover:bg-primary/5"
+        )}
         asChild
       >
-        <Link to="/candidate-login">
-          Login / Register
+        <Link to="/register-talent">
+          Upload CV
         </Link>
       </Button>
 
-      {/* Job Post Button */}
+      {/* Login Link */}
+      <Link 
+        to="/candidate-login"
+        className={cn(
+          "font-medium text-sm transition-colors px-3",
+          isDark 
+            ? "text-white hover:text-gray-300" 
+            : "text-foreground hover:text-primary"
+        )}
+      >
+        Login
+      </Link>
+
+      {/* Post a Job Button */}
       <Button 
         className="rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm px-5"
         asChild
       >
         <Link to="/post-job">
-          Job Post
+          Post a Job
         </Link>
       </Button>
     </div>

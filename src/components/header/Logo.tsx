@@ -1,15 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import hirionLogo from '@/assets/hirion-logo.png';
+import { Building2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
-const Logo = () => {
+interface LogoProps {
+  isDark?: boolean;
+}
+
+const Logo = ({ isDark = false }: LogoProps) => {
   return (
-    <Link to="/" className="flex items-center group">
-      <img 
-        src={hirionLogo} 
-        alt="Hirion - Your Hiring Champion" 
-        className="h-14 w-auto transition-transform duration-300 group-hover:scale-105" 
-      />
+    <Link to="/" className="flex items-center gap-2.5 group">
+      <div className="w-9 h-9 bg-primary rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+        <Building2 className="h-5 w-5 text-primary-foreground" />
+      </div>
+      <span className={cn(
+        "text-xl font-bold tracking-tight",
+        isDark ? "text-white" : "text-foreground"
+      )}>
+        HIRION
+      </span>
     </Link>
   );
 };
