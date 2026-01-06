@@ -1,22 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Search, MapPin, ArrowRight, SlidersHorizontal, TrendingUp, Clock, Sparkles } from 'lucide-react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, MapPin, ArrowRight, SlidersHorizontal, TrendingUp, Clock, Sparkles, Briefcase, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
-const popularSearches = [
-  { label: 'Software Engineer', icon: TrendingUp },
-  { label: 'Product Manager', icon: TrendingUp },
-  { label: 'Data Scientist', icon: TrendingUp },
-  { label: 'UI/UX Designer', icon: TrendingUp },
-  { label: 'Frontend Developer', icon: TrendingUp },
-];
-
-const recentSearches = [
-  { label: 'React Developer Bangalore', icon: Clock },
-  { label: 'Full Stack Engineer Remote', icon: Clock },
-  { label: 'DevOps AWS', icon: Clock },
-];
+import { jobListings } from '@/data/jobListings';
 
 const Hero = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [location, setLocation] = useState('');
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
@@ -42,6 +31,44 @@ const Hero = () => {
     'Remote',
   ];
 
+  // Get unique job titles and companies from job listings
+  const allJobTitles = useMemo(() => 
+    [...new Set(jobListings.map(job => job.title.en))], 
+    []
+  );
+
+  const allCompanies = useMemo(() => 
+    [...new Set(jobListings.map(job => job.company))], 
+    []
+  );
+
+  const allSkills = useMemo(() => 
+    [...new Set(jobListings.flatMap(job => job.skills || []))], 
+    []
+  );
+
+  // Filter suggestions based on search query
+  const filteredSuggestions = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return {
+        titles: allJobTitles.slice(0, 4),
+        companies: allCompanies.slice(0, 3),
+        skills: allSkills.slice(0, 4)
+      };
+    }
+
+    const query = searchQuery.toLowerCase();
+    return {
+      titles: allJobTitles.filter(t => t.toLowerCase().includes(query)).slice(0, 4),
+      companies: allCompanies.filter(c => c.toLowerCase().includes(query)).slice(0, 3),
+      skills: allSkills.filter(s => s.toLowerCase().includes(query)).slice(0, 4)
+    };
+  }, [searchQuery, allJobTitles, allCompanies, allSkills]);
+
+  const hasResults = filteredSuggestions.titles.length > 0 || 
+                     filteredSuggestions.companies.length > 0 || 
+                     filteredSuggestions.skills.length > 0;
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
@@ -60,7 +87,7 @@ const Hero = () => {
     if (searchQuery) params.append('query', searchQuery);
     if (location) params.append('location', location);
     if (activeFilter) params.append('filter', activeFilter);
-    window.location.href = `/jobs?${params.toString()}`;
+    navigate(`/jobs?${params.toString()}`);
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -101,7 +128,7 @@ const Hero = () => {
 
           {/* Search Form */}
           <form onSubmit={handleSearch} className="mb-10">
-            <div ref={searchRef} className="relative bg-white rounded-2xl p-2 shadow-2xl shadow-black/20 flex items-center gap-2 max-w-2xl mx-auto">
+            <div ref={searchRef} className="relative bg-white rounded-2xl p-2 shadow-2xl shadow-black/20 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 max-w-2xl mx-auto">
               {/* Job Search Input */}
               <div className="flex-1 relative">
                 <div className="flex items-center gap-3 pl-4">
@@ -119,60 +146,96 @@ const Hero = () => {
                   />
                 </div>
                 
-                {/* Search Suggestions Dropdown */}
+                {/* Autocomplete Dropdown */}
                 {showSuggestions && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-border z-50 overflow-hidden animate-scale-in">
-                    {/* Recent Searches */}
-                    {recentSearches.length > 0 && (
-                      <div className="p-4 border-b border-border">
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-                          <Clock className="h-3.5 w-3.5" />
-                          Recent Searches
-                        </p>
-                        <div className="space-y-1">
-                          {recentSearches.map((item, index) => (
-                            <button
-                              key={index}
-                              type="button"
-                              onClick={() => handleSuggestionClick(item.label)}
-                              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary transition-colors text-left group"
-                            >
-                              <item.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                              <span className="text-sm text-foreground">{item.label}</span>
-                            </button>
-                          ))}
-                        </div>
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-2xl border border-border z-50 overflow-hidden animate-scale-in max-h-[400px] overflow-y-auto">
+                    {hasResults ? (
+                      <>
+                        {/* Job Titles */}
+                        {filteredSuggestions.titles.length > 0 && (
+                          <div className="p-4 border-b border-border">
+                            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                              <Briefcase className="h-3.5 w-3.5" />
+                              Job Titles
+                            </p>
+                            <div className="space-y-1">
+                              {filteredSuggestions.titles.map((title, index) => (
+                                <button
+                                  key={index}
+                                  type="button"
+                                  onClick={() => handleSuggestionClick(title)}
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-primary/5 transition-all text-left group"
+                                >
+                                  <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                                    <Briefcase className="h-4 w-4 text-primary" />
+                                  </div>
+                                  <span className="text-sm text-foreground font-medium">{title}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Companies */}
+                        {filteredSuggestions.companies.length > 0 && (
+                          <div className="p-4 border-b border-border">
+                            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                              <Building2 className="h-3.5 w-3.5" />
+                              Companies
+                            </p>
+                            <div className="space-y-1">
+                              {filteredSuggestions.companies.map((company, index) => (
+                                <button
+                                  key={index}
+                                  type="button"
+                                  onClick={() => handleSuggestionClick(company)}
+                                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary transition-colors text-left group"
+                                >
+                                  <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center font-bold text-primary">
+                                    {company[0]}
+                                  </div>
+                                  <span className="text-sm text-foreground">{company}</span>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Skills */}
+                        {filteredSuggestions.skills.length > 0 && (
+                          <div className="p-4">
+                            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                              <TrendingUp className="h-3.5 w-3.5" />
+                              Popular Skills
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {filteredSuggestions.skills.map((skill, index) => (
+                                <button
+                                  key={index}
+                                  type="button"
+                                  onClick={() => handleSuggestionClick(skill)}
+                                  className="px-3 py-1.5 bg-secondary hover:bg-primary/10 hover:text-primary text-foreground text-sm font-medium rounded-lg transition-colors"
+                                >
+                                  {skill}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <div className="p-6 text-center">
+                        <Search className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                        <p className="text-sm text-muted-foreground">No results for "{searchQuery}"</p>
+                        <p className="text-xs text-muted-foreground mt-1">Try a different search term</p>
                       </div>
                     )}
-                    
-                    {/* Popular Searches */}
-                    <div className="p-4">
-                      <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <TrendingUp className="h-3.5 w-3.5" />
-                        Popular Searches
-                      </p>
-                      <div className="space-y-1">
-                        {popularSearches.map((item, index) => (
-                          <button
-                            key={index}
-                            type="button"
-                            onClick={() => handleSuggestionClick(item.label)}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-primary/5 transition-all text-left group"
-                          >
-                            <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                              <Sparkles className="h-4 w-4 text-primary" />
-                            </div>
-                            <span className="text-sm text-foreground font-medium">{item.label}</span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
                   </div>
                 )}
               </div>
               
-              {/* Divider */}
-              <div className="w-px h-8 bg-border"></div>
+              {/* Divider - hidden on mobile */}
+              <div className="hidden sm:block w-px h-8 bg-border"></div>
               
               {/* Location Input */}
               <div className="flex-1 relative">
@@ -200,7 +263,9 @@ const Hero = () => {
                         Popular Locations
                       </p>
                       <div className="space-y-1">
-                        {locationSuggestions.map((loc, index) => (
+                        {locationSuggestions
+                          .filter(loc => !location || loc.toLowerCase().includes(location.toLowerCase()))
+                          .map((loc, index) => (
                           <button
                             key={index}
                             type="button"
@@ -221,7 +286,7 @@ const Hero = () => {
               <Button 
                 type="submit" 
                 size="icon"
-                className="h-12 w-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground flex-shrink-0 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all hover:-translate-y-0.5"
+                className="h-12 w-full sm:w-12 rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground flex-shrink-0 shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all hover:-translate-y-0.5"
               >
                 <ArrowRight className="h-5 w-5" />
               </Button>
