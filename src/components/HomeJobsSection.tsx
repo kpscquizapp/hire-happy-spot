@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ChevronDown, ChevronLeft, ChevronRight, MapPin, Building2, Clock, Bookmark, Zap, Sparkles, Briefcase, DollarSign, Award, Clock3, Navigation, Code } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, MapPin, Building2, Clock, Bookmark, Zap, Sparkles, Briefcase, DollarSign, Award, Clock3, Navigation, Code, X, Filter, ArrowUpRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 interface Job {
   id: number;
@@ -272,6 +273,70 @@ const FilterSection: React.FC<FilterSectionProps> = ({
   );
 };
 
+// Filter Content Component for both desktop and mobile
+const FilterContent: React.FC<{
+  openFilters: string[];
+  toggleFilter: (filter: string) => void;
+  selectedFilters: Record<string, string[]>;
+  handleFilterChange: (category: string, filterId: string) => void;
+  clearAllFilters: () => void;
+  totalSelected: number;
+  onApply?: () => void;
+}> = ({ openFilters, toggleFilter, selectedFilters, handleFilterChange, clearAllFilters, totalSelected, onApply }) => {
+  return (
+    <>
+      {/* Filter Header */}
+      <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/50">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-primary to-violet-600 rounded-xl flex items-center justify-center">
+            <Sparkles className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h3 className="font-bold text-foreground text-lg">Filters</h3>
+            {totalSelected > 0 && (
+              <p className="text-xs text-muted-foreground">{totalSelected} filters applied</p>
+            )}
+          </div>
+        </div>
+        {totalSelected > 0 && (
+          <button 
+            onClick={clearAllFilters}
+            className="text-sm text-primary hover:text-primary/80 font-semibold bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors"
+          >
+            Clear all
+          </button>
+        )}
+      </div>
+      
+      {/* Filter Sections */}
+      <div className="space-y-1">
+        {filterConfigs.map((config) => (
+          <FilterSection 
+            key={config.key}
+            config={config}
+            isOpen={openFilters.includes(config.key)} 
+            onToggle={() => toggleFilter(config.key)}
+            selectedFilters={selectedFilters[config.key]}
+            onFilterChange={(id) => handleFilterChange(config.key, id)}
+          />
+        ))}
+      </div>
+
+      {/* Apply Filters Button */}
+      {totalSelected > 0 && (
+        <div className="mt-5 pt-4 border-t border-border/50">
+          <Button 
+            onClick={onApply}
+            className="w-full bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-semibold py-5 rounded-xl shadow-lg shadow-primary/25"
+          >
+            Apply Filters ({totalSelected})
+          </Button>
+        </div>
+      )}
+    </>
+  );
+};
+
 const HomeJobsSection = () => {
   const [openFilters, setOpenFilters] = useState<string[]>(['category', 'skills']);
   const [selectedFilters, setSelectedFilters] = useState<Record<string, string[]>>({
@@ -283,6 +348,7 @@ const HomeJobsSection = () => {
     skills: [],
   });
   const [savedJobs, setSavedJobs] = useState<number[]>([]);
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const toggleFilter = (filter: string) => {
     setOpenFilters(prev => 
@@ -327,68 +393,72 @@ const HomeJobsSection = () => {
     <section className="py-8 bg-background">
       <div className="container mx-auto px-4">
         <div className="flex gap-8">
-          {/* Filters Sidebar */}
+          {/* Desktop Filters Sidebar */}
           <aside className="w-80 flex-shrink-0 hidden lg:block">
             <div className="bg-card border border-border/50 rounded-2xl p-5 sticky top-24 shadow-lg">
-              {/* Filter Header */}
-              <div className="flex items-center justify-between mb-5 pb-4 border-b border-border/50">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-violet-600 rounded-xl flex items-center justify-center">
-                    <Sparkles className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-foreground text-lg">Filters</h3>
-                    {totalSelected > 0 && (
-                      <p className="text-xs text-muted-foreground">{totalSelected} filters applied</p>
-                    )}
-                  </div>
-                </div>
-                {totalSelected > 0 && (
-                  <button 
-                    onClick={clearAllFilters}
-                    className="text-sm text-primary hover:text-primary/80 font-semibold bg-primary/10 px-3 py-1.5 rounded-lg hover:bg-primary/20 transition-colors"
-                  >
-                    Clear all
-                  </button>
-                )}
-              </div>
-              
-              {/* Filter Sections */}
-              <div className="space-y-1">
-                {filterConfigs.map((config) => (
-                  <FilterSection 
-                    key={config.key}
-                    config={config}
-                    isOpen={openFilters.includes(config.key)} 
-                    onToggle={() => toggleFilter(config.key)}
-                    selectedFilters={selectedFilters[config.key]}
-                    onFilterChange={(id) => handleFilterChange(config.key, id)}
-                  />
-                ))}
-              </div>
-
-              {/* Apply Filters Button */}
-              {totalSelected > 0 && (
-                <div className="mt-5 pt-4 border-t border-border/50">
-                  <Button className="w-full bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-semibold py-5 rounded-xl shadow-lg shadow-primary/25">
-                    Apply Filters ({totalSelected})
-                  </Button>
-                </div>
-              )}
+              <FilterContent 
+                openFilters={openFilters}
+                toggleFilter={toggleFilter}
+                selectedFilters={selectedFilters}
+                handleFilterChange={handleFilterChange}
+                clearAllFilters={clearAllFilters}
+                totalSelected={totalSelected}
+              />
             </div>
           </aside>
 
           {/* Main Content */}
           <div className="flex-1">
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden mb-4">
+              <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
+                <SheetTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="w-full flex items-center justify-center gap-2 py-6 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 hover:border-primary/50 transition-all"
+                  >
+                    <Filter className="h-5 w-5 text-primary" />
+                    <span className="font-semibold text-primary">Filters</span>
+                    {totalSelected > 0 && (
+                      <span className="ml-2 px-2.5 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded-full">
+                        {totalSelected}
+                      </span>
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-full sm:max-w-md p-0 bg-background">
+                  <SheetHeader className="p-5 border-b border-border/50">
+                    <SheetTitle className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-br from-primary to-violet-600 rounded-xl flex items-center justify-center">
+                        <Filter className="h-5 w-5 text-white" />
+                      </div>
+                      <span>Filter Jobs</span>
+                    </SheetTitle>
+                  </SheetHeader>
+                  <div className="p-5 overflow-y-auto max-h-[calc(100vh-120px)]">
+                    <FilterContent 
+                      openFilters={openFilters}
+                      toggleFilter={toggleFilter}
+                      selectedFilters={selectedFilters}
+                      handleFilterChange={handleFilterChange}
+                      clearAllFilters={clearAllFilters}
+                      totalSelected={totalSelected}
+                      onApply={() => setMobileFilterOpen(false)}
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
+
             {/* Top Hiring Companies */}
             <div className="bg-card border border-border/50 rounded-2xl p-5 mb-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-medium text-muted-foreground">Top Hiring Companies</h3>
                 <div className="flex gap-1">
-                  <button className="w-8 h-8 border border-border rounded-lg flex items-center justify-center hover:bg-muted transition-colors">
+                  <button className="w-8 h-8 border border-border rounded-lg flex items-center justify-center hover:bg-muted hover:scale-105 transition-all">
                     <ChevronLeft className="h-4 w-4" />
                   </button>
-                  <button className="w-8 h-8 border border-border rounded-lg flex items-center justify-center hover:bg-muted transition-colors">
+                  <button className="w-8 h-8 border border-border rounded-lg flex items-center justify-center hover:bg-muted hover:scale-105 transition-all">
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
@@ -398,7 +468,7 @@ const HomeJobsSection = () => {
                   <a 
                     key={index}
                     href={`/jobs?company=${company.name.toLowerCase()}`}
-                    className="flex-shrink-0 grayscale hover:grayscale-0 opacity-70 hover:opacity-100 transition-all duration-300"
+                    className="flex-shrink-0 grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300"
                   >
                     <img 
                       src={company.logo} 
@@ -417,7 +487,7 @@ const HomeJobsSection = () => {
             {/* Recommended Jobs Header */}
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center animate-pulse">
                   <Zap className="h-5 w-5 text-white" />
                 </div>
                 Recommended Jobs
@@ -427,21 +497,22 @@ const HomeJobsSection = () => {
               </span>
             </div>
 
-            {/* Job Cards */}
+            {/* Job Cards with animations */}
             <div className="space-y-4">
-              {jobs.map((job) => (
+              {jobs.map((job, index) => (
                 <a
                   key={job.id}
                   href={`/jobs/${job.id}`}
-                  className="block bg-card border border-border/50 rounded-2xl overflow-hidden hover:shadow-xl hover:border-primary/30 transition-all duration-300 group"
+                  className="block bg-card border border-border/50 rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-primary/10 hover:border-primary/40 transition-all duration-500 group hover:-translate-y-1"
+                  style={{ animationDelay: `${index * 100}ms` }}
                 >
-                  {/* Gradient Top Border */}
-                  <div className={`h-1 bg-gradient-to-r ${job.accentColor}`} />
+                  {/* Gradient Top Border with animation */}
+                  <div className={`h-1 bg-gradient-to-r ${job.accentColor} group-hover:h-1.5 transition-all duration-300`} />
                   
                   <div className="p-6">
                     <div className="flex items-start gap-5">
-                      {/* Company Logo */}
-                      <div className="w-14 h-14 bg-gradient-to-br from-muted to-muted/50 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden border border-border/30 group-hover:scale-105 transition-transform">
+                      {/* Company Logo with hover effect */}
+                      <div className="w-14 h-14 bg-gradient-to-br from-muted to-muted/50 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden border border-border/30 group-hover:scale-110 group-hover:shadow-lg group-hover:border-primary/30 transition-all duration-300">
                         <img 
                           src={job.companyLogo} 
                           alt={job.company}
@@ -459,30 +530,31 @@ const HomeJobsSection = () => {
                         <div className="flex items-start justify-between gap-4">
                           <div>
                             <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-bold text-foreground text-lg group-hover:text-primary transition-colors">
+                              <h3 className="font-bold text-foreground text-lg group-hover:text-primary transition-colors duration-300 flex items-center gap-2">
                                 {job.title}
+                                <ArrowUpRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
                               </h3>
                               {job.isFeatured && (
-                                <span className="px-2 py-0.5 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 text-xs font-semibold rounded-full flex items-center gap-1">
+                                <span className="px-2 py-0.5 bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 text-xs font-semibold rounded-full flex items-center gap-1 animate-pulse">
                                   <Sparkles className="h-3 w-3" />
                                   Featured
                                 </span>
                               )}
                             </div>
                             <div className="flex items-center gap-3 text-sm mb-3">
-                              <span className="font-medium text-foreground">{job.company}</span>
+                              <span className="font-medium text-foreground group-hover:text-primary/80 transition-colors">{job.company}</span>
                               {job.isNew && (
                                 <span className="px-2.5 py-0.5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full animate-pulse">
                                   NEW
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-5 text-sm text-muted-foreground">
-                              <span className="flex items-center gap-1.5 bg-muted/50 px-3 py-1 rounded-full">
+                            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1.5 bg-muted/50 px-3 py-1 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-all">
                                 <MapPin className="h-3.5 w-3.5 text-primary" />
                                 {job.location}
                               </span>
-                              <span className="flex items-center gap-1.5 bg-muted/50 px-3 py-1 rounded-full">
+                              <span className="flex items-center gap-1.5 bg-muted/50 px-3 py-1 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-all">
                                 <Building2 className="h-3.5 w-3.5 text-primary" />
                                 {job.type}
                               </span>
@@ -490,35 +562,36 @@ const HomeJobsSection = () => {
                           </div>
 
                           <div className="text-right flex-shrink-0">
-                            <div className="text-lg font-bold bg-gradient-to-r from-primary to-violet-600 bg-clip-text text-transparent mb-2">
+                            <div className="text-lg font-bold bg-gradient-to-r from-primary to-violet-600 bg-clip-text text-transparent mb-2 group-hover:scale-105 transition-transform origin-right">
                               {job.salary}
                             </div>
                             <button 
                               onClick={(e) => toggleSaveJob(job.id, e)}
-                              className={`p-2.5 rounded-xl transition-all ${
+                              className={`p-2.5 rounded-xl transition-all duration-300 hover:scale-110 ${
                                 savedJobs.includes(job.id)
-                                  ? 'bg-primary/10 text-primary'
+                                  ? 'bg-primary/10 text-primary shadow-lg shadow-primary/20'
                                   : 'hover:bg-muted text-muted-foreground hover:text-primary'
                               }`}
                             >
-                              <Bookmark className={`h-5 w-5 ${savedJobs.includes(job.id) ? 'fill-current' : ''}`} />
+                              <Bookmark className={`h-5 w-5 transition-all duration-300 ${savedJobs.includes(job.id) ? 'fill-current scale-110' : ''}`} />
                             </button>
                           </div>
                         </div>
 
                         {/* Skills & Time */}
-                        <div className="flex items-center justify-between mt-5 pt-4 border-t border-border/30">
+                        <div className="flex items-center justify-between mt-5 pt-4 border-t border-border/30 group-hover:border-primary/20 transition-colors">
                           <div className="flex flex-wrap gap-2">
-                            {job.skills.map((skill, index) => (
+                            {job.skills.map((skill, skillIndex) => (
                               <span 
-                                key={index}
-                                className="px-3 py-1.5 bg-gradient-to-r from-muted to-muted/70 text-foreground text-xs font-medium rounded-lg border border-border/30 hover:border-primary/30 hover:from-primary/5 hover:to-primary/10 transition-all cursor-default"
+                                key={skillIndex}
+                                className="px-3 py-1.5 bg-gradient-to-r from-muted to-muted/70 text-foreground text-xs font-medium rounded-lg border border-border/30 hover:border-primary/50 hover:from-primary/10 hover:to-violet-500/10 hover:text-primary hover:scale-105 transition-all duration-300 cursor-default"
+                                style={{ transitionDelay: `${skillIndex * 50}ms` }}
                               >
                                 {skill}
                               </span>
                             ))}
                           </div>
-                          <span className="text-xs text-muted-foreground flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full">
+                          <span className="text-xs text-muted-foreground flex items-center gap-1.5 bg-muted/50 px-3 py-1.5 rounded-full group-hover:bg-primary/10 group-hover:text-primary transition-all">
                             <Clock className="h-3.5 w-3.5" />
                             {job.postedTime}
                           </span>
@@ -532,7 +605,7 @@ const HomeJobsSection = () => {
 
             {/* Load More */}
             <div className="text-center mt-10">
-              <Button className="px-10 py-6 bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-semibold rounded-xl shadow-lg shadow-primary/25">
+              <Button className="px-10 py-6 bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-semibold rounded-xl shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 hover:scale-105 transition-all duration-300">
                 Load More Jobs
               </Button>
             </div>
