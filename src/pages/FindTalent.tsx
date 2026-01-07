@@ -2,579 +2,667 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Slider } from '@/components/ui/slider';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import PostContractModal from '@/components/PostContractModal';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { 
   Search, 
-  Mail,
-  Upload,
-  Edit,
-  Share2,
-  Bell,
-  Info,
-  History,
+  Bot,
+  Sparkles,
+  ArrowLeft,
   Filter,
-  Settings,
-  MoreHorizontal,
-  ChevronDown,
-  CheckCircle2,
-  Download,
-  Calendar,
+  SlidersHorizontal,
+  User,
+  Clock,
+  DollarSign,
+  MapPin,
   Briefcase,
-  FileText,
-  Plus
+  Building2,
+  Star,
+  Heart,
+  Eye,
+  ChevronDown,
+  RotateCcw,
+  Plus,
+  X
 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
-interface Candidate {
+interface AIProfile {
   id: number;
   name: string;
-  title: string;
-  bio: string;
-  appliedDate: string;
-  appliedTime: string;
-  experience: string;
-  location: string;
+  matchScore: number;
   skills: string[];
-  workHistory: {
-    role: string;
-    company: string;
-    period: string;
-    description: string;
-  }[];
-  files: {
-    name: string;
-    type: string;
-    size: string;
-  }[];
-  selected?: boolean;
+  experience: number;
+  rate: number;
+  profileType: 'bench' | 'contract';
+  availability: 'immediate' | 'within30';
+  location: string;
+  avatar: string;
 }
 
 const FindTalent = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [candidateSearch, setCandidateSearch] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
-  const [selectedCandidateId, setSelectedCandidateId] = useState<number>(1);
-  const [selectedCandidates, setSelectedCandidates] = useState<number[]>([1]);
+  const [view, setView] = useState<'posting' | 'results'>('posting');
   const [showContractModal, setShowContractModal] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  
+  // Job posting form state
+  const [jobData, setJobData] = useState({
+    title: 'Senior React Developer',
+    description: 'We are looking for an experienced React developer to join our team. The ideal candidate will have strong experience with React, Redux, TypeScript, and modern frontend development practices. You will be working on building scalable web applications and collaborating with cross-functional teams.',
+    skills: ['React', 'Redux', 'TypeScript', 'Node.js', 'REST APIs'],
+    experience: '5-8 years',
+    location: 'Remote / Bangalore',
+    budget: '$40/hr - $60/hr'
+  });
 
-  const candidates: Candidate[] = [
-    {
-      id: 1,
-      name: 'Arjun Mehta',
-      title: 'Product Designer',
-      bio: "I'm UI/UX Designer based in Bangalore",
-      appliedDate: '09/02/2024',
-      appliedTime: '18.10',
-      experience: '2nd Total Experience',
-      location: 'Bangalore, India',
-      skills: ['UI/UX', 'Figma', 'Adobe XD', 'Prototyping'],
-      workHistory: [
-        {
-          role: 'Senior UI/UX Designer',
-          company: 'Flipkart',
-          period: 'August 2022 - October 2024',
-          description: "I've led numerous projects, with complex concepts into visually compelling & user-friendly interfaces"
-        },
-        {
-          role: 'Junior UI Designer',
-          company: 'Zomato',
-          period: 'March 2021 - August 2022',
-          description: "I've honed my skills by collaborating with team and..."
-        }
-      ],
-      files: [
-        { name: 'arjun-cv-updated', type: 'File PDF', size: '2.1 MB' },
-        { name: 'arjun-portfolio-new', type: 'File PDF', size: '5.4 MB' }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Priya Sharma',
-      title: 'Product Designer',
-      bio: "I'm UI/UX Designer based in Mumbai",
-      appliedDate: '12/02/2024',
-      appliedTime: '15.13',
-      experience: '3 Years Experience',
-      location: 'Mumbai, India',
-      skills: ['UI/UX', 'Sketch', 'InVision'],
-      workHistory: [
-        {
-          role: 'Product Designer',
-          company: 'Swiggy',
-          period: 'Jan 2022 - Present',
-          description: 'Leading design initiatives for mobile app features'
-        }
-      ],
-      files: [
-        { name: 'priya-resume', type: 'File PDF', size: '1.8 MB' }
-      ]
-    },
-    {
-      id: 3,
-      name: 'Rohan Verma',
-      title: 'Product Designer',
-      bio: "I'm UI/UX Designer based in Delhi",
-      appliedDate: '11/02/2024',
-      appliedTime: '08.10',
-      experience: '4 Years Experience',
-      location: 'Delhi, India',
-      skills: ['UI/UX', 'Figma', 'Motion Design'],
-      workHistory: [
-        {
-          role: 'Lead Designer',
-          company: 'Paytm',
-          period: 'June 2021 - Present',
-          description: 'Designing payment flow experiences'
-        }
-      ],
-      files: [
-        { name: 'rohan-portfolio', type: 'File PDF', size: '3.2 MB' }
-      ]
-    },
-    {
-      id: 4,
-      name: 'Ananya Reddy',
-      title: 'Product Designer',
-      bio: "I'm UI/UX Designer based in Hyderabad",
-      appliedDate: '07/02/2024',
-      appliedTime: '09.52',
-      experience: '2 Years Experience',
-      location: 'Hyderabad, India',
-      skills: ['UI/UX', 'Adobe XD', 'Illustration'],
-      workHistory: [
-        {
-          role: 'UI Designer',
-          company: 'Razorpay',
-          period: 'April 2023 - Present',
-          description: 'Creating beautiful payment interfaces'
-        }
-      ],
-      files: [
-        { name: 'ananya-cv', type: 'File PDF', size: '2.0 MB' }
-      ]
-    },
-    {
-      id: 5,
-      name: 'Vikram Singh',
-      title: 'Product Designer',
-      bio: "I'm UI/UX Designer based in Pune",
-      appliedDate: '08/02/2024',
-      appliedTime: '11.17',
-      experience: '5 Years Experience',
-      location: 'Pune, India',
-      skills: ['UI/UX', 'Figma', 'Design Systems'],
-      workHistory: [
-        {
-          role: 'Senior Designer',
-          company: 'PhonePe',
-          period: 'March 2020 - Present',
-          description: 'Building comprehensive design systems'
-        }
-      ],
-      files: [
-        { name: 'vikram-portfolio', type: 'File PDF', size: '4.1 MB' }
-      ]
-    },
-    {
-      id: 6,
-      name: 'Kavya Nair',
-      title: 'Product Designer',
-      bio: "I'm UI/UX Designer based in Chennai",
-      appliedDate: '09/02/2024',
-      appliedTime: '13.31',
-      experience: '3 Years Experience',
-      location: 'Chennai, India',
-      skills: ['UI/UX', 'Prototyping', 'User Research'],
-      workHistory: [
-        {
-          role: 'Product Designer',
-          company: 'Freshworks',
-          period: 'Jan 2022 - Present',
-          description: 'Designing SaaS product experiences'
-        }
-      ],
-      files: [
-        { name: 'kavya-resume', type: 'File PDF', size: '1.9 MB' }
-      ]
-    },
-    {
-      id: 7,
-      name: 'Rahul Gupta',
-      title: 'Product Designer',
-      bio: "I'm UI/UX Designer based in Kolkata",
-      appliedDate: '10/02/2024',
-      appliedTime: '14.22',
-      experience: '4 Years Experience',
-      location: 'Kolkata, India',
-      skills: ['UI/UX', 'Figma', 'Animation'],
-      workHistory: [
-        {
-          role: 'Senior UI Designer',
-          company: 'CRED',
-          period: 'Feb 2021 - Present',
-          description: 'Creating premium fintech experiences'
-        }
-      ],
-      files: [
-        { name: 'rahul-portfolio', type: 'File PDF', size: '3.5 MB' }
-      ]
-    }
+  const [skillInput, setSkillInput] = useState('');
+  
+  // Filter state
+  const [filters, setFilters] = useState({
+    experienceRange: [2, 10],
+    rateRange: [30, 70],
+    profileTypes: { contract: true, bench: true },
+    availability: 'all',
+    location: 'all'
+  });
+
+  const [sortBy, setSortBy] = useState('matchScore');
+
+  // Mock AI-matched profiles
+  const aiProfiles: AIProfile[] = [
+    { id: 1, name: 'Arjun Mehta', matchScore: 92, skills: ['React', 'Redux', 'TypeScript', 'Node.js'], experience: 6, rate: 45, profileType: 'bench', availability: 'immediate', location: 'Bangalore', avatar: 'arjun' },
+    { id: 2, name: 'Priya Sharma', matchScore: 88, skills: ['React', 'Next.js', 'GraphQL', 'AWS'], experience: 7, rate: 55, profileType: 'contract', availability: 'immediate', location: 'Mumbai', avatar: 'priya' },
+    { id: 3, name: 'Rohan Verma', matchScore: 85, skills: ['React', 'Redux', 'Python', 'Django'], experience: 5, rate: 40, profileType: 'bench', availability: 'within30', location: 'Delhi', avatar: 'rohan' },
+    { id: 4, name: 'Ananya Reddy', matchScore: 82, skills: ['React', 'Vue.js', 'TypeScript', 'Firebase'], experience: 4, rate: 35, profileType: 'contract', availability: 'immediate', location: 'Hyderabad', avatar: 'ananya' },
+    { id: 5, name: 'Vikram Singh', matchScore: 78, skills: ['React', 'Angular', 'Node.js', 'MongoDB'], experience: 8, rate: 60, profileType: 'bench', availability: 'within30', location: 'Pune', avatar: 'vikram' },
+    { id: 6, name: 'Kavya Nair', matchScore: 75, skills: ['React', 'Redux', 'Jest', 'Cypress'], experience: 3, rate: 32, profileType: 'contract', availability: 'immediate', location: 'Chennai', avatar: 'kavya' },
+    { id: 7, name: 'Rahul Gupta', matchScore: 68, skills: ['React', 'Svelte', 'Tailwind', 'PostgreSQL'], experience: 5, rate: 42, profileType: 'bench', availability: 'immediate', location: 'Kolkata', avatar: 'rahul' },
+    { id: 8, name: 'Sneha Patel', matchScore: 55, skills: ['React', 'Bootstrap', 'jQuery', 'PHP'], experience: 4, rate: 30, profileType: 'contract', availability: 'within30', location: 'Ahmedabad', avatar: 'sneha' },
   ];
 
-  const selectedCandidate = candidates.find(c => c.id === selectedCandidateId) || candidates[0];
+  const [shortlisted, setShortlisted] = useState<number[]>([]);
 
-  const toggleCandidateSelection = (id: number) => {
-    setSelectedCandidates(prev => 
-      prev.includes(id) ? prev.filter(cId => cId !== id) : [...prev, id]
+  const addSkill = (skill: string) => {
+    if (skill && !jobData.skills.includes(skill)) {
+      setJobData(prev => ({ ...prev, skills: [...prev.skills, skill] }));
+      setSkillInput('');
+    }
+  };
+
+  const removeSkill = (skill: string) => {
+    setJobData(prev => ({ ...prev, skills: prev.skills.filter(s => s !== skill) }));
+  };
+
+  const handleShowProfiles = () => {
+    setIsSearching(true);
+    setTimeout(() => {
+      setIsSearching(false);
+      setView('results');
+    }, 1500);
+  };
+
+  const toggleShortlist = (id: number) => {
+    setShortlisted(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
   };
 
-  const selectAllCandidates = () => {
-    if (selectedCandidates.length === candidates.length) {
-      setSelectedCandidates([]);
-    } else {
-      setSelectedCandidates(candidates.map(c => c.id));
-    }
+  const getScoreColor = (score: number) => {
+    if (score >= 80) return 'text-green-600 bg-green-100';
+    if (score >= 60) return 'text-yellow-600 bg-yellow-100';
+    return 'text-red-600 bg-red-100';
   };
 
-  const filteredCandidates = candidates.filter(c => 
-    c.name.toLowerCase().includes(candidateSearch.toLowerCase())
-  );
+  const getScoreBarColor = (score: number) => {
+    if (score >= 80) return 'bg-green-500';
+    if (score >= 60) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
 
+  // Filter and sort profiles
+  const filteredProfiles = aiProfiles
+    .filter(p => {
+      if (p.experience < filters.experienceRange[0] || p.experience > filters.experienceRange[1]) return false;
+      if (p.rate < filters.rateRange[0] || p.rate > filters.rateRange[1]) return false;
+      if (!filters.profileTypes.contract && p.profileType === 'contract') return false;
+      if (!filters.profileTypes.bench && p.profileType === 'bench') return false;
+      if (filters.availability !== 'all' && p.availability !== filters.availability) return false;
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === 'matchScore') return b.matchScore - a.matchScore;
+      if (sortBy === 'experience') return b.experience - a.experience;
+      if (sortBy === 'rate') return a.rate - b.rate;
+      return 0;
+    });
+
+  const resetFilters = () => {
+    setFilters({
+      experienceRange: [2, 10],
+      rateRange: [30, 70],
+      profileTypes: { contract: true, bench: true },
+      availability: 'all',
+      location: 'all'
+    });
+  };
+
+  // Job Posting View
+  if (view === 'posting') {
+    return (
+      <div className="min-h-screen flex flex-col bg-muted/30">
+        <Header />
+        
+        <main className="flex-1 pt-20">
+          <div className="container mx-auto px-4 py-8 max-w-4xl">
+            {/* Page Header */}
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-foreground mb-2">Find Talent</h1>
+              <p className="text-muted-foreground">
+                Enter your job requirements and let AI find the best matching profiles
+              </p>
+            </div>
+
+            {/* Job Description Card */}
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Briefcase className="h-5 w-5 text-primary" />
+                  Job Description
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Job Title */}
+                <div>
+                  <Label htmlFor="title" className="text-sm font-medium">
+                    Job Title <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="title"
+                    value={jobData.title}
+                    onChange={(e) => setJobData(prev => ({ ...prev, title: e.target.value }))}
+                    placeholder="e.g., Senior React Developer"
+                    className="mt-1.5"
+                  />
+                </div>
+
+                {/* Job Description */}
+                <div>
+                  <Label htmlFor="description" className="text-sm font-medium">
+                    Job Description <span className="text-destructive">*</span>
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={jobData.description}
+                    onChange={(e) => setJobData(prev => ({ ...prev, description: e.target.value }))}
+                    placeholder="Describe the role, responsibilities, and requirements..."
+                    className="mt-1.5 min-h-[120px]"
+                  />
+                </div>
+
+                {/* Skills */}
+                <div>
+                  <Label className="text-sm font-medium">
+                    Skills <span className="text-destructive">*</span>
+                  </Label>
+                  <div className="flex flex-wrap gap-2 mt-2 mb-3">
+                    {jobData.skills.map((skill) => (
+                      <Badge key={skill} variant="secondary" className="gap-1 px-3 py-1.5">
+                        {skill}
+                        <X 
+                          className="h-3 w-3 cursor-pointer hover:text-destructive" 
+                          onClick={() => removeSkill(skill)}
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Add a skill..."
+                      value={skillInput}
+                      onChange={(e) => setSkillInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          addSkill(skillInput);
+                        }
+                      }}
+                    />
+                    <Button variant="outline" onClick={() => addSkill(skillInput)}>
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Experience, Location, Budget */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="experience" className="text-sm font-medium">Experience</Label>
+                    <Input
+                      id="experience"
+                      value={jobData.experience}
+                      onChange={(e) => setJobData(prev => ({ ...prev, experience: e.target.value }))}
+                      placeholder="e.g., 3-5 years"
+                      className="mt-1.5"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="location" className="text-sm font-medium">Location</Label>
+                    <Input
+                      id="location"
+                      value={jobData.location}
+                      onChange={(e) => setJobData(prev => ({ ...prev, location: e.target.value }))}
+                      placeholder="e.g., Remote / Bangalore"
+                      className="mt-1.5"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="budget" className="text-sm font-medium">Budget</Label>
+                    <Input
+                      id="budget"
+                      value={jobData.budget}
+                      onChange={(e) => setJobData(prev => ({ ...prev, budget: e.target.value }))}
+                      placeholder="e.g., $40-60/hr"
+                      className="mt-1.5"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* AI CTA Button */}
+            <div className="flex justify-center">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      size="lg"
+                      className="gap-3 px-8 py-6 text-lg bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 shadow-lg hover:shadow-xl transition-all"
+                      onClick={handleShowProfiles}
+                      disabled={isSearching}
+                    >
+                      {isSearching ? (
+                        <>
+                          <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Finding Matches...
+                        </>
+                      ) : (
+                        <>
+                          <Bot className="h-5 w-5" />
+                          Show Me Similar Profiles
+                        </>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-xs">
+                    <p>Find contract & bench resources matching this job description using AI</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+
+            {/* Additional Actions */}
+            <div className="flex justify-center gap-4 mt-6">
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={() => setShowContractModal(true)}
+              >
+                <Plus className="h-4 w-4" />
+                Post Contract Opportunity
+              </Button>
+            </div>
+          </div>
+        </main>
+
+        <Footer />
+        <PostContractModal open={showContractModal} onOpenChange={setShowContractModal} />
+      </div>
+    );
+  }
+
+  // Results View
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
       <Header />
       
       <main className="flex-1 pt-20">
-        {/* Top Bar */}
+        {/* Results Header */}
         <div className="bg-background border-b">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex-1 max-w-md">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Search now..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10 bg-background border-border"
-                  />
-                </div>
+          <div className="container mx-auto px-4 py-6">
+            <Button 
+              variant="ghost" 
+              className="gap-2 mb-4 -ml-2"
+              onClick={() => setView('posting')}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Job Posting
+            </Button>
+            <div className="flex items-center gap-3">
+              <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
+                <Sparkles className="h-6 w-6 text-white" />
               </div>
-              <div className="flex items-center gap-3">
-                <Button 
-                  className="gap-2 bg-primary hover:bg-primary/90"
-                  onClick={() => setShowContractModal(true)}
-                >
-                  <Plus className="h-4 w-4" />
-                  Post Contract Opportunity
-                </Button>
-                <Button variant="outline" className="gap-2">
-                  <Edit className="h-4 w-4" />
-                  Custom Page
-                </Button>
-                <Button variant="outline" className="gap-2">
-                  <Share2 className="h-4 w-4" />
-                  Share Availability
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <Info className="h-5 w-5" />
-                </Button>
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute top-1 right-1 h-2 w-2 bg-destructive rounded-full" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Page Header */}
-        <div className="bg-background border-b">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Product Designer</h1>
-                <p className="text-sm text-muted-foreground">
-                  Open Hiring / Product Designer / <span className="text-primary">Applied</span>
+                <h1 className="text-2xl font-bold text-foreground">
+                  Similar Profiles for: {jobData.title}
+                </h1>
+                <p className="text-muted-foreground">
+                  AI-matched profiles based on your job description
                 </p>
               </div>
-              <Button className="gap-2 bg-primary hover:bg-primary/90">
-                <Upload className="h-4 w-4" />
-                Export Report
-              </Button>
             </div>
           </div>
         </div>
 
-        {/* Tabs and Filters */}
-        <div className="bg-background border-b">
-          <div className="container mx-auto px-4 py-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Button 
-                  variant={activeTab === 'all' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setActiveTab('all')}
-                  className={activeTab === 'all' ? 'bg-primary text-primary-foreground' : ''}
-                >
-                  All Applied
-                </Button>
-                <Button 
-                  variant={activeTab === 'interview' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setActiveTab('interview')}
-                >
-                  Schedule Interview
-                </Button>
-                <Button 
-                  variant={activeTab === 'draft' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setActiveTab('draft')}
-                >
-                  Draft Applied
-                </Button>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <History className="h-4 w-4" />
-                  History Hiring
-                </Button>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Filter className="h-4 w-4" />
-                  Filter
-                </Button>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Settings className="h-4 w-4" />
-                  Setting Page
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content - Split View */}
         <div className="container mx-auto px-4 py-6">
           <div className="flex gap-6">
-            {/* Left Panel - Candidate List */}
-            <div className="w-96 flex-shrink-0">
-              <Card className="overflow-hidden">
-                <div className="p-4 border-b">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="font-semibold text-foreground">Others Applied</h2>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="h-4 w-4" />
+            {/* Filters Sidebar */}
+            <div className="w-72 flex-shrink-0">
+              <Card className="sticky top-24">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center justify-between text-lg">
+                    <span className="flex items-center gap-2">
+                      <Filter className="h-4 w-4" />
+                      Filters
+                    </span>
+                    <Button variant="ghost" size="sm" onClick={resetFilters} className="h-8 text-xs">
+                      <RotateCcw className="h-3 w-3 mr-1" />
+                      Reset
                     </Button>
-                  </div>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="text"
-                      placeholder="Search Applied..."
-                      value={candidateSearch}
-                      onChange={(e) => setCandidateSearch(e.target.value)}
-                      className="pl-10"
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Experience Slider */}
+                  <div>
+                    <Label className="text-sm font-medium flex items-center gap-2 mb-3">
+                      <Briefcase className="h-4 w-4 text-muted-foreground" />
+                      Experience
+                    </Label>
+                    <Slider
+                      value={filters.experienceRange}
+                      onValueChange={(value) => setFilters(prev => ({ ...prev, experienceRange: value }))}
+                      min={0}
+                      max={15}
+                      step={1}
+                      className="mb-2"
                     />
-                  </div>
-                </div>
-                
-                <div className="p-4 border-b flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Checkbox 
-                      checked={selectedCandidates.length === candidates.length}
-                      onCheckedChange={selectAllCandidates}
-                    />
-                    <span className="text-sm text-foreground">Select All</span>
-                  </div>
-                  <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground">
-                    Sort By
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                <div className="max-h-[600px] overflow-y-auto">
-                  {filteredCandidates.map((candidate) => (
-                    <div
-                      key={candidate.id}
-                      className={`p-4 border-b cursor-pointer transition-colors hover:bg-muted/50 ${
-                        selectedCandidateId === candidate.id ? 'bg-muted/50' : ''
-                      }`}
-                      onClick={() => setSelectedCandidateId(candidate.id)}
-                    >
-                      <div className="flex items-start gap-3">
-                        <Checkbox 
-                          checked={selectedCandidates.includes(candidate.id)}
-                          onCheckedChange={() => toggleCandidateSelection(candidate.id)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <Avatar className="h-10 w-10">
-                          <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${candidate.name}`} />
-                          <AvatarFallback>{candidate.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-medium text-foreground truncate">{candidate.name}</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {candidate.appliedDate} • {candidate.appliedTime}
-                          </p>
-                        </div>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0">
-                          <Mail className="h-4 w-4" />
-                        </Button>
-                      </div>
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>{filters.experienceRange[0]} years</span>
+                      <span>{filters.experienceRange[1]} years</span>
                     </div>
-                  ))}
-                </div>
+                  </div>
+
+                  {/* Rate Slider */}
+                  <div>
+                    <Label className="text-sm font-medium flex items-center gap-2 mb-3">
+                      <DollarSign className="h-4 w-4 text-muted-foreground" />
+                      Price / Rate
+                    </Label>
+                    <Slider
+                      value={filters.rateRange}
+                      onValueChange={(value) => setFilters(prev => ({ ...prev, rateRange: value }))}
+                      min={20}
+                      max={100}
+                      step={5}
+                      className="mb-2"
+                    />
+                    <div className="flex justify-between text-xs text-muted-foreground">
+                      <span>${filters.rateRange[0]}/hr</span>
+                      <span>${filters.rateRange[1]}/hr</span>
+                    </div>
+                  </div>
+
+                  {/* Profile Type */}
+                  <div>
+                    <Label className="text-sm font-medium flex items-center gap-2 mb-3">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      Profile Type
+                    </Label>
+                    <div className="space-y-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <Checkbox 
+                          checked={filters.profileTypes.contract}
+                          onCheckedChange={(checked) => 
+                            setFilters(prev => ({ 
+                              ...prev, 
+                              profileTypes: { ...prev.profileTypes, contract: !!checked } 
+                            }))
+                          }
+                        />
+                        <span className="text-sm">Contract Resource</span>
+                      </label>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <Checkbox 
+                          checked={filters.profileTypes.bench}
+                          onCheckedChange={(checked) => 
+                            setFilters(prev => ({ 
+                              ...prev, 
+                              profileTypes: { ...prev.profileTypes, bench: !!checked } 
+                            }))
+                          }
+                        />
+                        <span className="text-sm">Bench Resource</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Availability */}
+                  <div>
+                    <Label className="text-sm font-medium flex items-center gap-2 mb-3">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      Availability
+                    </Label>
+                    <Select 
+                      value={filters.availability} 
+                      onValueChange={(value) => setFilters(prev => ({ ...prev, availability: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All</SelectItem>
+                        <SelectItem value="immediate">Immediate</SelectItem>
+                        <SelectItem value="within30">Within 30 Days</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Location */}
+                  <div>
+                    <Label className="text-sm font-medium flex items-center gap-2 mb-3">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      Location
+                    </Label>
+                    <Select 
+                      value={filters.location} 
+                      onValueChange={(value) => setFilters(prev => ({ ...prev, location: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Locations</SelectItem>
+                        <SelectItem value="remote">Remote Only</SelectItem>
+                        <SelectItem value="onsite">Onsite Only</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </CardContent>
               </Card>
             </div>
 
-            {/* Right Panel - Candidate Details */}
+            {/* Results List */}
             <div className="flex-1">
-              <Card className="overflow-hidden">
-                {/* Header with Gradient */}
-                <div className="relative h-32 bg-gradient-to-r from-slate-800 via-purple-900 to-pink-800 overflow-hidden">
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-pink-500/30 via-transparent to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-background to-transparent" />
-                  <div className="absolute top-6 left-0 right-0 text-center">
-                    <h2 className="text-xl font-bold text-white">{selectedCandidate.title}</h2>
-                    <p className="text-sm text-white/80">Select the best employee candidates to join your team</p>
-                  </div>
+              {/* Sort Header */}
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-medium text-foreground">{filteredProfiles.length}</span> profiles found
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Sort by:</span>
+                  <Select value={sortBy} onValueChange={setSortBy}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="matchScore">Highest Match Score</SelectItem>
+                      <SelectItem value="experience">Experience</SelectItem>
+                      <SelectItem value="rate">Lowest Price</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
+              </div>
 
-                {/* Profile Section */}
-                <div className="px-6 -mt-12 relative z-10">
-                  <div className="flex items-end justify-between">
-                    <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedCandidate.name}`} />
-                      <AvatarFallback className="text-2xl">{selectedCandidate.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex items-center gap-2 mb-4">
-                      <Button variant="ghost" size="icon">
-                        <Mail className="h-5 w-5" />
-                      </Button>
-                      <Button variant="outline">Move Draft</Button>
-                      <Button className="bg-primary hover:bg-primary/90">Schedule Interview</Button>
-                    </div>
-                  </div>
+              {/* Profile Cards */}
+              {filteredProfiles.length > 0 ? (
+                <div className="space-y-4">
+                  {filteredProfiles.map((profile) => (
+                    <Card key={profile.id} className="hover:shadow-md transition-shadow">
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-4">
+                          {/* Avatar */}
+                          <Avatar className="h-14 w-14">
+                            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.avatar}`} />
+                            <AvatarFallback>{profile.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
 
-                  <div className="mt-4">
-                    <h2 className="text-2xl font-bold text-foreground">{selectedCandidate.name}</h2>
-                    <p className="text-muted-foreground">{selectedCandidate.bio}</p>
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <div className="grid grid-cols-3 gap-6">
-                    {/* Left Content */}
-                    <div className="col-span-2 space-y-6">
-                      {/* Description */}
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-3">Description</h3>
-                        <p className="text-muted-foreground text-sm leading-relaxed">
-                          I'm experienced UI/UX designer passionate about creating engaging digital experiences. 
-                          With a keen eye for detail and a commitment to user-centric design, I specialize in 
-                          transforming ideas into visually... <span className="text-primary cursor-pointer">See more...</span>
-                        </p>
-                      </div>
-
-                      {/* Experience */}
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-4">Experience</h3>
-                        <div className="space-y-4">
-                          {selectedCandidate.workHistory.map((work, index) => (
-                            <div key={index} className="flex gap-3">
-                              <div className="flex-shrink-0 mt-1">
-                                <CheckCircle2 className="h-5 w-5 text-primary" />
-                              </div>
+                          {/* Info */}
+                          <div className="flex-1">
+                            <div className="flex items-start justify-between">
                               <div>
-                                <h4 className="font-medium text-foreground">{work.role} - {work.company}</h4>
-                                <p className="text-sm text-muted-foreground mb-1">({work.period})</p>
-                                <p className="text-sm text-muted-foreground">{work.description}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Right Sidebar - Overview */}
-                    <div className="space-y-6">
-                      {/* Overview Card */}
-                      <Card className="p-4">
-                        <h3 className="font-semibold text-foreground mb-4">Overview</h3>
-                        <div className="space-y-4">
-                          <div className="flex items-start gap-3">
-                            <div className="p-2 rounded-lg bg-muted">
-                              <Briefcase className="h-4 w-4 text-muted-foreground" />
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Applied For</p>
-                              <p className="font-medium text-foreground">{selectedCandidate.title}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="p-2 rounded-lg bg-muted">
-                              <Calendar className="h-4 w-4 text-muted-foreground" />
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Application Date</p>
-                              <p className="font-medium text-foreground">{selectedCandidate.appliedDate} • {selectedCandidate.appliedTime}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-start gap-3">
-                            <div className="p-2 rounded-lg bg-muted">
-                              <Briefcase className="h-4 w-4 text-muted-foreground" />
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Experience</p>
-                              <p className="font-medium text-foreground">{selectedCandidate.experience}</p>
-                            </div>
-                          </div>
-                        </div>
-                      </Card>
-
-                      {/* File Attachments */}
-                      <Card className="p-4">
-                        <h3 className="font-semibold text-foreground mb-4">File Attachment</h3>
-                        <div className="space-y-3">
-                          {selectedCandidate.files.map((file, index) => (
-                            <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                              <div className="flex items-center gap-3">
-                                <FileText className="h-5 w-5 text-muted-foreground" />
-                                <div>
-                                  <p className="text-sm font-medium text-foreground">{file.name}</p>
-                                  <p className="text-xs text-muted-foreground">{file.type} - {file.size}</p>
+                                <div className="flex items-center gap-2">
+                                  <h3 className="font-semibold text-foreground">{profile.name}</h3>
+                                  <Badge 
+                                    variant="outline" 
+                                    className={profile.availability === 'immediate' ? 'text-green-600 border-green-300 bg-green-50' : 'text-amber-600 border-amber-300 bg-amber-50'}
+                                  >
+                                    {profile.availability === 'immediate' ? '🟢 Immediate' : '🟡 Within 30 Days'}
+                                  </Badge>
+                                </div>
+                                <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+                                  <span className="flex items-center gap-1">
+                                    <Briefcase className="h-3.5 w-3.5" />
+                                    {profile.experience} Years
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <DollarSign className="h-3.5 w-3.5" />
+                                    ${profile.rate}/hr
+                                  </span>
+                                  <span className="flex items-center gap-1">
+                                    <MapPin className="h-3.5 w-3.5" />
+                                    {profile.location}
+                                  </span>
                                 </div>
                               </div>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
-                                <Download className="h-4 w-4" />
-                              </Button>
+
+                              {/* Match Score */}
+                              <div className="text-center">
+                                <div className={`inline-flex items-center justify-center h-12 w-12 rounded-full ${getScoreColor(profile.matchScore)}`}>
+                                  <span className="font-bold text-sm">{profile.matchScore}%</span>
+                                </div>
+                                <p className="text-xs text-muted-foreground mt-1">AI Match</p>
+                              </div>
                             </div>
-                          ))}
+
+                            {/* Skills */}
+                            <div className="flex flex-wrap gap-1.5 mt-3">
+                              {profile.skills.map((skill) => (
+                                <Badge key={skill} variant="secondary" className="text-xs">
+                                  {skill}
+                                </Badge>
+                              ))}
+                            </div>
+
+                            {/* Score Bar */}
+                            <div className="mt-3">
+                              <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                                <div 
+                                  className={`h-full ${getScoreBarColor(profile.matchScore)} transition-all`}
+                                  style={{ width: `${profile.matchScore}%` }}
+                                />
+                              </div>
+                            </div>
+
+                            {/* Profile Type Badge & Actions */}
+                            <div className="flex items-center justify-between mt-4">
+                              <Badge 
+                                variant="outline"
+                                className={profile.profileType === 'bench' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-purple-50 text-purple-700 border-purple-200'}
+                              >
+                                {profile.profileType === 'bench' ? (
+                                  <><Building2 className="h-3 w-3 mr-1" /> Bench Resource</>
+                                ) : (
+                                  <><Briefcase className="h-3 w-3 mr-1" /> Contract Resource</>
+                                )}
+                              </Badge>
+                              <div className="flex gap-2">
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
+                                  onClick={() => navigate(`/talent/${profile.id}`)}
+                                >
+                                  <Eye className="h-4 w-4 mr-1" />
+                                  View Profile
+                                </Button>
+                                <Button 
+                                  variant={shortlisted.includes(profile.id) ? "default" : "outline"}
+                                  size="sm"
+                                  onClick={() => toggleShortlist(profile.id)}
+                                  className={shortlisted.includes(profile.id) ? "bg-primary" : ""}
+                                >
+                                  <Heart className={`h-4 w-4 mr-1 ${shortlisted.includes(profile.id) ? 'fill-current' : ''}`} />
+                                  {shortlisted.includes(profile.id) ? 'Shortlisted' : 'Shortlist'}
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </Card>
-                    </div>
-                  </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-              </Card>
+              ) : (
+                /* Empty State */
+                <Card className="p-12 text-center">
+                  <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                    <Search className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">No strong matches found</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Try adjusting experience or price range to find more profiles.
+                  </p>
+                  <Button variant="outline" onClick={resetFilters}>
+                    Reset Filters
+                  </Button>
+                </Card>
+              )}
             </div>
           </div>
         </div>
       </main>
 
       <Footer />
-
-      <PostContractModal 
-        open={showContractModal} 
-        onOpenChange={setShowContractModal} 
-      />
+      <PostContractModal open={showContractModal} onOpenChange={setShowContractModal} />
     </div>
   );
 };
