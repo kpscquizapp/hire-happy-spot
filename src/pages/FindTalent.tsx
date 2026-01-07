@@ -784,170 +784,128 @@ const FindTalent = () => {
 
         <Footer />
 
-        {/* Candidate Profile Sheet */}
+        {/* Candidate Profile Sheet - Simple View */}
         <Sheet open={!!selectedCandidate} onOpenChange={() => setSelectedCandidate(null)}>
-          <SheetContent className="w-full sm:max-w-3xl overflow-y-auto p-0">
+          <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
             {selectedCandidate && (
-              <div className="flex">
-                {/* Left Sidebar */}
-                <div className="w-64 bg-gradient-to-b from-slate-800 to-slate-900 text-white p-6 flex-shrink-0">
-                  <Avatar className="h-24 w-24 mx-auto border-4 border-white/20">
+              <div className="space-y-6">
+                {/* Header */}
+                <div className="flex items-start gap-4">
+                  <Avatar className="h-16 w-16">
                     <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedCandidate.avatar}`} />
-                    <AvatarFallback className="text-2xl bg-slate-700">{selectedCandidate.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                    <AvatarFallback className="text-xl">{selectedCandidate.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
-                  <h2 className="text-lg font-bold text-center mt-4">{selectedCandidate.name}</h2>
-                  <p className="text-sm text-slate-300 text-center">{selectedCandidate.title}</p>
-
-                  <div className="flex justify-center gap-2 mt-4">
-                    <Badge className="bg-blue-600 text-white">{selectedCandidate.profileType === 'bench' ? 'BENCH RESOURCE' : 'CONTRACT'}</Badge>
-                    {selectedCandidate.topMatch && <Badge className="bg-green-600 text-white">⭐ Top 5% Match</Badge>}
-                  </div>
-
-                  <Button className="w-full mt-4 bg-primary hover:bg-primary/90">Book Interview</Button>
-                  <Button variant="outline" size="icon" className="w-full mt-2 bg-transparent border-white/30 text-white hover:bg-white/10"><Download className="h-4 w-4" /></Button>
-
-                  <div className="mt-6 space-y-3 text-sm">
-                    <div className="flex items-center justify-between"><span className="text-slate-400 flex items-center gap-2"><DollarSign className="h-4 w-4" /> Hourly Rate</span><span>{selectedCandidate.hourlyRate} /hr</span></div>
-                    <div className="flex items-center justify-between"><span className="text-slate-400 flex items-center gap-2"><Clock className="h-4 w-4" /> Availability</span><span>{selectedCandidate.availability}</span></div>
-                    <div className="flex items-center justify-between"><span className="text-slate-400 flex items-center gap-2"><MapPin className="h-4 w-4" /> Location</span><span>{selectedCandidate.location}</span></div>
-                    <div className="flex items-center justify-between"><span className="text-slate-400 flex items-center gap-2"><Briefcase className="h-4 w-4" /> Experience</span><span>{selectedCandidate.experience}</span></div>
-                    <div className="flex items-center justify-between"><span className="text-slate-400 flex items-center gap-2"><Globe className="h-4 w-4" /> English</span><span>{selectedCandidate.language}</span></div>
-                  </div>
-
-                  <div className="mt-6">
-                    <h4 className="text-sm font-semibold mb-3">Skills & Tech</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedCandidate.skills.map(skill => <Badge key={skill} variant="secondary" className="bg-slate-700 text-white text-xs">{skill}</Badge>)}
+                  <div className="flex-1">
+                    <h2 className="text-xl font-bold text-foreground">{selectedCandidate.name}</h2>
+                    <p className="text-muted-foreground">{selectedCandidate.title}</p>
+                    <div className="flex gap-2 mt-2">
+                      <Badge className={selectedCandidate.profileType === 'bench' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}>
+                        {selectedCandidate.profileType === 'bench' ? 'Bench Resource' : 'Contract'}
+                      </Badge>
+                      {selectedCandidate.topMatch && <Badge className="bg-green-100 text-green-700">⭐ Top 5% Match</Badge>}
                     </div>
                   </div>
+                  <div className="text-center">
+                    <div className={`h-14 w-14 rounded-full flex items-center justify-center border-2 ${getScoreColor(selectedCandidate.matchPercentage)}`}>
+                      <span className="text-lg font-bold">{selectedCandidate.matchPercentage}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">AI Match</p>
+                  </div>
+                </div>
 
-                  <div className="mt-6">
-                    <h4 className="text-sm font-semibold mb-3">Certifications</h4>
+                {/* Quick Info */}
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <DollarSign className="h-4 w-4" />
+                    <span>{selectedCandidate.hourlyRate}/hr</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    <span>{selectedCandidate.availability}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <MapPin className="h-4 w-4" />
+                    <span>{selectedCandidate.location}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Briefcase className="h-4 w-4" />
+                    <span>{selectedCandidate.experience}</span>
+                  </div>
+                </div>
+
+                {/* AI Scores */}
+                <Card className="bg-muted/50">
+                  <CardContent className="p-4">
+                    <h4 className="font-medium text-foreground mb-3">AI Assessment Scores</h4>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="text-center">
+                        <p className="text-2xl font-bold text-foreground">{selectedCandidate.aiScores.technical}</p>
+                        <p className="text-xs text-muted-foreground">Technical</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-2xl font-bold text-foreground">{selectedCandidate.aiScores.communication}</p>
+                        <p className="text-xs text-muted-foreground">Communication</p>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-2xl font-bold text-foreground">{selectedCandidate.aiScores.problemSolving}</p>
+                        <p className="text-xs text-muted-foreground">Problem Solving</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Skills */}
+                <div>
+                  <h4 className="font-medium text-foreground mb-2">Skills</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedCandidate.skills.map(skill => (
+                      <Badge key={skill} variant="secondary">{skill}</Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* About */}
+                <div>
+                  <h4 className="font-medium text-foreground mb-2">About</h4>
+                  <p className="text-sm text-muted-foreground">{selectedCandidate.about}</p>
+                </div>
+
+                {/* Work Experience */}
+                <div>
+                  <h4 className="font-medium text-foreground mb-3">Experience</h4>
+                  <div className="space-y-3">
+                    {selectedCandidate.workHistory.map((work, i) => (
+                      <div key={i} className="border-l-2 border-primary/30 pl-3">
+                        <h5 className="font-medium text-foreground">{work.role}</h5>
+                        <p className="text-sm text-primary">{work.company}</p>
+                        <p className="text-xs text-muted-foreground">{work.period}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Certifications */}
+                {selectedCandidate.certifications.length > 0 && (
+                  <div>
+                    <h4 className="font-medium text-foreground mb-2">Certifications</h4>
                     <div className="space-y-2">
                       {selectedCandidate.certifications.map((cert, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <Award className="h-4 w-4 text-amber-400 mt-0.5" />
-                          <div>
-                            <p className="text-sm">{cert.name}</p>
-                            <p className="text-xs text-slate-400">{cert.issueDate}</p>
-                          </div>
+                        <div key={i} className="flex items-center gap-2">
+                          <Award className="h-4 w-4 text-amber-500" />
+                          <span className="text-sm">{cert.name}</span>
                         </div>
                       ))}
                     </div>
                   </div>
-                </div>
+                )}
 
-                {/* Right Content */}
-                <div className="flex-1 p-6 bg-background">
-                  <Tabs defaultValue="overview" className="w-full">
-                    <TabsList className="mb-6">
-                      <TabsTrigger value="overview">Overview</TabsTrigger>
-                      <TabsTrigger value="projects">Projects</TabsTrigger>
-                      <TabsTrigger value="assessment">Assessment Report</TabsTrigger>
-                      <TabsTrigger value="resume">Resume</TabsTrigger>
-                    </TabsList>
-
-                    <TabsContent value="overview" className="space-y-6">
-                      {/* AI Score Card */}
-                      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
-                        <CardContent className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              <div className={`h-16 w-16 rounded-full flex items-center justify-center border-4 ${getScoreColor(selectedCandidate.matchPercentage)}`}>
-                                <span className="text-2xl font-bold">{selectedCandidate.matchPercentage}</span>
-                              </div>
-                              <div>
-                                <h4 className="font-semibold text-foreground">AI Matching Score</h4>
-                                <p className="text-sm text-muted-foreground">Based on your project requirements for "{formData.jobTitle}"</p>
-                              </div>
-                            </div>
-                            <Button variant="outline" size="sm">View Detailed Report</Button>
-                          </div>
-
-                          <div className="grid grid-cols-3 gap-4 mt-4">
-                            <div className="text-center p-3 bg-background rounded-lg border">
-                              <p className="text-xs text-muted-foreground mb-1">Technical Skill</p>
-                              <p className="text-lg font-bold text-foreground">{selectedCandidate.aiScores.technical}/10</p>
-                            </div>
-                            <div className="text-center p-3 bg-background rounded-lg border">
-                              <p className="text-xs text-muted-foreground mb-1">Communication</p>
-                              <p className="text-lg font-bold text-foreground">{selectedCandidate.aiScores.communication}/10</p>
-                            </div>
-                            <div className="text-center p-3 bg-background rounded-lg border">
-                              <p className="text-xs text-muted-foreground mb-1">Problem Solving</p>
-                              <p className="text-lg font-bold text-foreground">{selectedCandidate.aiScores.problemSolving}/10</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      {/* About */}
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-3">About Candidate</h4>
-                        <p className="text-sm text-muted-foreground whitespace-pre-line">{selectedCandidate.about}</p>
-                      </div>
-
-                      {/* Work Experience */}
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-4">Work Experience</h4>
-                        <div className="space-y-4">
-                          {selectedCandidate.workHistory.map((work, i) => (
-                            <div key={i} className="flex gap-4">
-                              <div className="flex flex-col items-center">
-                                <div className="h-3 w-3 rounded-full bg-primary" />
-                                {i < selectedCandidate.workHistory.length - 1 && <div className="w-0.5 flex-1 bg-border mt-1" />}
-                              </div>
-                              <div className="flex-1 pb-4">
-                                <h5 className="font-medium text-foreground">{work.role}</h5>
-                                <p className="text-sm text-primary">{work.company}</p>
-                                <p className="text-xs text-muted-foreground">{work.period} • {work.location}</p>
-                                <ul className="mt-2 space-y-1">
-                                  {work.bullets.map((bullet, j) => (
-                                    <li key={j} className="text-sm text-muted-foreground flex items-start gap-2">
-                                      <span className="text-muted-foreground">•</span>{bullet}
-                                    </li>
-                                  ))}
-                                </ul>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Featured Projects */}
-                      <div>
-                        <div className="flex items-center justify-between mb-4">
-                          <h4 className="font-semibold text-foreground">Featured Projects</h4>
-                          <Button variant="link" className="text-primary p-0 h-auto">View Portfolio</Button>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          {selectedCandidate.projects.map((project, i) => (
-                            <Card key={i} className="hover:shadow-md transition-shadow">
-                              <CardContent className="p-4 text-center">
-                                <div className="h-12 w-12 mx-auto rounded-lg bg-muted flex items-center justify-center mb-3">
-                                  <Monitor className="h-6 w-6 text-muted-foreground" />
-                                </div>
-                                <h5 className="font-medium text-foreground">{project.name}</h5>
-                                <p className="text-xs text-muted-foreground mt-1">{project.tech}</p>
-                              </CardContent>
-                            </Card>
-                          ))}
-                        </div>
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="projects">
-                      <p className="text-muted-foreground">Projects section coming soon...</p>
-                    </TabsContent>
-
-                    <TabsContent value="assessment">
-                      <p className="text-muted-foreground">Assessment report coming soon...</p>
-                    </TabsContent>
-
-                    <TabsContent value="resume">
-                      <p className="text-muted-foreground">Resume section coming soon...</p>
-                    </TabsContent>
-                  </Tabs>
+                {/* Actions */}
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button className="flex-1">Book Interview</Button>
+                  <Button variant="outline" className="flex-1">
+                    <Heart className="h-4 w-4 mr-2" />
+                    Shortlist
+                  </Button>
                 </div>
               </div>
             )}
@@ -962,7 +920,7 @@ const FindTalent = () => {
     <div className="min-h-screen flex flex-col bg-muted/30">
       <Header />
       
-      <main className="flex-1 pt-20 pb-24">
+      <main className="flex-1 pt-20">
         <div className="bg-background border-b">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
@@ -1002,20 +960,17 @@ const FindTalent = () => {
           </div>
 
           {renderStepContent()}
-        </div>
-      </main>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t py-4 z-50">
-        <div className="container mx-auto px-4 max-w-3xl">
-          <div className="flex items-center justify-end gap-3">
+          {/* Action Buttons - Above Footer */}
+          <div className="flex items-center justify-center gap-3 mt-8 mb-8">
             <Button variant="outline">Save Draft</Button>
-            <Button variant="outline" className="border-destructive text-destructive hover:bg-destructive/10">Post Job Only</Button>
+            <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">Post Job Only</Button>
             <Button className="bg-primary hover:bg-primary/90 gap-2" onClick={handlePostJob} disabled={isLoading}>
               {isLoading ? <><div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Finding Matches...</> : <><Sparkles className="h-4 w-4" /> Post & Show Relevant Profiles</>}
             </Button>
           </div>
         </div>
-      </div>
+      </main>
 
       <Footer />
     </div>
