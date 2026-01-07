@@ -712,7 +712,7 @@ const PostJob = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in pb-24">
+    <div className="max-w-5xl mx-auto space-y-6 animate-fade-in pb-24">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-foreground">Create New Job Post</h1>
@@ -728,7 +728,7 @@ const PostJob = () => {
             const isCompleted = currentStep > step.id;
             
             return (
-              <React.Fragment key={step.id}>
+              <div key={index} className='my-2'>
                 <button
                   onClick={() => goToStep(step.id)}
                   className={cn(
@@ -770,7 +770,7 @@ const PostJob = () => {
                     )}
                   />
                 )}
-              </React.Fragment>
+              </div>
             );
           })}
         </div>
