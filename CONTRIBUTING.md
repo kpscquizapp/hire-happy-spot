@@ -10,8 +10,6 @@ Thank you for your interest in contributing to **Chatly**! This React-based fron
 - [Coding Standards](#coding-standards)
 - [Commit Guidelines](#commit-guidelines)
 - [Pull Request Process](#pull-request-process)
-- [Testing Guidelines](#testing-guidelines)
-- [Release Process](#release-process)
 
 ---
 ## 📜 Code of Conduct
