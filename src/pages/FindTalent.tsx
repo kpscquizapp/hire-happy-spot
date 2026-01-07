@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import PostContractModal from '@/components/PostContractModal';
 import { 
   Search, 
   Mail,
@@ -25,7 +26,8 @@ import {
   Download,
   Calendar,
   Briefcase,
-  FileText
+  FileText,
+  Plus
 } from 'lucide-react';
 
 interface Candidate {
@@ -59,6 +61,7 @@ const FindTalent = () => {
   const [activeTab, setActiveTab] = useState('all');
   const [selectedCandidateId, setSelectedCandidateId] = useState<number>(1);
   const [selectedCandidates, setSelectedCandidates] = useState<number[]>([1]);
+  const [showContractModal, setShowContractModal] = useState(false);
 
   const candidates: Candidate[] = [
     {
@@ -266,6 +269,13 @@ const FindTalent = () => {
                 </div>
               </div>
               <div className="flex items-center gap-3">
+                <Button 
+                  className="gap-2 bg-primary hover:bg-primary/90"
+                  onClick={() => setShowContractModal(true)}
+                >
+                  <Plus className="h-4 w-4" />
+                  Post Contract Opportunity
+                </Button>
                 <Button variant="outline" className="gap-2">
                   <Edit className="h-4 w-4" />
                   Custom Page
@@ -560,6 +570,11 @@ const FindTalent = () => {
       </main>
 
       <Footer />
+
+      <PostContractModal 
+        open={showContractModal} 
+        onOpenChange={setShowContractModal} 
+      />
     </div>
   );
 };
