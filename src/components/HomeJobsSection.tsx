@@ -450,40 +450,6 @@ const HomeJobsSection = () => {
               </Sheet>
             </div>
 
-            {/* Top Hiring Companies */}
-            <div className="bg-card border border-border/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-4 sm:mb-6">
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <h3 className="font-medium text-muted-foreground text-sm sm:text-base">Top Hiring Companies</h3>
-                <div className="flex gap-1">
-                  <button className="w-7 h-7 sm:w-8 sm:h-8 border border-border rounded-lg flex items-center justify-center hover:bg-muted hover:scale-105 transition-all">
-                    <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  </button>
-                  <button className="w-7 h-7 sm:w-8 sm:h-8 border border-border rounded-lg flex items-center justify-center hover:bg-muted hover:scale-105 transition-all">
-                    <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                  </button>
-                </div>
-              </div>
-              <div className="flex items-center gap-6 sm:gap-10 overflow-x-auto pb-2 scrollbar-hide">
-                {topCompanies.map((company, index) => (
-                  <a 
-                    key={index}
-                    href={`/jobs?company=${company.name.toLowerCase()}`}
-                    className="flex-shrink-0 grayscale hover:grayscale-0 opacity-70 hover:opacity-100 hover:scale-110 transition-all duration-300"
-                  >
-                    <img 
-                      src={company.logo} 
-                      alt={company.name}
-                      className="h-8 sm:h-10 object-contain"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                      }}
-                    />
-                  </a>
-                ))}
-              </div>
-            </div>
-
             {/* Recommended Jobs Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 sm:mb-6">
               <h2 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2 sm:gap-3">
