@@ -10,8 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { toast } from 'sonner';
 import {
   Select,
@@ -25,23 +24,18 @@ import {
   Briefcase, 
   MapPin, 
   Wallet,
-  X,
   Sparkles,
+  Zap,
+  CreditCard,
   Calendar,
-  ChevronRight,
-  ChevronLeft,
   ArrowLeft,
   DollarSign,
   Clock,
   Globe,
-  Star,
-  Download,
   Award,
-  Monitor,
   Heart,
   Eye,
   Building2,
-  CheckCircle2,
   Users
 } from 'lucide-react';
 
@@ -367,12 +361,38 @@ const FindTalent = () => {
     }
   };
 
-  const handlePostJob = () => {
-    if (!validateStep(currentStep)) {
-      toast.error('Please fill in all required fields');
-      return;
+  const validateAll = () => {
+    // Run validation for all steps
+    for (let s = 1; s <= STEPS.length; s++) {
+      if (!validateStep(s)) {
+        toast.error('Please fill in all required fields');
+        return false;
+      }
     }
-    
+    return true;
+  };
+
+  const saveDraft = () => {
+    try {
+      localStorage.setItem('postJobDraft', JSON.stringify(formData));
+      toast.success('Draft saved');
+    } catch (e) {
+      toast.error('Could not save draft');
+    }
+  };
+
+  const postJobOnly = () => {
+    if (!validateAll()) return;
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      toast.success('Job posted successfully');
+    }, 1200);
+  };
+
+  const handlePostJob = () => {
+    if (!validateAll()) return;
+
     setIsLoading(true);
     // Simulate AI matching
     setTimeout(() => {
@@ -389,311 +409,14 @@ const FindTalent = () => {
     return 'text-red-600 bg-red-100 border-red-200';
   };
 
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <FileText className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Basic Information</h3>
-                  <p className="text-xs text-muted-foreground">Define the core requirements of the role</p>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                <div>
-                  <Label htmlFor="jobTitle" className="text-sm font-medium">
-                    Job Title <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="relative mt-1.5">
-                    <Input
-                      id="jobTitle"
-                      placeholder="e.g. Senior React Native Developer (Contract)"
-                      value={formData.jobTitle}
-                      onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))}
-                      className={`pr-10 ${errors.jobTitle ? 'border-destructive' : ''}`}
-                    />
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-primary hover:bg-primary/10"
-                    >
-                      <Sparkles className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  {errors.jobTitle && <p className="text-xs text-destructive mt-1">{errors.jobTitle}</p>}
-                </div>
-
-                <div>
-                  <Label htmlFor="jobDescription" className="text-sm font-medium">
-                    Job Description <span className="text-destructive">*</span>
-                  </Label>
-                  <Textarea
-                    id="jobDescription"
-                    placeholder="Describe the project scope, deliverables, and expectations..."
-                    value={formData.jobDescription}
-                    onChange={(e) => setFormData(prev => ({ ...prev, jobDescription: e.target.value }))}
-                    className={`mt-1.5 min-h-[120px] ${errors.jobDescription ? 'border-destructive' : ''}`}
-                  />
-                  {errors.jobDescription && <p className="text-xs text-destructive mt-1">{errors.jobDescription}</p>}
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium">Job Category</Label>
-                    <Select
-                      value={formData.jobCategory}
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, jobCategory: value }))}
-                    >
-                      <SelectTrigger className="mt-1.5">
-                        <SelectValue placeholder="Select Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="engineering">Engineering</SelectItem>
-                        <SelectItem value="design">Design</SelectItem>
-                        <SelectItem value="marketing">Marketing</SelectItem>
-                        <SelectItem value="sales">Sales</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="openings" className="text-sm font-medium">Number of Openings</Label>
-                    <Input
-                      id="openings"
-                      type="number"
-                      min="1"
-                      value={formData.numberOfOpenings}
-                      onChange={(e) => setFormData(prev => ({ ...prev, numberOfOpenings: e.target.value }))}
-                      className="mt-1.5"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end mt-6">
-                <Button onClick={nextStep} className="gap-2">
-                  Next <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        );
-
-      case 2:
-        return (
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-10 w-10 rounded-full bg-amber-500/10 flex items-center justify-center">
-                  <Briefcase className="h-5 w-5 text-amber-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Skills & Experience</h3>
-                  <p className="text-xs text-muted-foreground">What technologies should the candidate know?</p>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                <div>
-                  <Label className="text-sm font-medium">
-                    Required Skills <span className="text-destructive">*</span>
-                  </Label>
-                  <div className="flex flex-wrap gap-2 mt-2 mb-2">
-                    {formData.requiredSkills.map((skill) => (
-                      <Badge key={skill} variant="secondary" className="gap-1 px-3 py-1.5">
-                        {skill}
-                        <X className="h-3 w-3 cursor-pointer hover:text-destructive" onClick={() => removeSkill(skill)} />
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Add skill..."
-                      value={skillInput}
-                      onChange={(e) => setSkillInput(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addSkill(skillInput); } }}
-                      className={errors.requiredSkills ? 'border-destructive' : ''}
-                    />
-                    <Button type="button" variant="outline" onClick={() => addSkill(skillInput)}>Add</Button>
-                  </div>
-                  {errors.requiredSkills && <p className="text-xs text-destructive mt-1">{errors.requiredSkills}</p>}
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium">Experience Level</Label>
-                    <Select value={formData.experienceLevel} onValueChange={(value) => setFormData(prev => ({ ...prev, experienceLevel: value }))}>
-                      <SelectTrigger className="mt-1.5"><SelectValue placeholder="Mid-Senior (3-5 Years)" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="entry">Entry Level (0-2 Years)</SelectItem>
-                        <SelectItem value="mid">Mid-Senior (3-5 Years)</SelectItem>
-                        <SelectItem value="senior">Senior (5-8 Years)</SelectItem>
-                        <SelectItem value="lead">Lead (8+ Years)</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="certifications" className="text-sm font-medium">Certifications (Optional)</Label>
-                    <Input
-                      id="certifications"
-                      placeholder="e.g. AWS Certified"
-                      value={formData.certifications}
-                      onChange={(e) => setFormData(prev => ({ ...prev, certifications: e.target.value }))}
-                      className="mt-1.5"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-between mt-6">
-                <Button variant="outline" onClick={prevStep} className="gap-2"><ChevronLeft className="h-4 w-4" /> Previous</Button>
-                <Button onClick={nextStep} className="gap-2">Next <ChevronRight className="h-4 w-4" /></Button>
-              </div>
-            </CardContent>
-          </Card>
-        );
-
-      case 3:
-        return (
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-10 w-10 rounded-full bg-blue-500/10 flex items-center justify-center">
-                  <MapPin className="h-5 w-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Location & Terms</h3>
-                  <p className="text-xs text-muted-foreground">Where will the candidate work?</p>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium">Work Mode <span className="text-destructive">*</span></Label>
-                    <Select value={formData.workMode} onValueChange={(value) => setFormData(prev => ({ ...prev, workMode: value }))}>
-                      <SelectTrigger className={`mt-1.5 ${errors.workMode ? 'border-destructive' : ''}`}><SelectValue placeholder="Select" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="remote">Remote</SelectItem>
-                        <SelectItem value="onsite">Onsite</SelectItem>
-                        <SelectItem value="hybrid">Hybrid</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    {errors.workMode && <p className="text-xs text-destructive mt-1">{errors.workMode}</p>}
-                  </div>
-                  <div>
-                    <Label htmlFor="location" className="text-sm font-medium">Location</Label>
-                    <div className="relative mt-1.5">
-                      <Input id="location" placeholder="Bangalore, India" value={formData.location} onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))} className="pr-10" />
-                      <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-4 bg-primary/5 rounded-lg border border-primary/20">
-                  <div>
-                    <p className="font-medium text-sm text-foreground">Open to Bench Resources</p>
-                    <p className="text-xs text-muted-foreground">Allow agencies and companies to propose their bench employees</p>
-                  </div>
-                  <Switch checked={formData.openToBench} onCheckedChange={(checked) => setFormData(prev => ({ ...prev, openToBench: checked }))} />
-                </div>
-              </div>
-
-              <div className="flex justify-between mt-6">
-                <Button variant="outline" onClick={prevStep} className="gap-2"><ChevronLeft className="h-4 w-4" /> Previous</Button>
-                <Button onClick={nextStep} className="gap-2">Next <ChevronRight className="h-4 w-4" /></Button>
-              </div>
-            </CardContent>
-          </Card>
-        );
-
-      case 4:
-        return (
-          <Card className="border-0 shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="h-10 w-10 rounded-full bg-green-500/10 flex items-center justify-center">
-                  <Wallet className="h-5 w-5 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-foreground">Budget & Duration</h3>
-                  <p className="text-xs text-muted-foreground">Set your financial limits for this contract</p>
-                </div>
-              </div>
-
-              <div className="space-y-5">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium">Duration</Label>
-                    <div className="flex gap-2 mt-1.5">
-                      <Input type="number" min="1" placeholder="3" value={formData.duration} onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))} className="w-20" />
-                      <Select value={formData.durationUnit} onValueChange={(value) => setFormData(prev => ({ ...prev, durationUnit: value }))}>
-                        <SelectTrigger className="flex-1"><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Week">Week</SelectItem>
-                          <SelectItem value="Month">Month</SelectItem>
-                          <SelectItem value="Year">Year</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium">Start Date</Label>
-                    <div className="relative mt-1.5">
-                      <Input type="date" value={formData.startDate} onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))} className="pr-10" />
-                      <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-sm font-medium">Payment Type</Label>
-                    <Select value={formData.paymentType} onValueChange={(value) => setFormData(prev => ({ ...prev, paymentType: value }))}>
-                      <SelectTrigger className="mt-1.5"><SelectValue placeholder="Hourly Rate" /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="hourly">Hourly Rate</SelectItem>
-                        <SelectItem value="fixed">Fixed Price</SelectItem>
-                        <SelectItem value="monthly">Monthly Rate</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label className="text-sm font-medium">Budget Range (INR)</Label>
-                    <div className="flex gap-2 mt-1.5">
-                      <Input placeholder="Min" value={formData.budgetMin} onChange={(e) => setFormData(prev => ({ ...prev, budgetMin: e.target.value }))} />
-                      <span className="flex items-center text-muted-foreground">-</span>
-                      <Input placeholder="Max" value={formData.budgetMax} onChange={(e) => setFormData(prev => ({ ...prev, budgetMax: e.target.value }))} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-between mt-6">
-                <Button variant="outline" onClick={prevStep} className="gap-2"><ChevronLeft className="h-4 w-4" /> Previous</Button>
-              </div>
-            </CardContent>
-          </Card>
-        );
-
-      default:
-        return null;
-    }
-  };
-
   // Results View
   if (view === 'results') {
     return (
-      <div className="min-h-screen flex flex-col bg-muted/30">
+      <div className="min-h-screen flex flex-col bg-muted/30 dark:bg-muted/60">
         <Header />
         
-        <main className="flex-1 pt-20">
-          <div className="bg-background border-b">
+        <main className="flex-1 pt-[70px]">
+          <div className="bg-background border-b dark:bg-slate-900 dark:border-slate-700">
             <div className="container mx-auto px-4 py-6">
               <Button variant="ghost" className="gap-2 mb-4 -ml-2" onClick={() => setView('form')}>
                 <ArrowLeft className="h-4 w-4" /> Back to Job Posting
@@ -703,8 +426,8 @@ const FindTalent = () => {
                   <Users className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground">Matched Candidates for: {formData.jobTitle || 'Your Job'}</h1>
-                  <p className="text-muted-foreground">AI-matched profiles based on your job requirements</p>
+                  <h1 className="text-2xl font-bold text-foreground dark:text-slate-100">Matched Candidates for: {formData.jobTitle || 'Your Job'}</h1>
+                  <p className="text-muted-foreground dark:text-slate-400">AI-matched profiles based on your job requirements</p>
                 </div>
               </div>
             </div>
@@ -712,7 +435,7 @@ const FindTalent = () => {
 
           <div className="container mx-auto px-4 py-6">
             <div className="mb-4 flex items-center justify-between">
-              <p className="text-sm text-muted-foreground"><span className="font-medium text-foreground">{candidates.length}</span> candidates found</p>
+              <p className="text-sm text-muted-foreground dark:text-slate-400"><span className="font-medium text-foreground dark:text-slate-100">{candidates.length}</span> candidates found</p>
               <Select defaultValue="match">
                 <SelectTrigger className="w-[180px]"><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -737,11 +460,11 @@ const FindTalent = () => {
                         <div className="flex items-start justify-between">
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="font-semibold text-foreground">{candidate.name}</h3>
+                              <h3 className="font-semibold text-foreground dark:text-slate-100">{candidate.name}</h3>
                               {candidate.topMatch && <Badge className="bg-green-100 text-green-700 border-green-200">⭐ Top 5% Match</Badge>}
                             </div>
-                            <p className="text-sm text-muted-foreground">{candidate.title}</p>
-                            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                            <p className="text-sm text-muted-foreground dark:text-slate-400">{candidate.title}</p>
+                            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground dark:text-slate-400">
                               <span className="flex items-center gap-1"><DollarSign className="h-3 w-3" />{candidate.hourlyRate}/hr</span>
                               <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{candidate.availability}</span>
                               <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{candidate.location}</span>
@@ -753,7 +476,7 @@ const FindTalent = () => {
                             <div className={`inline-flex items-center justify-center h-14 w-14 rounded-full border-2 ${getScoreColor(candidate.matchPercentage)}`}>
                               <span className="font-bold text-lg">{candidate.matchPercentage}</span>
                             </div>
-                            <p className="text-xs text-muted-foreground mt-1">AI Match</p>
+                            <p className="text-xs text-muted-foreground mt-1 dark:text-slate-400">AI Match</p>
                           </div>
                         </div>
 
@@ -766,7 +489,7 @@ const FindTalent = () => {
 
                         <div className="flex items-center justify-between mt-4">
                           <Badge variant="outline" className={candidate.profileType === 'bench' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-purple-50 text-purple-700 border-purple-200'}>
-                            {candidate.profileType === 'bench' ? <><Building2 className="h-3 w-3 mr-1" /> Bench Resource</> : <><Briefcase className="h-3 w-3 mr-1" /> Contract Resource</>}
+                            {candidate.profileType === 'bench' ? <span className="inline-flex items-center gap-1"><Building2 className="h-3 w-3 mr-1" /> Bench Resource</span> : <span className="inline-flex items-center gap-1"><Briefcase className="h-3 w-3 mr-1" /> Contract Resource</span>}
                           </Badge>
                           <div className="flex gap-2">
                             <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); setSelectedCandidate(candidate); }}><Eye className="h-4 w-4 mr-1" /> View Profile</Button>
@@ -796,8 +519,8 @@ const FindTalent = () => {
                     <AvatarFallback className="text-xl">{selectedCandidate.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <h2 className="text-xl font-bold text-foreground">{selectedCandidate.name}</h2>
-                    <p className="text-muted-foreground">{selectedCandidate.title}</p>
+                    <h2 className="text-xl font-bold text-foreground dark:text-slate-100">{selectedCandidate.name}</h2>
+                    <p className="text-muted-foreground dark:text-slate-400">{selectedCandidate.title}</p>
                     <div className="flex gap-2 mt-2">
                       <Badge className={selectedCandidate.profileType === 'bench' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}>
                         {selectedCandidate.profileType === 'bench' ? 'Bench Resource' : 'Contract'}
@@ -809,46 +532,46 @@ const FindTalent = () => {
                     <div className={`h-14 w-14 rounded-full flex items-center justify-center border-2 ${getScoreColor(selectedCandidate.matchPercentage)}`}>
                       <span className="text-lg font-bold">{selectedCandidate.matchPercentage}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">AI Match</p>
+                    <p className="text-xs text-muted-foreground mt-1 dark:text-slate-400">AI Match</p>
                   </div>
                 </div>
 
                 {/* Quick Info */}
                 <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-muted-foreground dark:text-slate-400">
                     <DollarSign className="h-4 w-4" />
                     <span>{selectedCandidate.hourlyRate}/hr</span>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-muted-foreground dark:text-slate-400">
                     <Clock className="h-4 w-4" />
                     <span>{selectedCandidate.availability}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-muted-foreground dark:text-slate-400">
                     <MapPin className="h-4 w-4" />
                     <span>{selectedCandidate.location}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="flex items-center gap-2 text-muted-foreground dark:text-slate-400">
                     <Briefcase className="h-4 w-4" />
                     <span>{selectedCandidate.experience}</span>
                   </div>
                 </div>
 
                 {/* AI Scores */}
-                <Card className="bg-muted/50">
+                <Card className="bg-muted/50 dark:bg-muted/30">
                   <CardContent className="p-4">
-                    <h4 className="font-medium text-foreground mb-3">AI Assessment Scores</h4>
+                    <h4 className="font-medium text-foreground mb-3 dark:text-slate-100">AI Assessment Scores</h4>
                     <div className="grid grid-cols-3 gap-3">
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-foreground">{selectedCandidate.aiScores.technical}</p>
-                        <p className="text-xs text-muted-foreground">Technical</p>
+                        <p className="text-2xl font-bold text-foreground dark:text-slate-100">{selectedCandidate.aiScores.technical}</p>
+                        <p className="text-xs text-muted-foreground dark:text-slate-400">Technical</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-foreground">{selectedCandidate.aiScores.communication}</p>
-                        <p className="text-xs text-muted-foreground">Communication</p>
+                        <p className="text-2xl font-bold text-foreground dark:text-slate-100">{selectedCandidate.aiScores.communication}</p>
+                        <p className="text-xs text-muted-foreground dark:text-slate-400">Communication</p>
                       </div>
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-foreground">{selectedCandidate.aiScores.problemSolving}</p>
-                        <p className="text-xs text-muted-foreground">Problem Solving</p>
+                        <p className="text-2xl font-bold text-foreground dark:text-slate-100">{selectedCandidate.aiScores.problemSolving}</p>
+                        <p className="text-xs text-muted-foreground dark:text-slate-400">Problem Solving</p>
                       </div>
                     </div>
                   </CardContent>
@@ -856,7 +579,7 @@ const FindTalent = () => {
 
                 {/* Skills */}
                 <div>
-                  <h4 className="font-medium text-foreground mb-2">Skills</h4>
+                  <h4 className="font-medium text-foreground mb-2 dark:text-slate-100">Skills</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedCandidate.skills.map(skill => (
                       <Badge key={skill} variant="secondary">{skill}</Badge>
@@ -866,19 +589,19 @@ const FindTalent = () => {
 
                 {/* About */}
                 <div>
-                  <h4 className="font-medium text-foreground mb-2">About</h4>
-                  <p className="text-sm text-muted-foreground">{selectedCandidate.about}</p>
+                  <h4 className="font-medium text-foreground mb-2 dark:text-slate-100">About</h4>
+                  <p className="text-sm text-muted-foreground dark:text-slate-400">{selectedCandidate.about}</p>
                 </div>
 
                 {/* Work Experience */}
                 <div>
-                  <h4 className="font-medium text-foreground mb-3">Experience</h4>
+                  <h4 className="font-medium text-foreground mb-3 dark:text-slate-100">Experience</h4>
                   <div className="space-y-3">
                     {selectedCandidate.workHistory.map((work, i) => (
                       <div key={i} className="border-l-2 border-primary/30 pl-3">
-                        <h5 className="font-medium text-foreground">{work.role}</h5>
-                        <p className="text-sm text-primary">{work.company}</p>
-                        <p className="text-xs text-muted-foreground">{work.period}</p>
+                        <h5 className="font-medium text-foreground dark:text-slate-100">{work.role}</h5>
+                        <p className="text-sm text-primary dark:text-primary/80">{work.company}</p>
+                        <p className="text-xs text-muted-foreground dark:text-slate-400">{work.period}</p>
                       </div>
                     ))}
                   </div>
@@ -887,12 +610,12 @@ const FindTalent = () => {
                 {/* Certifications */}
                 {selectedCandidate.certifications.length > 0 && (
                   <div>
-                    <h4 className="font-medium text-foreground mb-2">Certifications</h4>
+                    <h4 className="font-medium text-foreground mb-2 dark:text-slate-100">Certifications</h4>
                     <div className="space-y-2">
                       {selectedCandidate.certifications.map((cert, i) => (
                         <div key={i} className="flex items-center gap-2">
                           <Award className="h-4 w-4 text-amber-500" />
-                          <span className="text-sm">{cert.name}</span>
+                          <span className="text-sm dark:text-slate-200">{cert.name}</span>
                         </div>
                       ))}
                     </div>
@@ -917,16 +640,16 @@ const FindTalent = () => {
 
   // Form View
   return (
-    <div className="min-h-screen flex flex-col bg-muted/30">
+    <div className="min-h-screen flex flex-col bg-muted/30 dark:bg-muted/60">
       <Header />
       
-      <main className="flex-1 pt-20">
-        <div className="bg-background border-b">
+      <main className="flex-1 pt-16 md:pt-19">
+        <div className="bg-background border-b dark:bg-slate-900 dark:border-slate-700">
           <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-3">
                 <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="gap-1"><ArrowLeft className="h-4 w-4" /> Jobs</Button>
-                <span className="text-muted-foreground">/</span>
+                <span className="text-muted-foreground dark:text-slate-400">/</span>
                 <span className="font-medium">New Posting</span>
               </div>
               <Button variant="outline" size="sm" className="gap-2 border-primary text-primary hover:bg-primary/10">
@@ -936,41 +659,286 @@ const FindTalent = () => {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-primary mb-2">Post a Contract Opportunity</h1>
-            <p className="text-muted-foreground">Fill in the details to find the perfect freelancer or bench talent for your project.</p>
+        <div className="mx-auto mt-8 md:mt-12 pb-32 max-w-4xl px-4 sm:px-6">
+          {/* Page Header */}
+          <div className="mb-10">
+            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-slate-100">Post a Contract Opportunity</h1>
+            <p className="mt-2 text-slate-500 dark:text-slate-400">Fill in the details to find the perfect freelancer or bench talent for your project.</p>
           </div>
 
-          <div className="flex items-center justify-center gap-2 mb-8">
-            {STEPS.map((step, index) => (
-              <React.Fragment key={step.id}>
-                <button
-                  onClick={() => { if (validateStep(currentStep) || step.id < currentStep) setCurrentStep(step.id); }}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all ${currentStep === step.id ? 'bg-primary/10 text-primary' : currentStep > step.id ? 'text-primary/70' : 'text-muted-foreground'}`}
-                >
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-medium ${currentStep === step.id ? 'bg-primary text-white' : currentStep > step.id ? 'bg-primary/20 text-primary' : 'bg-muted text-muted-foreground'}`}>
-                    {currentStep > step.id ? <CheckCircle2 className="h-4 w-4" /> : step.id}
+          {/* Card: Basic Information */}
+          <div className="mb-6 rounded-xl border bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700">
+          <div className="flex items-start gap-4 border-b bg-slate-50 p-4 sm:p-6 dark:bg-slate-900/40 dark:border-slate-700">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg border bg-white dark:bg-slate-800 text-indigo-600"><FileText /></div>
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100">Basic Information</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Define the core requirements of the role.</p>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div className="md:col-span-2">
+                  <Label  htmlFor='jobTitle' 
+                  className="block text-sm font-semibold text-slate-600 mb-2 dark:text-slate-300">Job Title <span className='text-red-600'>*</span></Label>
+                  <div>
+                    <Input 
+                    id="jobTitle"
+                    value={formData.jobTitle}
+                    onChange={(e) => setFormData(prev => ({ ...prev, jobTitle: e.target.value }))} 
+                    placeholder="Senior React Native Developer (Contract)" 
+                    className={`w-full rounded-lg border px-4 py-3 text-sm  focus:ring-2 focus:ring-indigo-200 ${errors.jobTitle ? 'border-destructive' : ''}`}
+                     />
                   </div>
-                  <span className="text-sm font-medium hidden md:inline">{step.title}</span>
-                </button>
-                {index < STEPS.length - 1 && <div className={`h-0.5 w-8 ${currentStep > step.id ? 'bg-primary/40' : 'bg-muted'}`} />}
-              </React.Fragment>
-            ))}
+                  {errors.jobTitle && <p className="text-xs text-destructive mt-1">{errors.jobTitle}</p>}
+                </div>
+
+                <div className="md:col-span-2">
+                  <Label htmlFor='jobDescription'
+                   className="block text-sm font-semibold text-slate-600 mb-2 dark:text-slate-300">Job Description <span className='text-red-600'>*</span></Label>
+                  <Textarea 
+                  id="jobDescription"
+                  value={formData.jobDescription} 
+                  onChange={(e) => setFormData(prev => ({ ...prev, jobDescription: e.target.value }))} 
+                  placeholder="Describe the project scope, deliverables, and expectations..." 
+                  className={`${errors.jobDescription ? 'border-destructive' : ''} w-full min-h-[120px] rounded-lg border px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-200`} />
+                  {errors.jobDescription && <p className="text-xs text-destructive mt-1">{errors.jobDescription}</p>}
+                </div>
+
+                <div>
+                    <Label className="text-sm font-medium dark:text-slate-300">Job Category</Label>
+                    <Select
+                      value={formData.jobCategory}
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, jobCategory: value }))}
+                    >
+                      <SelectTrigger className="mt-1.5">
+                        <SelectValue placeholder="Select Category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="engineering">Engineering</SelectItem>
+                        <SelectItem value="design">Design</SelectItem>
+                        <SelectItem value="marketing">Marketing</SelectItem>
+                        <SelectItem value="sales">Sales</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                <div>
+                  <Label htmlFor='openings'
+                   className="block text-sm font-semibold text-slate-600 mb-2 dark:text-slate-300">Number of Openings</Label>
+                  <Input 
+                  id="openings"
+                  type="number" 
+                  min="1"
+                  value={formData.numberOfOpenings} 
+                  onChange={(e) => setFormData(prev => ({ ...prev, numberOfOpenings: e.target.value }))} 
+                  className="w-full rounded-lg border px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-200" />
+                </div>
+              </div>
+            </div>
           </div>
 
-          {renderStepContent()}
+          {/* Card: Skills & Experience */}
+          <div className="mb-6 rounded-xl border bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700">
+            <div className="flex items-start gap-4 border-b bg-slate-50 p-4 sm:p-6 dark:bg-slate-900/40 dark:border-slate-700">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg border bg-white dark:bg-slate-800 text-indigo-600"><Zap className="text-yellow-500" /></div>
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100">Skills & Experience</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">What technologies should the candidate know?</p>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div className="md:col-span-2">
+                  <Label className="block text-sm font-semibold text-slate-600 mb-2 dark:text-slate-300">Required Skills <span className='text-red-600'>*</span></Label>
+                  <div className="flex flex-col sm:flex-row gap-2">
 
-          {/* Action Buttons - Above Footer */}
-          <div className="flex items-center justify-center gap-3 mt-8 mb-8">
-            <Button variant="outline">Save Draft</Button>
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">Post Job Only</Button>
-            <Button className="bg-primary hover:bg-primary/90 gap-2" onClick={handlePostJob} disabled={isLoading}>
-              {isLoading ? <><div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Finding Matches...</> : <><Sparkles className="h-4 w-4" /> Post & Show Relevant Profiles</>}
-            </Button>
+                    <Input 
+                    value={skillInput} 
+                    onChange={(e) => setSkillInput(e.target.value)} 
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addSkill(skillInput); } }} placeholder="Add skill..." 
+                    className={`${errors.requiredSkills ? 'border-destructive' : ''} w-full rounded-lg border px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-200`} />
+
+                    <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={() => addSkill(skillInput)} 
+                    className="px-4 rounded-lg bg-indigo-600 text-white">Add</Button>
+                  </div>
+                    {errors.requiredSkills && <p className="text-xs text-destructive mt-1">{errors.requiredSkills}</p>}
+                  
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {formData.requiredSkills.map(s => (
+                      <div key={s} className="flex items-center gap-2 bg-white border rounded-full px-3 py-1 text-sm dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100">
+                        <span>{s}</span>
+                        <button onClick={() => removeSkill(s)} className="text-xs text-slate-400 dark:text-slate-300">×</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="block text-sm font-semibold text-slate-600 mb-2 dark:text-slate-300">Experience Level</Label>
+                    <Select value={formData.experienceLevel} onValueChange={(value) => setFormData(prev => ({ ...prev, experienceLevel: value }))}>
+                      <SelectTrigger className="mt-1.5"><SelectValue placeholder="Mid-Senior (3-5 Years)" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="entry">Entry Level (0-2 Years)</SelectItem>
+                        <SelectItem value="mid">Mid-Senior (3-5 Years)</SelectItem>
+                        <SelectItem value="senior">Senior (5-8 Years)</SelectItem>
+                        <SelectItem value="lead">Lead (8+ Years)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor='certifications' 
+                  className="block text-sm font-semibold text-slate-600 mb-2 dark:text-slate-300">Certifications</Label>
+                  <Input 
+                  id="certifications"
+                  value={formData.certifications} 
+                  onChange={(e) => setFormData(prev => ({ ...prev, certifications: e.target.value }))} 
+                  placeholder="AWS Certified" 
+                  className="w-full rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-indigo-200" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Card: Location & Terms */}
+          <div className="mb-6 rounded-xl border bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700">
+            <div className="flex items-start gap-4 border-b bg-slate-50 p-4 sm:p-6 dark:bg-slate-900/40 dark:border-slate-700">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg border bg-white dark:bg-slate-800 text-indigo-600"><Globe className="text-sky-500" /></div>
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100">Location & Terms</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Where will the candidate work?</p>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div>
+                  <Label className="block text-sm font-semibold text-slate-600 mb-2 dark:text-slate-300">Work Mode <span className='text-red-600'>*</span></Label>
+                    <Select value={formData.workMode} onValueChange={(value) => setFormData(prev => ({ ...prev, workMode: value }))}>
+                      <SelectTrigger className={`mt-1.5 ${errors.workMode ? 'border-destructive' : ''}`}><SelectValue placeholder="Select" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="remote">Remote</SelectItem>
+                        <SelectItem value="onsite">Onsite</SelectItem>
+                        <SelectItem value="hybrid">Hybrid</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    {errors.workMode && <p className="text-xs text-destructive mt-1">{errors.workMode}</p>}
+                </div>
+
+                <div>
+                  <Label htmlFor='location'
+                  className="block text-sm font-semibold text-slate-600 mb-2 dark:text-slate-300">Location</Label>
+                  <div className="relative">
+
+                    <Input 
+                    id="location"
+                    value={formData.location} 
+                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))} 
+                    placeholder="Bangalore, India" 
+                    className="w-full rounded-lg px-4 py-3 pr-10 text-sm  focus:ring-2 focus:ring-indigo-200" />
+                    <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between gap-3 rounded-xl border bg-slate-50 p-4 sm:p-5 dark:bg-slate-900/40 dark:border-slate-700">
+                  {/* Text */}
+                  <div className="min-w-0">
+                    <p className="font-medium text-sm text-foreground dark:text-slate-100">
+                      Open to Bench Resources
+                    </p>
+                    <p className="text-xs text-muted-foreground dark:text-slate-400">
+                      Allow agencies and companies to propose their bench employees
+                    </p>
+                  </div>
+
+                  {/* Switch */}
+                  <div className="flex justify-start sm:justify-end">
+                    <Switch
+                      className="flex-shrink-0 min-h-0"
+                      checked={formData.openToBench}
+                      onCheckedChange={(checked) =>
+                        setFormData((prev) => ({ ...prev, openToBench: checked }))
+                      }
+                    />
+                  </div>
+                </div>
+            </div>
+          </div>
+
+          {/* Card: Budget & Duration */}
+          <div className="mb-6 rounded-xl border bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700">
+            <div className="flex items-start gap-4 border-b bg-slate-50 p-4 sm:p-6 dark:bg-slate-900/40 dark:border-slate-700">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg border bg-white dark:bg-slate-800 text-indigo-600"><CreditCard className="text-emerald-500" /></div>
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100">Budget & Duration</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Set your financial terms for this contract.</p>
+              </div>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div>
+                    <Label className="text-sm font-medium dark:text-slate-300">Duration</Label>
+                    <div className="flex gap-2 mt-1.5">
+                      <Input type="number" min="1" placeholder="3" value={formData.duration} onChange={(e) => setFormData(prev => ({ ...prev, duration: e.target.value }))} className="w-20" />
+                      <Select value={formData.durationUnit} onValueChange={(value) => setFormData(prev => ({ ...prev, durationUnit: value }))}>
+                        <SelectTrigger className="flex-1"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Week">Week</SelectItem>
+                          <SelectItem value="Month">Month</SelectItem>
+                          <SelectItem value="Year">Year</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium dark:text-slate-300">Start Date</Label>
+                    <div className="relative mt-1.5">
+                      <Input type="date" value={formData.startDate} onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))} className="pr-10" />
+                      <Calendar className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground dark:text-slate-400 pointer-events-none" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium dark:text-slate-300">Payment Type</Label>
+                    <Select value={formData.paymentType} onValueChange={(value) => setFormData(prev => ({ ...prev, paymentType: value }))}>
+                      <SelectTrigger className="mt-1.5"><SelectValue placeholder="Hourly Rate" /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="hourly">Hourly Rate</SelectItem>
+                        <SelectItem value="fixed">Fixed Price</SelectItem>
+                        <SelectItem value="monthly">Monthly Rate</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium dark:text-slate-300">Budget Range (INR)</Label>
+                    <div className="flex gap-2 mt-1.5">
+                      <Input placeholder="Min" 
+                      value={formData.budgetMin} 
+                      onChange={(e) => setFormData(prev => ({ ...prev, budgetMin: e.target.value }))} />
+
+                      <span className="flex items-center text-muted-foreground dark:text-slate-400">-</span>
+
+                      <Input placeholder="Max" 
+                      value={formData.budgetMax} 
+                      onChange={(e) => setFormData(prev => ({ ...prev, budgetMax: e.target.value }))} />
+                    </div>
+                  </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
+
+      <div className="bg-white/90 backdrop-blur border-t px-4 sm:px-6 py-4 flex flex-col md:flex-row md:justify-end gap-3 sm:gap-4 sticky bottom-0 z-50 dark:bg-slate-900/80 dark:border-slate-700">
+        <Button className="h-11 px-6 rounded-lg text-sm font-semibold border bg-white text-slate-600 hover:bg-slate-50 w-full md:w-auto dark:text-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700" onClick={saveDraft}>Save Draft</Button>
+        <Button className="h-11 px-6 rounded-lg text-sm font-semibold border bg-white text-slate-600 hover:bg-slate-50 w-full md:w-auto dark:text-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700" onClick={postJobOnly} disabled={isLoading}>{isLoading ? 'Posting...' : 'Post Job Only'}</Button>
+        <Button className="h-11 px-6 rounded-lg text-sm font-semibold bg-gradient-to-r from-indigo-600 to-pink-500 text-white hover:brightness-110 w-full md:w-auto flex items-center gap-2" onClick={handlePostJob} disabled={isLoading}>{isLoading ? <span className="inline-flex items-center gap-2"><span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin inline-block" /> Posting...</span> : <><Sparkles className="w-4 h-4" /> Post & Show Relevant Profiles</>}</Button>
+      </div>
 
       <Footer />
     </div>
