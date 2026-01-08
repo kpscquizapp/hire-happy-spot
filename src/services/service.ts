@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 export const config = {
   //TODO: need to change this base url when deploying to production
-  baseURL: "https://uat-auth-be.neosan.in/api/",
+  baseURL: "http://localhost:4002/api/v1/",
   headers: {
     "Content-Type": "application/json",
   },
