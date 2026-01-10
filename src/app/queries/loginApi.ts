@@ -9,21 +9,32 @@ export const loginApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    loginUser: builder.mutation({
+    createEmployer: builder.mutation({
       query: (data) => ({
         method: "POST",
         body: data,
-        url: "auth/login", // sample api
-        // headers: {
-        //   "Content-Type": "application/json",
-        // },
+        url: "jobboard/register/employer", 
+      }),
+    }),
+    createCandidate: builder.mutation({
+      query: (data) => ({
+        method: "POST",
+        body: data,
+        url: "jobboard/register/candidate", 
+      }),
+    }),
+    login: builder.mutation({
+      query: (data) => ({
+        method: "POST",
+        body: data,
+        url: "auth/login", 
       }),
     }),
      getRefreshToken: builder.mutation({
       query: (data) => ({
         headers: getAuthHeaders(),
         method: "POST",
-        url: `auth/refresh`,// sample api
+        url: `auth/refresh`,
         body: data,
       }),
     }),
@@ -40,7 +51,9 @@ export const loginApi = createApi({
 });
 
 export const {
-  useLoginUserMutation,
+  useCreateEmployerMutation,
+  useCreateCandidateMutation,
+  useLoginMutation,
   useGetRefreshTokenMutation,
   useLogoutMutation,
 } = loginApi;

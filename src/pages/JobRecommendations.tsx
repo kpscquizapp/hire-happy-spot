@@ -9,9 +9,11 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { jobListings } from '@/data/jobListings';
 import { JobListing } from '@/types/job';
+import { useSelector } from 'react-redux';
 
 const JobRecommendations = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
+  const user = useSelector((state: any) => state.user.userDetails);
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<JobListing[]>([]);
 

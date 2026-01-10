@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import UserMenu from './UserMenu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { useSelector } from 'react-redux';
 
 interface AuthButtonsProps {
   isMobile?: boolean;
@@ -11,7 +12,10 @@ interface AuthButtonsProps {
 }
 
 const AuthButtons = ({ isMobile = false, isDark = false }: AuthButtonsProps) => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
+
+  const user = useSelector((state: any) => state.user.userDetails);
+  console.log(user)
 
   if (user) {
     return <UserMenu />;
