@@ -38,6 +38,7 @@ import ContractHiring from "./pages/employer/ContractHiring";
 import TalentMarketplace from "./pages/employer/TalentMarketplace";
 import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
+import { useFetchRefreshToken } from "./services/utils/hooks/useFetchRefreshToken";
 
 const queryClient = new QueryClient();
 
@@ -52,83 +53,126 @@ const ScrollToTop = () => {
   return null;
 };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <TooltipProvider>
-        <LanguageProvider>
-          <AuthProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-            <ScrollToTop />
-            <PageTransition>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/career-path" element={<CareerPath />} />
-                <Route path="/marketplace" element={<Marketplace />} />
-                <Route path="/find-talent" element={<FindTalent />} />
-                <Route path="/talent/:id" element={<TalentProfile />} />
-                <Route path="/register-talent" element={<RegisterTalent />} />
-                <Route path="/employer" element={<EmployerLogin />} />
-                <Route path="/employer-login" element={<EmployerLogin />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/jobs" element={<JobSearch />} />
-                <Route path="/jobs/:id" element={<JobDetails />} />
-                <Route path="/job/:id" element={<JobDetails />} />
-                <Route path="/list-bench-talent" element={<ListBenchTalent />} />
-                <Route path="/candidate-login" element={<CandidateLogin />} />
-                <Route path="/candidate-register" element={<CandidateRegistration />} />
-                <Route path="/profile" element={<CandidateProfile />} />
-                <Route path="/job-recommendations" element={<JobRecommendations />} />
-                <Route path="/skills-assessment" element={<SkillsAssessment />} />
-                <Route path="/saved-jobs" element={<SavedJobs />} />
-                {/* Employer Dashboard Routes */}
-                <Route path="/employer-dashboard" element={<EmployerLayout />}>
-                  <Route index element={<CompanyDashboard />} />
-                  <Route path="post-job" element={<PostJob />} />
-                  <Route path="hire-fulltime" element={<HireFullTime />} />
-                  <Route path="hire-interns" element={<HireInterns />} />
-                  <Route path="contract-hiring" element={<ContractHiring />} />
-                  <Route path="talent-marketplace" element={<TalentMarketplace />} />
-                  <Route path="ai-screening" element={<AIScreening />} />
-                  <Route path="job/:jobId/candidates" element={<JobCandidates />} />
-                  <Route path="interview-results/:candidateId" element={<AIInterviewResults />} />
-                </Route>
 
-                {/* Standalone employer routes (redirect to dashboard) */}
-                <Route path="/post-job" element={<EmployerLayout />}>
-                  <Route index element={<PostJob />} />
-                </Route>
-                <Route path="/hire-fulltime" element={<EmployerLayout />}>
-                  <Route index element={<HireFullTime />} />
-                </Route>
-                <Route path="/hire-interns" element={<EmployerLayout />}>
-                  <Route index element={<HireInterns />} />
-                </Route>
-                <Route path="/contract-hiring" element={<EmployerLayout />}>
-                  <Route index element={<ContractHiring />} />
-                </Route>
-                <Route path="/talent-marketplace" element={<EmployerLayout />}>
-                  <Route index element={<TalentMarketplace />} />
-                </Route>
-                <Route path="/ai-screening" element={<EmployerLayout />}>
-                  <Route index element={<AIScreening />} />
-                </Route>
-                <Route path="/company-dashboard" element={<EmployerLayout />}>
-                  <Route index element={<CompanyDashboard />} />
-                </Route>
-                
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </PageTransition>
-          </BrowserRouter>
-        </AuthProvider>
-      </LanguageProvider>
-    </TooltipProvider>
-  </ThemeProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  useFetchRefreshToken();
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <TooltipProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <ScrollToTop />
+                <PageTransition>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/career-path" element={<CareerPath />} />
+                    <Route path="/marketplace" element={<Marketplace />} />
+                    <Route path="/find-talent" element={<FindTalent />} />
+                    <Route path="/talent/:id" element={<TalentProfile />} />
+                    <Route
+                      path="/register-talent"
+                      element={<RegisterTalent />}
+                    />
+                    <Route path="/employer" element={<EmployerLogin />} />
+                    <Route path="/employer-login" element={<EmployerLogin />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/jobs" element={<JobSearch />} />
+                    <Route path="/jobs/:id" element={<JobDetails />} />
+                    <Route path="/job/:id" element={<JobDetails />} />
+                    <Route
+                      path="/list-bench-talent"
+                      element={<ListBenchTalent />}
+                    />
+                    <Route
+                      path="/candidate-login"
+                      element={<CandidateLogin />}
+                    />
+                    <Route
+                      path="/candidate-register"
+                      element={<CandidateRegistration />}
+                    />
+                    <Route path="/profile" element={<CandidateProfile />} />
+                    <Route
+                      path="/job-recommendations"
+                      element={<JobRecommendations />}
+                    />
+                    <Route
+                      path="/skills-assessment"
+                      element={<SkillsAssessment />}
+                    />
+                    <Route path="/saved-jobs" element={<SavedJobs />} />
+                    {/* Employer Dashboard Routes */}
+                    <Route
+                      path="/employer-dashboard"
+                      element={<EmployerLayout />}
+                    >
+                      <Route index element={<CompanyDashboard />} />
+                      <Route path="post-job" element={<PostJob />} />
+                      <Route path="hire-fulltime" element={<HireFullTime />} />
+                      <Route path="hire-interns" element={<HireInterns />} />
+                      <Route
+                        path="contract-hiring"
+                        element={<ContractHiring />}
+                      />
+                      <Route
+                        path="talent-marketplace"
+                        element={<TalentMarketplace />}
+                      />
+                      <Route path="ai-screening" element={<AIScreening />} />
+                      <Route
+                        path="job/:jobId/candidates"
+                        element={<JobCandidates />}
+                      />
+                      <Route
+                        path="interview-results/:candidateId"
+                        element={<AIInterviewResults />}
+                      />
+                    </Route>
+
+                    {/* Standalone employer routes (redirect to dashboard) */}
+                    <Route path="/post-job" element={<EmployerLayout />}>
+                      <Route index element={<PostJob />} />
+                    </Route>
+                    <Route path="/hire-fulltime" element={<EmployerLayout />}>
+                      <Route index element={<HireFullTime />} />
+                    </Route>
+                    <Route path="/hire-interns" element={<EmployerLayout />}>
+                      <Route index element={<HireInterns />} />
+                    </Route>
+                    <Route path="/contract-hiring" element={<EmployerLayout />}>
+                      <Route index element={<ContractHiring />} />
+                    </Route>
+                    <Route
+                      path="/talent-marketplace"
+                      element={<EmployerLayout />}
+                    >
+                      <Route index element={<TalentMarketplace />} />
+                    </Route>
+                    <Route path="/ai-screening" element={<EmployerLayout />}>
+                      <Route index element={<AIScreening />} />
+                    </Route>
+                    <Route
+                      path="/company-dashboard"
+                      element={<EmployerLayout />}
+                    >
+                      <Route index element={<CompanyDashboard />} />
+                    </Route>
+
+                    {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </PageTransition>
+              </BrowserRouter>
+            </AuthProvider>
+          </LanguageProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

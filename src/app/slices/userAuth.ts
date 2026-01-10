@@ -4,28 +4,25 @@ import Cookies from "js-cookie";
 export type UserState = {
   token: string | null;
   refreshToken: string | null;
-  menus: any[];
   userDetails: {
     id?: string;
+    uuid?: string;
     email?: string;
-    role?: string;
-    customer_id?: string;
-    [key: string]: any;
+    firstName?: string;
+    lastName?: string;
+    admin?: boolean;
   } | null;
 };
 
+const cookieData = Cookies.get("userInfo")
+  ? JSON.parse(Cookies.get("userInfo") as string)
+  : null;
+
+  // console.log(cookieData, 'cookieData')
 const initialState: UserState = {
-  token: Cookies.get("userInfo")
-    ? JSON.parse(Cookies.get("userInfo") || "{}").token || null
-    : null,
-  refreshToken: Cookies.get("userInfo")
-    ? JSON.parse(Cookies.get("userInfo") || "{}").refreshToken || null
-    : null,
-  menus: Cookies.get("userInfo")
-    ? JSON.parse(Cookies.get("userInfo") || "{}").menus ||[]:[],
-  userDetails: Cookies.get("userInfo")
-    ? JSON.parse(Cookies.get("userInfo") || "{}").userDetails || null
-    : null,
+  token: cookieData?.token ?? null,
+  refreshToken: cookieData?.refreshToken ?? null,
+  userDetails: cookieData?.userDetails ?? null,
 };
 
 
@@ -36,13 +33,12 @@ export const userAuth = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const { token, refreshToken, userDetails , menus} = action.payload;
-      const payloadToStore = { token, refreshToken, userDetails , menus };
+      const { accessToken: token, refreshToken, user:userDetails } = action.payload;
+      const payloadToStore = { token, refreshToken, userDetails  };
       Cookies.set("userInfo", JSON.stringify(payloadToStore), { expires: 15 });
       state.token = token;
       state.refreshToken = refreshToken;
       state.userDetails = userDetails;
-      state.menus = menus
     },
     removeUser: () => {
       Cookies.remove("userInfo");
