@@ -96,7 +96,7 @@ const Hero = () => {
   };
 
   const handleLocationClick = (loc: string) => {
-    setLocation(loc);
+    setLocation(loc.toLowerCase());
     setShowLocationSuggestions(false);
   };
 
@@ -244,7 +244,7 @@ const Hero = () => {
                   <input
                     type="text"
                     placeholder="City, state, or remote"
-                    className="w-full h-12 text-foreground bg-transparent border-none focus:outline-none placeholder:text-muted-foreground text-sm"
+                    className="w-full h-12 capitalize text-foreground bg-transparent border-none focus:outline-none placeholder:text-muted-foreground text-sm"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     onFocus={() => {
