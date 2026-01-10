@@ -38,6 +38,8 @@ import {
   Building2,
   Users
 } from 'lucide-react';
+import AiMatchedProfile from './AiMatchedProfile';
+import CandidateProfile from './CandidateProfile';
 
 const STEPS = [
   { id: 1, title: 'Basic Information', icon: FileText, color: 'primary' },
@@ -69,7 +71,6 @@ interface Candidate {
 
 const FindTalent = () => {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState(1);
   const [view, setView] = useState<'form' | 'results'>('form');
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -345,21 +346,6 @@ const FindTalent = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const nextStep = () => {
-    if (validateStep(currentStep)) {
-      if (currentStep < STEPS.length) {
-        setCurrentStep(currentStep + 1);
-      }
-    } else {
-      toast.error('Please fill in all required fields');
-    }
-  };
-
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
 
   const validateAll = () => {
     // Run validation for all steps
@@ -509,131 +495,15 @@ const FindTalent = () => {
 
         {/* Candidate Profile Sheet - Simple View */}
         <Sheet open={!!selectedCandidate} onOpenChange={() => setSelectedCandidate(null)}>
-          <SheetContent className="w-full sm:max-w-xl overflow-y-auto">
-            {selectedCandidate && (
-              <div className="space-y-6">
-                {/* Header */}
-                <div className="flex items-start gap-4">
-                  <Avatar className="h-16 w-16">
-                    <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedCandidate.avatar}`} />
-                    <AvatarFallback className="text-xl">{selectedCandidate.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <h2 className="text-xl font-bold text-foreground dark:text-slate-100">{selectedCandidate.name}</h2>
-                    <p className="text-muted-foreground dark:text-slate-400">{selectedCandidate.title}</p>
-                    <div className="flex gap-2 mt-2">
-                      <Badge className={selectedCandidate.profileType === 'bench' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}>
-                        {selectedCandidate.profileType === 'bench' ? 'Bench Resource' : 'Contract'}
-                      </Badge>
-                      {selectedCandidate.topMatch && <Badge className="bg-green-100 text-green-700">⭐ Top 5% Match</Badge>}
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className={`h-14 w-14 rounded-full flex items-center justify-center border-2 ${getScoreColor(selectedCandidate.matchPercentage)}`}>
-                      <span className="text-lg font-bold">{selectedCandidate.matchPercentage}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1 dark:text-slate-400">AI Match</p>
-                  </div>
-                </div>
-
-                {/* Quick Info */}
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground dark:text-slate-400">
-                    <DollarSign className="h-4 w-4" />
-                    <span>{selectedCandidate.hourlyRate}/hr</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground dark:text-slate-400">
-                    <Clock className="h-4 w-4" />
-                    <span>{selectedCandidate.availability}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground dark:text-slate-400">
-                    <MapPin className="h-4 w-4" />
-                    <span>{selectedCandidate.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground dark:text-slate-400">
-                    <Briefcase className="h-4 w-4" />
-                    <span>{selectedCandidate.experience}</span>
-                  </div>
-                </div>
-
-                {/* AI Scores */}
-                <Card className="bg-muted/50 dark:bg-muted/30">
-                  <CardContent className="p-4">
-                    <h4 className="font-medium text-foreground mb-3 dark:text-slate-100">AI Assessment Scores</h4>
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-foreground dark:text-slate-100">{selectedCandidate.aiScores.technical}</p>
-                        <p className="text-xs text-muted-foreground dark:text-slate-400">Technical</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-foreground dark:text-slate-100">{selectedCandidate.aiScores.communication}</p>
-                        <p className="text-xs text-muted-foreground dark:text-slate-400">Communication</p>
-                      </div>
-                      <div className="text-center">
-                        <p className="text-2xl font-bold text-foreground dark:text-slate-100">{selectedCandidate.aiScores.problemSolving}</p>
-                        <p className="text-xs text-muted-foreground dark:text-slate-400">Problem Solving</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Skills */}
-                <div>
-                  <h4 className="font-medium text-foreground mb-2 dark:text-slate-100">Skills</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {selectedCandidate.skills.map(skill => (
-                      <Badge key={skill} variant="secondary">{skill}</Badge>
-                    ))}
-                  </div>
-                </div>
-
-                {/* About */}
-                <div>
-                  <h4 className="font-medium text-foreground mb-2 dark:text-slate-100">About</h4>
-                  <p className="text-sm text-muted-foreground dark:text-slate-400">{selectedCandidate.about}</p>
-                </div>
-
-                {/* Work Experience */}
-                <div>
-                  <h4 className="font-medium text-foreground mb-3 dark:text-slate-100">Experience</h4>
-                  <div className="space-y-3">
-                    {selectedCandidate.workHistory.map((work, i) => (
-                      <div key={i} className="border-l-2 border-primary/30 pl-3">
-                        <h5 className="font-medium text-foreground dark:text-slate-100">{work.role}</h5>
-                        <p className="text-sm text-primary dark:text-primary/80">{work.company}</p>
-                        <p className="text-xs text-muted-foreground dark:text-slate-400">{work.period}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Certifications */}
-                {selectedCandidate.certifications.length > 0 && (
-                  <div>
-                    <h4 className="font-medium text-foreground mb-2 dark:text-slate-100">Certifications</h4>
-                    <div className="space-y-2">
-                      {selectedCandidate.certifications.map((cert, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <Award className="h-4 w-4 text-amber-500" />
-                          <span className="text-sm dark:text-slate-200">{cert.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Actions */}
-                <div className="flex gap-3 pt-4 border-t">
-                  <Button className="flex-1">Book Interview</Button>
-                  <Button variant="outline" className="flex-1">
-                    <Heart className="h-4 w-4 mr-2" />
-                    Shortlist
-                  </Button>
-                </div>
-              </div>
-            )}
-          </SheetContent>
-        </Sheet>
+            <SheetContent 
+              className="w-full max-w-full sm:max-w-full p-0 overflow-y-auto"
+              side="right"
+            >
+              {selectedCandidate && (   
+                <AiMatchedProfile candidate={selectedCandidate} />     
+              )}
+            </SheetContent>
+          </Sheet>
       </div>
     );
   }
