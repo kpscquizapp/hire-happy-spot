@@ -11,9 +11,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState<string>("");
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle password reset logic here
+  };
+
   return (
     <>
       <div className="min-h-screen flex flex-col bg-gradient-to-br from-primary/5 via-white to-neutral-50">
@@ -32,7 +44,7 @@ const ForgotPassword = () => {
               </CardHeader>
 
               <CardContent className="p-6 sm:p-8">
-                <form action="">
+                <form onSubmit={handleSubmit}>
                   <div className="space-y-5 grid-cols-1 sm:grid grid-cols-2">
                     <div className="">
                       <img
@@ -50,9 +62,11 @@ const ForgotPassword = () => {
                           <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                           <Input
                             id="email"
+                            value={email}
                             className="pl-11 h-12 text-base"
                             placeholder="Enter your email"
                             type="email"
+                            onChange={handleEmailChange}
                             required
                           />
                         </div>
