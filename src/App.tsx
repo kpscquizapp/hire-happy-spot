@@ -39,6 +39,7 @@ import TalentMarketplace from "./pages/employer/TalentMarketplace";
 import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
 import { useFetchRefreshToken } from "./services/utils/hooks/useFetchRefreshToken";
+import ForgotPassword from "./pages/employer/ForgotPassword";
 
 const queryClient = new QueryClient();
 
@@ -86,11 +87,12 @@ const App = () => {
                     <Route
                       path="/list-bench-talent"
                       element={<ListBenchTalent />}
-                    />
+                      />
                     <Route
                       path="/candidate-login"
                       element={<CandidateLogin />}
                     />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
                     <Route
                       path="/candidate-register"
                       element={<CandidateRegistration />}
