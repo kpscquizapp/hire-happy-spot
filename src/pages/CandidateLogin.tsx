@@ -1,52 +1,77 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, Eye, EyeOff, User, MapPin, Briefcase, Target, Award, Building2, Globe, Users, Loader } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
-import { useCreateCandidateMutation, useCreateEmployerMutation, useLoginMutation } from '@/app/queries/loginApi';
-import { useSelector, useDispatch } from 'react-redux';
-import { setUser } from '@/app/slices/userAuth';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  User,
+  MapPin,
+  Briefcase,
+  Target,
+  Award,
+  Building2,
+  Globe,
+  Users,
+  Loader,
+} from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+import {
+  useCreateCandidateMutation,
+  useCreateEmployerMutation,
+  useLoginMutation,
+} from "@/app/queries/loginApi";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "@/app/slices/userAuth";
 
-
-type Role = 'candidate' | 'employer';
+type Role = "candidate" | "employer";
 
 const CandidateLogin = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [role, setRole] = useState<Role>('candidate');
+  const [role, setRole] = useState<Role>("candidate");
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   // Common
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [location, setLocation] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [location, setLocation] = useState("");
 
   // Candidate fields
-  const [availability, setAvailability] = useState('full-time');
-  const [skills, setSkills] = useState('');
-  const [bio, setBio] = useState('');
+  const [availability, setAvailability] = useState("full-time");
+  const [skills, setSkills] = useState("");
+  const [bio, setBio] = useState("");
   const [yearsExperience, setYearsExperience] = useState<number>(0);
 
   // Employer fields
-  const [companyName, setCompanyName] = useState('');
-  const [industry, setIndustry] = useState('');
-  const [companySize, setCompanySize] = useState('');
-  const [website, setWebsite] = useState('');
-  const [description, setDescription] = useState('');
+  const [companyName, setCompanyName] = useState("");
+  const [industry, setIndustry] = useState("");
+  const [companySize, setCompanySize] = useState("");
+  const [website, setWebsite] = useState("");
+  const [description, setDescription] = useState("");
 
-  const [createEmployer , {isLoading : isLoadingEmployer}] = useCreateEmployerMutation();
-  const [createCandidate , {isLoading : isLoadingCandidate}] = useCreateCandidateMutation()
+  const [createEmployer, { isLoading: isLoadingEmployer }] =
+    useCreateEmployerMutation();
+  const [createCandidate, { isLoading: isLoadingCandidate }] =
+    useCreateCandidateMutation();
   const [login, { isLoading: isLoadingLogin }] = useLoginMutation();
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -118,7 +143,7 @@ const CandidateLogin = () => {
 
       <main className="flex-1 pt-24 pb-12 px-4 sm:pt-32 sm:pb-20">
         <div className="container mx-auto max-w-6xl ">
-          <Card className="shadow-2xl border-0 overflow-hidden ">
+          <Card className="shadow-2xl border-0 overflow-hidden">
             <CardHeader className="space-y-2 text-center bg-gradient-to-br from-primary  to-primary/80 text-primary-foreground p-6 sm:p-8">
               <CardTitle className="text-2xl sm:text-3xl font-bold">
                 {isLogin ? "Welcome Back" : "Create Your Account"}
@@ -160,7 +185,7 @@ const CandidateLogin = () => {
                 {/* Login Form */}
                 {isLogin && (
                   // max-w-md mx-auto
-                  <div className="space-y-5  grid grid-cols-2">
+                  <div className="space-y-5 grid grid-cols-1 sm:grid-cols-2">
                     <div className="">
                       <img
                         src="https://placehold.co/600x400"
@@ -168,7 +193,7 @@ const CandidateLogin = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className="flex ml-5 justify-center flex-col">
+                    <div className="flex sm:ml-5 justify-center flex-col">
                       <div className="space-y-2">
                         <Label htmlFor="email" className="text-sm font-medium">
                           Email
@@ -187,14 +212,14 @@ const CandidateLogin = () => {
                         </div>
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="my-4 sm:space-y-2">
                         <Label
                           htmlFor="password"
                           className="text-sm font-medium"
                         >
                           Password
                         </Label>
-                        <div className="relative">
+                        <div className="relative sm:my-0 my-2">
                           <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                           <Input
                             id="password"
@@ -207,7 +232,7 @@ const CandidateLogin = () => {
                           />
                           <button
                             type="button"
-                            className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                            className="absolute right-0 md:right-3 top-1 md:top-3 text-muted-foreground hover:text-foreground transition-colors"
                             onClick={() => setShowPassword(!showPassword)}
                           >
                             {showPassword ? (
@@ -306,7 +331,7 @@ const CandidateLogin = () => {
                         />
                         <button
                           type="button"
-                          className="absolute right-3 top-3 text-muted-foreground hover:text-foreground transition-colors"
+                          className="absolute right-0 md:right-3 top-1 md:top-3 text-muted-foreground hover:text-foreground transition-colors"
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
@@ -511,7 +536,7 @@ const CandidateLogin = () => {
                   </div>
                 )}
 
-                <div className="pt-4">
+                <div className="sm:pt-4">
                   <Button
                     type="submit"
                     className="w-full h-12 text-base font-medium transition-all hover:scale-[1.02] shadow-lg"

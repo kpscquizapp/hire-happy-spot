@@ -780,7 +780,7 @@ const PostJob = () => {
       {renderCurrentStep()}
 
       {/* Action Buttons - Fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 bg-background border-t p-4 z-50">
+      <div className="sticky bottom-0 left-0 right-0 bg-background border p-4 z-50">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={handleSaveDraft}>
