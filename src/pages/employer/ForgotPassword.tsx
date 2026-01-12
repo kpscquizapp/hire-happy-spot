@@ -45,7 +45,7 @@ const ForgotPassword = () => {
 
               <CardContent className="p-6 sm:p-8">
                 <form onSubmit={handleSubmit}>
-                  <div className="space-y-5 grid-cols-1 sm:grid grid-cols-2">
+                  <div className="space-y-5 grid-cols-1 grid sm:grid-cols-2">
                     <div className="">
                       <img
                         src="https://placehold.co/600x400"
@@ -88,7 +88,7 @@ const ForgotPassword = () => {
                   Go back to{" "}
                   <Link
                     className="text-primary font-semibold"
-                    to="/candidate-login"
+                    to="/employer-login"
                   >
                     Login
                   </Link>
