@@ -20,7 +20,7 @@ import Register from "./pages/Register";
 import JobSearch from "./pages/JobSearch";
 import JobDetails from "./pages/JobDetails";
 import ListBenchTalent from "./pages/ListBenchTalent";
-import CandidateLogin from "./pages/CandidateLogin";
+import Login from "./pages/Login";
 import CandidateProfile from "./pages/CandidateProfile";
 import CandidateRegistration from "./pages/CandidateRegistration";
 import JobRecommendations from "./pages/JobRecommendations";
@@ -39,7 +39,8 @@ import TalentMarketplace from "./pages/employer/TalentMarketplace";
 import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
 import { useFetchRefreshToken } from "./services/utils/hooks/useFetchRefreshToken";
-import ForgotPassword from "./pages/employer/ForgotPassword";
+import ForgotPassword from "./pages/ForgotPassword";
+import CandidateLogin from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -53,7 +54,6 @@ const ScrollToTop = () => {
 
   return null;
 };
-
 
 const App = () => {
   useFetchRefreshToken();
@@ -87,12 +87,12 @@ const App = () => {
                     <Route
                       path="/list-bench-talent"
                       element={<ListBenchTalent />}
-                      />
-                    <Route
-                      path="/candidate-login"
-                      element={<CandidateLogin />}
                     />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route
+                      path="/forgot-password"
+                      element={<ForgotPassword />}
+                    />
                     <Route
                       path="/candidate-register"
                       element={<CandidateRegistration />}

@@ -1,35 +1,59 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { User, Mail, Phone, MapPin, Briefcase, Upload, Save, FileText, Star, MessageSquare, History, Settings, LogOut, Award, Sparkles } from 'lucide-react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
+  Upload,
+  Save,
+  FileText,
+  Star,
+  MessageSquare,
+  History,
+  Settings,
+  LogOut,
+  Award,
+  Sparkles,
+} from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const CandidateProfile = () => {
   const { user, updateProfile, logout } = useAuth();
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
-    phone: user?.phone || '',
-    location: user?.location || '',
-    experience: user?.experience || '',
-    currentRole: user?.currentRole || '',
-    skills: user?.skills?.join(', ') || '',
+    name: user?.name || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    location: user?.location || "",
+    experience: user?.experience || "",
+    currentRole: user?.currentRole || "",
+    skills: user?.skills?.join(", ") || "",
   });
 
   const [resumeFile, setResumeFile] = useState<File | null>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -40,39 +64,42 @@ const CandidateProfile = () => {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('File size should be less than 5MB');
+        toast.error("File size should be less than 5MB");
         return;
       }
       setResumeFile(file);
-      toast.success('Resume selected');
+      toast.success("Resume selected");
     }
   };
 
   const handleSaveProfile = () => {
-    const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(s => s);
+    const skillsArray = formData.skills
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s);
     updateProfile({
       ...formData,
       skills: skillsArray,
       resumeUrl: resumeFile ? URL.createObjectURL(resumeFile) : user?.resumeUrl,
     });
-    toast.success('Profile updated successfully!');
+    toast.success("Profile updated successfully!");
   };
 
   const handleLogout = () => {
     logout();
-    toast.success('Logged out successfully');
-    navigate('/');
+    toast.success("Logged out successfully");
+    navigate("/");
   };
 
   if (!user) {
-    navigate('/candidate-login');
+    navigate("/login");
     return null;
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-50 via-white to-neutral-50">
       <Header />
-      
+
       <main className="flex-1 pt-32 pb-20">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
@@ -84,8 +111,12 @@ const CandidateProfile = () => {
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <div className="flex-1 text-center md:text-left md:mb-4">
-                    <h1 className="text-3xl font-bold text-neutral-900">{user.name}</h1>
-                    <p className="text-neutral-600">{user.currentRole || 'Job Seeker'}</p>
+                    <h1 className="text-3xl font-bold text-neutral-900">
+                      {user.name}
+                    </h1>
+                    <p className="text-neutral-600">
+                      {user.currentRole || "Job Seeker"}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -93,7 +124,10 @@ const CandidateProfile = () => {
 
             <Tabs defaultValue="profile" className="space-y-6">
               <TabsList className="grid w-full grid-cols-2 md:grid-cols-6 h-auto gap-2">
-                <TabsTrigger value="profile" className="flex items-center gap-2">
+                <TabsTrigger
+                  value="profile"
+                  className="flex items-center gap-2"
+                >
                   <User className="h-4 w-4" />
                   <span className="hidden sm:inline">Profile</span>
                 </TabsTrigger>
@@ -105,15 +139,25 @@ const CandidateProfile = () => {
                   <MessageSquare className="h-4 w-4" />
                   <span className="hidden sm:inline">Chats</span>
                 </TabsTrigger>
-                <TabsTrigger value="history" className="flex items-center gap-2">
+                <TabsTrigger
+                  value="history"
+                  className="flex items-center gap-2"
+                >
                   <History className="h-4 w-4" />
                   <span className="hidden sm:inline">History</span>
                 </TabsTrigger>
-                <TabsTrigger value="settings" className="flex items-center gap-2">
+                <TabsTrigger
+                  value="settings"
+                  className="flex items-center gap-2"
+                >
                   <Settings className="h-4 w-4" />
                   <span className="hidden sm:inline">Settings</span>
                 </TabsTrigger>
-                <TabsTrigger value="logout" onClick={handleLogout} className="flex items-center gap-2">
+                <TabsTrigger
+                  value="logout"
+                  onClick={handleLogout}
+                  className="flex items-center gap-2"
+                >
                   <LogOut className="h-4 w-4" />
                   <span className="hidden sm:inline">Logout</span>
                 </TabsTrigger>
@@ -124,7 +168,9 @@ const CandidateProfile = () => {
                   <Card className="shadow-lg border-0">
                     <CardHeader>
                       <CardTitle>Personal Information</CardTitle>
-                      <CardDescription>Update your personal details</CardDescription>
+                      <CardDescription>
+                        Update your personal details
+                      </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="space-y-2">
@@ -192,7 +238,9 @@ const CandidateProfile = () => {
                   <Card className="shadow-lg border-0">
                     <CardHeader>
                       <CardTitle>Professional Details</CardTitle>
-                      <CardDescription>Your work experience and skills</CardDescription>
+                      <CardDescription>
+                        Your work experience and skills
+                      </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="space-y-2">
@@ -257,16 +305,20 @@ const CandidateProfile = () => {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      {user.validatedSkills && user.validatedSkills.length > 0 ? (
+                      {user.validatedSkills &&
+                      user.validatedSkills.length > 0 ? (
                         <div className="flex flex-wrap gap-4">
                           {user.validatedSkills.map((skill) => (
-                            <div 
+                            <div
                               key={skill}
                               className="flex items-center gap-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white px-4 py-3 rounded-xl shadow-lg"
                             >
                               <Award className="h-5 w-5" />
                               <span className="font-semibold">{skill}</span>
-                              <Badge variant="secondary" className="bg-white/20 text-white border-0">
+                              <Badge
+                                variant="secondary"
+                                className="bg-white/20 text-white border-0"
+                              >
                                 Verified
                               </Badge>
                             </div>
@@ -276,10 +328,12 @@ const CandidateProfile = () => {
                         <div className="text-center py-8">
                           <Award className="h-16 w-16 text-teal-300 mx-auto mb-4" />
                           <p className="text-muted-foreground mb-4">
-                            No validated skills yet. Take skill assessments to earn badges!
+                            No validated skills yet. Take skill assessments to
+                            earn badges!
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            Validated skills improve your job match scores and make you stand out to employers
+                            Validated skills improve your job match scores and
+                            make you stand out to employers
                           </p>
                         </div>
                       )}
@@ -289,7 +343,9 @@ const CandidateProfile = () => {
                   <Card className="shadow-lg border-0 md:col-span-2">
                     <CardHeader>
                       <CardTitle>Resume Upload</CardTitle>
-                      <CardDescription>Upload your latest resume (PDF, DOC, DOCX - Max 5MB)</CardDescription>
+                      <CardDescription>
+                        Upload your latest resume (PDF, DOC, DOCX - Max 5MB)
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <div className="flex flex-col items-center justify-center border-2 border-dashed border-teal-200 rounded-lg p-8 bg-teal-50/30">
@@ -297,7 +353,9 @@ const CandidateProfile = () => {
                         <Label htmlFor="resume" className="cursor-pointer">
                           <div className="flex items-center gap-2 text-teal-600 hover:text-teal-700">
                             <Upload className="h-5 w-5" />
-                            <span className="font-medium">Click to upload resume</span>
+                            <span className="font-medium">
+                              Click to upload resume
+                            </span>
                           </div>
                           <Input
                             id="resume"
@@ -313,7 +371,9 @@ const CandidateProfile = () => {
                           </p>
                         )}
                         {user.resumeUrl && !resumeFile && (
-                          <p className="mt-2 text-sm text-teal-600">Resume uploaded ✓</p>
+                          <p className="mt-2 text-sm text-teal-600">
+                            Resume uploaded ✓
+                          </p>
                         )}
                       </div>
                     </CardContent>
@@ -321,7 +381,10 @@ const CandidateProfile = () => {
                 </div>
 
                 <div className="mt-6 flex justify-end">
-                  <Button onClick={handleSaveProfile} className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700">
+                  <Button
+                    onClick={handleSaveProfile}
+                    className="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-700"
+                  >
                     <Save className="h-4 w-4 mr-2" />
                     Save Profile
                   </Button>
@@ -332,10 +395,14 @@ const CandidateProfile = () => {
                 <Card className="shadow-lg border-0">
                   <CardHeader>
                     <CardTitle>Saved Jobs</CardTitle>
-                    <CardDescription>Jobs you've saved for later</CardDescription>
+                    <CardDescription>
+                      Jobs you've saved for later
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-center text-muted-foreground py-12">No saved jobs yet</p>
+                    <p className="text-center text-muted-foreground py-12">
+                      No saved jobs yet
+                    </p>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -344,10 +411,14 @@ const CandidateProfile = () => {
                 <Card className="shadow-lg border-0">
                   <CardHeader>
                     <CardTitle>Messages</CardTitle>
-                    <CardDescription>Chat with recruiters and employers</CardDescription>
+                    <CardDescription>
+                      Chat with recruiters and employers
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-center text-muted-foreground py-12">No messages yet</p>
+                    <p className="text-center text-muted-foreground py-12">
+                      No messages yet
+                    </p>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -356,10 +427,14 @@ const CandidateProfile = () => {
                 <Card className="shadow-lg border-0">
                   <CardHeader>
                     <CardTitle>Application History</CardTitle>
-                    <CardDescription>Track your job applications</CardDescription>
+                    <CardDescription>
+                      Track your job applications
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-center text-muted-foreground py-12">No applications yet</p>
+                    <p className="text-center text-muted-foreground py-12">
+                      No applications yet
+                    </p>
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -368,10 +443,14 @@ const CandidateProfile = () => {
                 <Card className="shadow-lg border-0">
                   <CardHeader>
                     <CardTitle>Account Settings</CardTitle>
-                    <CardDescription>Manage your account preferences</CardDescription>
+                    <CardDescription>
+                      Manage your account preferences
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-center text-muted-foreground py-12">Settings coming soon</p>
+                    <p className="text-center text-muted-foreground py-12">
+                      Settings coming soon
+                    </p>
                   </CardContent>
                 </Card>
               </TabsContent>

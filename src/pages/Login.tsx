@@ -40,7 +40,7 @@ import { setUser } from "@/app/slices/userAuth";
 
 type Role = "candidate" | "employer";
 
-const CandidateLogin = () => {
+const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [role, setRole] = useState<Role>("candidate");
 
@@ -579,4 +579,4 @@ const CandidateLogin = () => {
   );
 };
 
-export default CandidateLogin;
+export default Login;

@@ -1,27 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building2, Mail, Lock } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Building2, Mail, Lock } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 const EmployerLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { user, login, signup } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user && user.role === 'employer') {
-      navigate('/find-talent');
+    if (user && user.role === "employer") {
+      navigate("/find-talent");
     }
   }, [user, navigate]);
 
@@ -31,24 +37,24 @@ const EmployerLogin = () => {
 
     try {
       if (isLogin) {
-        const success = await login(email, password, 'employer');
+        const success = await login(email, password, "employer");
         if (success) {
-          toast.success('Welcome back!');
-          navigate('/find-talent');
+          toast.success("Welcome back!");
+          navigate("/find-talent");
         } else {
-          toast.error('Invalid credentials');
+          toast.error("Invalid credentials");
         }
       } else {
-        const success = await signup(email, password, name, 'employer');
+        const success = await signup(email, password, name, "employer");
         if (success) {
-          toast.success('Account created successfully!');
-          navigate('/find-talent');
+          toast.success("Account created successfully!");
+          navigate("/find-talent");
         } else {
-          toast.error('Email already registered');
+          toast.error("Email already registered");
         }
       }
     } catch (error) {
-      toast.error('An error occurred. Please try again.');
+      toast.error("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +63,7 @@ const EmployerLogin = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      
+
       <main className="flex-1 flex items-center justify-center py-12 px-4 sm:py-20 bg-gradient-to-br from-primary/5 via-white to-primary/5">
         <div className="container mx-auto">
           <div className="max-w-md mx-auto w-full">
@@ -67,13 +73,15 @@ const EmployerLogin = () => {
                   <Building2 className="h-8 w-8 sm:h-10 sm:w-10 text-primary-foreground" />
                 </div>
                 <CardTitle className="text-2xl sm:text-3xl font-bold">
-                  {isLogin ? 'Employer Login' : 'Employer Sign Up'}
+                  {isLogin ? "Employer Login" : "Employer Sign Up"}
                 </CardTitle>
                 <CardDescription className="text-primary-foreground/80 text-sm sm:text-base">
-                  {isLogin ? 'Access your employer dashboard and manage your hiring' : 'Create an account to start hiring top talent'}
+                  {isLogin
+                    ? "Access your employer dashboard and manage your hiring"
+                    : "Create an account to start hiring top talent"}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="p-4 sm:p-6">
                 <form onSubmit={handleSubmit} className="space-y-4">
                   {!isLogin && (
@@ -108,7 +116,7 @@ const EmployerLogin = () => {
                       />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="password">Password</Label>
                     <div className="relative">
@@ -124,29 +132,38 @@ const EmployerLogin = () => {
                       />
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center justify-between text-sm">
-                    <Link to="/forgot-password" className="text-primary hover:underline">
+                    <Link
+                      to="/forgot-password"
+                      className="text-primary hover:underline"
+                    >
                       Forgot password?
                     </Link>
                   </div>
-                  
-                  <Button 
-                    type="submit" 
+
+                  <Button
+                    type="submit"
                     className="w-full py-5 sm:py-6"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Processing...' : isLogin ? 'Sign In to Dashboard' : 'Create Account'}
+                    {isLoading
+                      ? "Processing..."
+                      : isLogin
+                      ? "Sign In to Dashboard"
+                      : "Create Account"}
                   </Button>
-                  
+
                   <div className="text-center text-sm text-muted-foreground">
-                    {isLogin ? "Don't have an account? " : "Already have an account? "}
+                    {isLogin
+                      ? "Don't have an account? "
+                      : "Already have an account? "}
                     <button
                       type="button"
                       onClick={() => setIsLogin(!isLogin)}
                       className="text-primary hover:underline font-medium"
                     >
-                      {isLogin ? 'Sign Up' : 'Sign In'}
+                      {isLogin ? "Sign Up" : "Sign In"}
                     </button>
                   </div>
                 </form>
@@ -160,8 +177,8 @@ const EmployerLogin = () => {
                   <p className="text-sm text-neutral-600 mb-2">
                     Looking for a job?
                   </p>
-                  <Link 
-                    to="/candidate-login" 
+                  <Link
+                    to="/login"
                     className="text-primary hover:text-primary/80 font-semibold inline-flex items-center gap-2"
                   >
                     Candidate Login →
@@ -172,7 +189,7 @@ const EmployerLogin = () => {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );
