@@ -28,6 +28,12 @@ const EmployerHeader = () => {
   const { refreshToken } = useSelector((state: RootState) => state.user);
 
   const handleLogout = async () => {
+    if (!refreshToken) {
+      dispatch(removeUser());
+      navigate("/");
+      return;
+    }
+
     try {
       await logout(refreshToken).unwrap();
       dispatch(removeUser());
