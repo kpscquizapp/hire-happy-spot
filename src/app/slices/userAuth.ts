@@ -7,6 +7,7 @@ export type UserState = {
   userDetails: {
     id?: string;
     uuid?: string;
+    role?: string;
     email?: string;
     firstName?: string;
     lastName?: string;

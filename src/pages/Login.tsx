@@ -76,6 +76,20 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const userDetails = useSelector(
+    (state: RootState) => state.user.userDetails
+  );
+// console.log(userDetails.role)
+  useEffect(() => {
+    if (userDetails) {
+      if (userDetails.role === "candidate") {
+        navigate("/jobs");
+      } else {
+        navigate("/employer-dashboard");
+      }
+    }
+  },[userDetails])
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -123,7 +137,7 @@ const Login = () => {
       const success = await createCandidate(payload);
       if (success) {
         toast.success("Account created successfully!");
-        navigate("/job-recommendations");
+        navigate("/jobs");
       } else {
         toast.error("Signup failed");
       }
