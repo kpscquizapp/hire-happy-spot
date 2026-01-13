@@ -40,9 +40,12 @@ export const userAuth = createSlice({
       state.refreshToken = refreshToken;
       state.userDetails = userDetails;
     },
-    removeUser: () => {
+    removeUser: (state) => {
       Cookies.remove("userInfo");
-      window.location.reload();
+      state.token = null;
+      state.refreshToken = null;
+      state.userDetails = null;
+      // window.location.reload();
     },
     setNewAccessToken: (state, action) => {
       Cookies.set("userInfo", JSON.stringify({ ...state, token: action.payload }), { expires: 15 });
