@@ -33,7 +33,7 @@ const EmployerHeader = () => {
       dispatch(removeUser());
       navigate("/");
     } catch (error) {
-      console.log("Backend logout failed", error);
+      console.error("Backend logout failed", error);
       dispatch(removeUser());
       navigate("/");
     }
@@ -94,7 +94,11 @@ const EmployerHeader = () => {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-red-600"
+              disabled={isLoading}
+            >
               <LogOut className="h-4 w-4 mr-2" />
               {isLoading ? "Signing out..." : "Sign out"}
             </DropdownMenuItem>
