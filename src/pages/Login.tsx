@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Mail,
@@ -37,6 +37,7 @@ import {
 } from "@/app/queries/loginApi";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "@/app/slices/userAuth";
+import { RootState } from "@/app/store";
 
 type Role = "candidate" | "employer";
 
@@ -84,7 +85,7 @@ const Login = () => {
         // console.log(success , 'success')
         dispatch(setUser(success?.data));
         toast.success("Welcome back!");
-        navigate("/job-recommendations");
+        navigate("/employer-dashboard");
       } else {
         toast.error("Invalid email or password");
       }

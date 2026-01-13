@@ -38,12 +38,12 @@ export const loginApi = createApi({
         body: data,
       }),
     }),
-     logout: builder.mutation({
-      query: () => ({
+     logout: builder.mutation<void, string>({
+      query: (refreshToken) => ({
         headers: getAuthHeaders(),
         method: "POST",
         url: `auth/logout`,// sample api
-       
+        body: {refreshToken},
       }),
     }),
   }),

@@ -40,7 +40,6 @@ import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
 import { useFetchRefreshToken } from "./services/utils/hooks/useFetchRefreshToken";
 import ForgotPassword from "./pages/ForgotPassword";
-import CandidateLogin from "./pages/Login";
 
 const queryClient = new QueryClient();
 
