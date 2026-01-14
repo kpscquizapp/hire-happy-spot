@@ -1,22 +1,10 @@
 import React from "react";
-import { Bell, Search, Settings, User, LogOut } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import useLogout from "@/hooks/useLogout";
 import ProfileMenu from "../ProfileMenu";
 
 const EmployerHeader = () => {
-  const [handleLogout, isLoading, user] = useLogout();
-
   return (
     <header className="h-16 bg-white border-b border-neutral-200 px-6 flex items-center justify-between sticky top-0 z-40">
       {/* Search */}
