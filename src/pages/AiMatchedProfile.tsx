@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Download,
   MapPin,
@@ -7,9 +7,6 @@ import {
   Briefcase,
   Globe,
   Sparkles,
-  Bell,
-  X,
-  Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,25 +14,31 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-type WorkHistoryItem = {
+interface Certification {
+  name: string;
+  issueDate: string;
+}
+
+interface WorkHistoryItem {
   id?: string;
   role: string;
   company: string;
   period: string;
   location: string;
   bullets: string[];
-};
+}
 
-type Certification = {
-  name: string;
-  issueDate: string;
-};
-
-type ProjectItem = {
+interface ProjectItem {
   name: string;
   tech: string;
   icon?: React.ReactNode;
-};
+}
+
+interface AiScores {
+  technical: number;
+  communication: number;
+  problemSolving: number;
+}
 
 interface Candidate {
   name: string;
@@ -56,11 +59,7 @@ interface Candidate {
   projects?: ProjectItem[];
   topMatch: boolean;
   about?: string;
-  aiScores: {
-    technical: number;
-    communication: number;
-    problemSolving: number;
-  };
+  aiScores: AiScores;
 }
 
 interface AiMatchedProfileProps {
@@ -85,7 +84,7 @@ const AiMatchedProfile = ({ candidate }: AiMatchedProfileProps) => {
 
   return (
     <div
-      id={`AiMatchedProfile-${candidateId}`}
+      id={candidateId}
       className={`min-h-screen bg-muted/30 dark:bg-muted/60`}
     >
       {/* Header */}
@@ -158,7 +157,7 @@ const AiMatchedProfile = ({ candidate }: AiMatchedProfileProps) => {
                 {candidate.topMatch && (
                   <Badge className="bg-blue-100 font-bold text-blue-700 hover:bg-blue-100 text-xs">
                     <Sparkles className="w-3 h-3 flex-shrink-0 mr-1" />
-                    {candidate.topMatch && "Top 5% Match"}
+                    Top 5% Match
                   </Badge>
                 )}
               </div>
@@ -240,7 +239,7 @@ const AiMatchedProfile = ({ candidate }: AiMatchedProfileProps) => {
                 id={`AiMatchedProfile-${candidateId}-skills`}
                 className="flex flex-wrap gap-2"
               >
-                {candidate.skills.map((skill) => (
+                {candidate.skills?.map((skill) => (
                   <Badge
                     key={skill}
                     id={`AiMatchedProfile-${candidateId}-skill-${skill
@@ -263,8 +262,7 @@ const AiMatchedProfile = ({ candidate }: AiMatchedProfileProps) => {
                 Certifications
               </h3>
               <div className="space-y-3">
-                {candidate.certifications &&
-                candidate.certifications.length > 0 ? (
+                {candidate.certifications?.length ? (
                   candidate.certifications.map(
                     ({ name, issueDate }, cIndex) => (
                       <div
@@ -364,7 +362,9 @@ const AiMatchedProfile = ({ candidate }: AiMatchedProfileProps) => {
                             stroke="#0ea5e9"
                             strokeWidth="5"
                             fill="none"
-                            strokeDasharray={`${(98 / 100) * 176} 176`}
+                            strokeDasharray={`${
+                              (candidate.matchPercentage / 100) * 176
+                            } 176`}
                             strokeLinecap="round"
                             className="sm:hidden"
                           />
@@ -384,7 +384,9 @@ const AiMatchedProfile = ({ candidate }: AiMatchedProfileProps) => {
                             stroke="#0ea5e9"
                             strokeWidth="6"
                             fill="none"
-                            strokeDasharray={`${(98 / 100) * 213.6} 213.6`}
+                            strokeDasharray={`${
+                              (candidate.matchPercentage / 100) * 213.6
+                            } 213.6`}
                             strokeLinecap="round"
                             className="hidden sm:block"
                           />
@@ -536,6 +538,29 @@ const AiMatchedProfile = ({ candidate }: AiMatchedProfileProps) => {
                       </Card>
                     ))}
                   </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="projects" className="space-y-4">
+              <Card className="dark:bg-slate-800 dark:border-slate-700">
+                <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
+                  Projects content coming soon...
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="assessment" className="space-y-4">
+              <Card className="dark:bg-slate-800 dark:border-slate-700">
+                <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
+                  Assessment Report coming soon...
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="resume" className="space-y-4">
+              <Card className="dark:bg-slate-800 dark:border-slate-700">
+                <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
+                  Resume viewer coming soon...
                 </CardContent>
               </Card>
             </TabsContent>

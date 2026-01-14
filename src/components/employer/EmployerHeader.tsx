@@ -1,13 +1,9 @@
-import React from "react";
 import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ProfileMenu from "../ProfileMenu";
-import { useGetProfileQuery } from "@/app/queries/loginApi";
 
 const EmployerHeader = () => {
-  const { data } = useGetProfileQuery();
-  console.log(data);
   return (
     <header className="h-16 bg-white border-b border-neutral-200 px-6 flex items-center justify-between sticky top-0 z-40">
       {/* Search */}

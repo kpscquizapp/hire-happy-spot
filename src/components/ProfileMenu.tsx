@@ -32,7 +32,7 @@ const ProfileMenu = ({
       navigate("/profile");
     }
   };
-  console.log();
+
   return (
     <>
       <DropdownMenu>

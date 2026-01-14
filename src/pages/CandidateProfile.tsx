@@ -1,13 +1,19 @@
 import React from "react";
-import { MapPin, Briefcase, Sparkles } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-
-import { Download, Clock, DollarSign, Globe } from "lucide-react";
+import {
+  Download,
+  Clock,
+  DollarSign,
+  Globe,
+  MapPin,
+  Briefcase,
+  Sparkles,
+} from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const CandidateProfile = () => {
@@ -17,7 +23,7 @@ const CandidateProfile = () => {
     title: "Senior React Native Developer",
     avatar: "amit",
     profileType: "bench",
-    matchPercentage: 98,
+    matchPercentage: 96,
     topMatch: true,
     hourlyRate: "$25 - $35",
     availability: "Immediate",
@@ -87,7 +93,7 @@ const CandidateProfile = () => {
 
   const candidateId = React.useMemo(() => {
     const nameSlug = slugify(candidate.name || "candidate");
-    return `AiMatchedProfile-${nameSlug}`;
+    return nameSlug;
   }, [candidate.name]);
 
   return (
@@ -99,12 +105,12 @@ const CandidateProfile = () => {
         <div className="lg:col-span-3 space-y-4">
           {/* Profile Card */}
           <Card
-            id={`AiMatchedProfile-${candidateId}-profile`}
+            id={candidateId}
             className="dark:bg-slate-800 dark:border-slate-700"
           >
             <CardContent className="p-4 sm:p-6 text-center">
               <Avatar className="w-24 h-24 sm:w-32 sm:h-32 mx-auto mb-4 shadow-xl ring-4 ring-white/90 dark:ring-slate-700/90">
-                <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop" />
+                <AvatarImage src={candidate.avatar} />
                 <AvatarFallback>AS</AvatarFallback>
               </Avatar>
               <h2 className="text-lg sm:text-xl font-bold mb-1 dark:text-slate-100">
@@ -122,7 +128,7 @@ const CandidateProfile = () => {
                 {candidate.topMatch && (
                   <Badge className="bg-blue-100 font-bold text-blue-700 hover:bg-blue-100 text-xs">
                     <Sparkles className="w-3 h-3 flex-shrink-0 mr-1" />
-                    {candidate.topMatch && "Top 5% Match"}
+                    Top 5% Match
                   </Badge>
                 )}
               </div>
@@ -204,7 +210,7 @@ const CandidateProfile = () => {
                 id={`AiMatchedProfile-${candidateId}-skills`}
                 className="flex flex-wrap gap-2"
               >
-                {candidate.skills.map((skill) => (
+                {candidate.skills?.map((skill) => (
                   <Badge
                     key={skill}
                     id={`AiMatchedProfile-${candidateId}-skill-${skill
@@ -227,8 +233,7 @@ const CandidateProfile = () => {
                 Certifications
               </h3>
               <div className="space-y-3">
-                {candidate.certifications &&
-                candidate.certifications.length > 0 ? (
+                {candidate.certifications?.length ? (
                   candidate.certifications.map(
                     ({ name, issueDate }, cIndex) => (
                       <div
@@ -328,7 +333,9 @@ const CandidateProfile = () => {
                             stroke="#0ea5e9"
                             strokeWidth="5"
                             fill="none"
-                            strokeDasharray={`${(98 / 100) * 176} 176`}
+                            strokeDasharray={`${
+                              (candidate.matchPercentage / 100) * 176
+                            } 176`}
                             strokeLinecap="round"
                             className="sm:hidden"
                           />
@@ -348,7 +355,9 @@ const CandidateProfile = () => {
                             stroke="#0ea5e9"
                             strokeWidth="6"
                             fill="none"
-                            strokeDasharray={`${(98 / 100) * 213.6} 213.6`}
+                            strokeDasharray={`${
+                              (candidate.matchPercentage / 100) * 213.6
+                            } 213.6`}
                             strokeLinecap="round"
                             className="hidden sm:block"
                           />
@@ -501,6 +510,29 @@ const CandidateProfile = () => {
                       </Card>
                     ))}
                   </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="projects" className="space-y-4">
+              <Card className="dark:bg-slate-800 dark:border-slate-700">
+                <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
+                  Projects content coming soon...
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="assessment" className="space-y-4">
+              <Card className="dark:bg-slate-800 dark:border-slate-700">
+                <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
+                  Assessment Report coming soon...
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="resume" className="space-y-4">
+              <Card className="dark:bg-slate-800 dark:border-slate-700">
+                <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
+                  Resume viewer coming soon...
                 </CardContent>
               </Card>
             </TabsContent>
