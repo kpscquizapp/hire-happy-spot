@@ -28,8 +28,11 @@ const ProfileMenu = ({
   const handleProfile = () => {
     if (user.role === "employer") {
       navigate("/employer-dashboard");
+    } else if (user.role === "candidate") {
+      navigate("/profile");
     }
   };
+  console.log();
   return (
     <>
       <DropdownMenu>
@@ -38,11 +41,11 @@ const ProfileMenu = ({
             <Avatar className="h-8 w-8">
               <AvatarImage src="" />
               <AvatarFallback className={avatarFallback}>
-                {user?.name?.charAt(0) || "E"}
+                {user?.firstName?.charAt(0) || "E"}
               </AvatarFallback>
             </Avatar>
             <span className="font-medium text-sm hidden sm:inline">
-              {user?.name || "Employer"}
+              {user?.firstName || "Employer"}
             </span>
           </Button>
         </DropdownMenuTrigger>
