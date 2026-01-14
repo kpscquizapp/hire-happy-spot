@@ -18,7 +18,6 @@ const AuthButtons = ({
   // const { user } = useAuth();
 
   const user = useSelector((state: any) => state.user.userDetails);
-  console.log(user);
 
   if (user) {
     return <UserMenu />;
