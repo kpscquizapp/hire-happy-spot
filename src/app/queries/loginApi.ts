@@ -13,24 +13,31 @@ export const loginApi = createApi({
       query: (data) => ({
         method: "POST",
         body: data,
-        url: "jobboard/register/employer", 
+        url: "jobboard/register/employer",
       }),
     }),
     createCandidate: builder.mutation({
       query: (data) => ({
         method: "POST",
         body: data,
-        url: "jobboard/register/candidate", 
+        url: "jobboard/register/candidate",
+      }),
+    }),
+    getProfile: builder.query<any, void>({
+      query: () => ({
+        headers: getAuthHeaders(),
+        method: "GET",
+        url: "jobboard/profile",
       }),
     }),
     login: builder.mutation({
       query: (data) => ({
         method: "POST",
         body: data,
-        url: "auth/login", 
+        url: "auth/login",
       }),
     }),
-     getRefreshToken: builder.mutation({
+    getRefreshToken: builder.mutation({
       query: (data) => ({
         headers: getAuthHeaders(),
         method: "POST",
@@ -38,16 +45,15 @@ export const loginApi = createApi({
         body: data,
       }),
     }),
-     logout: builder.mutation<void, string>({
+    logout: builder.mutation<void, string>({
       query: (refreshToken) => ({
         headers: getAuthHeaders(),
         method: "POST",
-        url: `auth/logout`,// sample api
-        body: {refreshToken},
+        url: `auth/logout`, // sample api
+        body: { refreshToken },
       }),
     }),
   }),
-  
 });
 
 export const {
@@ -56,4 +62,5 @@ export const {
   useLoginMutation,
   useGetRefreshTokenMutation,
   useLogoutMutation,
+  useGetProfileQuery,
 } = loginApi;
