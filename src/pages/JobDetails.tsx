@@ -6,6 +6,16 @@ import { jobListings } from '@/data/jobListings';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import {
   MapPin,
   Building2,
@@ -18,13 +28,30 @@ import {
   Linkedin,
   Twitter,
   Mail,
-  ChevronRight
+  ChevronRight,
+  Upload,
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
 
 const JobDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [applicationSubmitted, setApplicationSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    currentCompany: '',
+    experience: '',
+    expectedSalary: '',
+    noticePeriod: '',
+    coverLetter: '',
+    resume: null as File | null
+  });
   
   const job = jobListings.find(j => j.id === parseInt(id || '0'));
 
@@ -46,6 +73,59 @@ const JobDetails = () => {
     };
     
     window.open(shareUrls[platform], '_blank');
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFormData(prev => ({ ...prev, resume: e.target.files![0] }));
+    }
+  };
+
+  const handleSubmitApplication = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Validate required fields
+    if (!formData.fullName || !formData.email || !formData.phone || !formData.experience) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    setIsSubmitting(false);
+    setApplicationSubmitted(true);
+    toast.success('Application submitted successfully!');
+  };
+
+  const resetModal = () => {
+    setIsApplyModalOpen(false);
+    setApplicationSubmitted(false);
+    setFormData({
+      fullName: '',
+      email: '',
+      phone: '',
+      currentCompany: '',
+      experience: '',
+      expectedSalary: '',
+      noticePeriod: '',
+      coverLetter: '',
+      resume: null
+    });
   };
 
   if (!job) {
@@ -137,6 +217,7 @@ const JobDetails = () => {
 
               <Button 
                 size="lg"
+                onClick={() => setIsApplyModalOpen(true)}
                 className="bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90 text-white font-semibold px-8 rounded-xl shadow-lg shadow-primary/25"
               >
                 Apply Now
@@ -373,6 +454,187 @@ const JobDetails = () => {
       </main>
       
       <Footer />
+
+      {/* Apply Now Modal */}
+      <Dialog open={isApplyModalOpen} onOpenChange={(open) => !open && resetModal()}>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+          {!applicationSubmitted ? (
+            <>
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold">Apply for {job.title.en}</DialogTitle>
+                <DialogDescription>
+                  at {job.company} • {job.location}
+                </DialogDescription>
+              </DialogHeader>
+
+              <form onSubmit={handleSubmitApplication} className="space-y-4 mt-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="fullName">Full Name <span className="text-destructive">*</span></Label>
+                    <Input
+                      id="fullName"
+                      name="fullName"
+                      placeholder="Enter your full name"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email <span className="text-destructive">*</span></Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Phone Number <span className="text-destructive">*</span></Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="currentCompany">Current Company</Label>
+                    <Input
+                      id="currentCompany"
+                      name="currentCompany"
+                      placeholder="Your current company"
+                      value={formData.currentCompany}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="experience">Total Experience <span className="text-destructive">*</span></Label>
+                    <Input
+                      id="experience"
+                      name="experience"
+                      placeholder="e.g., 5 years"
+                      value={formData.experience}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="expectedSalary">Expected Salary (LPA)</Label>
+                    <Input
+                      id="expectedSalary"
+                      name="expectedSalary"
+                      placeholder="e.g., 15"
+                      value={formData.expectedSalary}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="noticePeriod">Notice Period</Label>
+                  <Input
+                    id="noticePeriod"
+                    name="noticePeriod"
+                    placeholder="e.g., 30 days, Immediate"
+                    value={formData.noticePeriod}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="resume">Upload Resume</Label>
+                  <div className="border-2 border-dashed border-border rounded-lg p-4 text-center hover:border-primary/50 transition-colors">
+                    <input
+                      id="resume"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                    <label htmlFor="resume" className="cursor-pointer">
+                      <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                      {formData.resume ? (
+                        <p className="text-sm text-primary font-medium">{formData.resume.name}</p>
+                      ) : (
+                        <>
+                          <p className="text-sm text-muted-foreground">Click to upload or drag and drop</p>
+                          <p className="text-xs text-muted-foreground mt-1">PDF, DOC, DOCX (Max 5MB)</p>
+                        </>
+                      )}
+                    </label>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="coverLetter">Cover Letter (Optional)</Label>
+                  <Textarea
+                    id="coverLetter"
+                    name="coverLetter"
+                    placeholder="Tell us why you're interested in this role..."
+                    value={formData.coverLetter}
+                    onChange={handleInputChange}
+                    rows={4}
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={resetModal}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-gradient-to-r from-primary to-violet-600 hover:from-primary/90 hover:to-violet-600/90"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      'Submit Application'
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="h-8 w-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground mb-2">Application Submitted!</h3>
+              <p className="text-muted-foreground mb-6">
+                Your application for <span className="font-medium text-foreground">{job.title.en}</span> at <span className="font-medium text-foreground">{job.company}</span> has been submitted successfully.
+              </p>
+              <p className="text-sm text-muted-foreground mb-6">
+                We'll review your application and get back to you soon. Check your email for confirmation.
+              </p>
+              <Button onClick={resetModal} className="bg-primary hover:bg-primary/90">
+                Close
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
