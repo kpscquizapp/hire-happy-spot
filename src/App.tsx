@@ -38,6 +38,11 @@ import ContractHiring from "./pages/employer/ContractHiring";
 import TalentMarketplace from "./pages/employer/TalentMarketplace";
 import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
+import JobBoard from "./pages/employer/JobBoard";
+import CreateJob from "./pages/employer/CreateJob";
+import AppliedCandidates from "./pages/employer/AppliedCandidates";
+import JobDetailsPage from "./pages/employer/JobDetails";
+import CandidateDetailPage from "./pages/employer/CandidateDetailPage";
 import { useFetchRefreshToken } from "./services/utils/hooks/useFetchRefreshToken";
 import ForgotPassword from "./pages/ForgotPassword";
 
@@ -54,14 +59,20 @@ const ScrollToTop = () => {
   return null;
 };
 
-const App = () => {
+// Component to handle refresh token logic - must be inside all providers
+const RefreshTokenHandler = () => {
   useFetchRefreshToken();
+  return null;
+};
+
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <TooltipProvider>
           <LanguageProvider>
             <AuthProvider>
+              <RefreshTokenHandler />
               <Toaster />
               <Sonner />
               <BrowserRouter>
@@ -112,26 +123,18 @@ const App = () => {
                       element={<EmployerLayout />}
                     >
                       <Route index element={<CompanyDashboard />} />
+                      <Route path="job-board" element={<JobBoard />} />
+                      <Route path="create-job" element={<CreateJob />} />
                       <Route path="post-job" element={<PostJob />} />
                       <Route path="hire-fulltime" element={<HireFullTime />} />
                       <Route path="hire-interns" element={<HireInterns />} />
-                      <Route
-                        path="contract-hiring"
-                        element={<ContractHiring />}
-                      />
-                      <Route
-                        path="talent-marketplace"
-                        element={<TalentMarketplace />}
-                      />
+                      <Route path="contract-hiring" element={<ContractHiring />} />
+                      <Route path="talent-marketplace" element={<TalentMarketplace />} />
                       <Route path="ai-screening" element={<AIScreening />} />
-                      <Route
-                        path="job/:jobId/candidates"
-                        element={<JobCandidates />}
-                      />
-                      <Route
-                        path="interview-results/:candidateId"
-                        element={<AIInterviewResults />}
-                      />
+                      <Route path="job/:jobId" element={<JobDetailsPage />} />
+                      <Route path="job/:jobId/candidates" element={<JobCandidates />} />
+                      <Route path="job/:jobId/candidate/:candidateId" element={<CandidateDetailPage />} />
+                      <Route path="interview-results/:candidateId" element={<AIInterviewResults />} />
                     </Route>
 
                     {/* Standalone employer routes (redirect to dashboard) */}

@@ -255,7 +255,13 @@ const Login = () => {
                         </div>
                       </div>
 
-                      <div className="flex justify-end">
+                      <div className="flex items-center justify-between">
+                        <Link
+                          to="/employer-login"
+                          className="text-sm text-primary hover:text-primary/80 font-medium"
+                        >
+                          Employer Login →
+                        </Link>
                         <Link
                           to="/forgot-password"
                           className="text-sm text-primary hover:text-primary/80 font-medium"
