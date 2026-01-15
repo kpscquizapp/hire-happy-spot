@@ -23,60 +23,14 @@ interface EmployerSidebarProps {
 }
 
 const menuItems = [
-  { 
-    title: 'Dashboard', 
-    icon: LayoutDashboard, 
-    path: '/employer-dashboard',
-    isAI: false 
-  },
-  { 
-    title: 'Post a Job', 
-    icon: FileText, 
-    path: '/employer-dashboard/post-job',
-    isAI: false 
-  },
-  { 
-    title: 'Job Candidates', 
-    icon: Users, 
-    path: '/employer-dashboard/job/1/candidates',
-    isAI: false 
-  },
-  { 
-    title: 'Hire Full-Time', 
-    icon: Briefcase, 
-    path: '/employer-dashboard/hire-fulltime',
-    isAI: false 
-  },
-  { 
-    title: 'Hire Interns', 
-    icon: GraduationCap, 
-    path: '/employer-dashboard/hire-interns',
-    isAI: false 
-  },
-  { 
-    title: 'Short-Term Contract', 
-    icon: Clock, 
-    path: '/employer-dashboard/contract-hiring',
-    isAI: false 
-  },
-  { 
-    title: 'Talent Marketplace', 
-    icon: Globe, 
-    path: '/employer-dashboard/talent-marketplace',
-    isAI: false 
-  },
-  { 
-    title: 'AI Screening', 
-    icon: Bot, 
-    path: '/employer-dashboard/ai-screening',
-    isAI: true 
-  },
-  { 
-    title: 'Interview Results', 
-    icon: ClipboardCheck, 
-    path: '/employer-dashboard/interview-results/1',
-    isAI: true 
-  },
+  { title: 'Dashboard', icon: LayoutDashboard, path: '/employer-dashboard', isAI: false },
+  { title: 'Job Board', icon: Briefcase, path: '/employer-dashboard/job-board', isAI: false },
+  { title: 'Create Job', icon: FileText, path: '/employer-dashboard/create-job', isAI: false },
+  { title: 'Hire Full-Time', icon: Briefcase, path: '/employer-dashboard/hire-fulltime', isAI: false },
+  { title: 'Hire Interns', icon: GraduationCap, path: '/employer-dashboard/hire-interns', isAI: false },
+  { title: 'Contract Hiring', icon: Clock, path: '/employer-dashboard/contract-hiring', isAI: false },
+  { title: 'Talent Marketplace', icon: Globe, path: '/employer-dashboard/talent-marketplace', isAI: false },
+  { title: 'AI Screening', icon: Bot, path: '/employer-dashboard/ai-screening', isAI: true },
 ];
 
 const EmployerSidebar = ({ collapsed, onToggle }: EmployerSidebarProps) => {
