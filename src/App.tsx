@@ -112,26 +112,16 @@ const App = () => {
                       element={<EmployerLayout />}
                     >
                       <Route index element={<CompanyDashboard />} />
+                      <Route path="job-board" element={<JobBoard />} />
+                      <Route path="create-job" element={<CreateJob />} />
                       <Route path="post-job" element={<PostJob />} />
                       <Route path="hire-fulltime" element={<HireFullTime />} />
                       <Route path="hire-interns" element={<HireInterns />} />
-                      <Route
-                        path="contract-hiring"
-                        element={<ContractHiring />}
-                      />
-                      <Route
-                        path="talent-marketplace"
-                        element={<TalentMarketplace />}
-                      />
+                      <Route path="contract-hiring" element={<ContractHiring />} />
+                      <Route path="talent-marketplace" element={<TalentMarketplace />} />
                       <Route path="ai-screening" element={<AIScreening />} />
-                      <Route
-                        path="job/:jobId/candidates"
-                        element={<JobCandidates />}
-                      />
-                      <Route
-                        path="interview-results/:candidateId"
-                        element={<AIInterviewResults />}
-                      />
+                      <Route path="job/:jobId/candidates" element={<AppliedCandidates />} />
+                      <Route path="interview-results/:candidateId" element={<AIInterviewResults />} />
                     </Route>
 
                     {/* Standalone employer routes (redirect to dashboard) */}
