@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -137,6 +137,7 @@ const defaultFilters = {
 
 const JobCandidates: React.FC = () => {
   const { jobId } = useParams();
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('ai_score');
@@ -185,8 +186,8 @@ const JobCandidates: React.FC = () => {
   }, [searchQuery, filters, sortBy]);
 
   const handleSelectCandidate = (candidate: Candidate) => {
-    setSelectedCandidate(candidate);
-    setDrawerOpen(true);
+    // Navigate to full-page candidate profile
+    navigate(`/employer-dashboard/job/${jobId}/candidate/${candidate.id}`);
   };
 
   const handleScheduleInterview = (candidate: Candidate) => {

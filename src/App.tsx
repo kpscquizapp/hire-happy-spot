@@ -42,6 +42,7 @@ import JobBoard from "./pages/employer/JobBoard";
 import CreateJob from "./pages/employer/CreateJob";
 import AppliedCandidates from "./pages/employer/AppliedCandidates";
 import JobDetailsPage from "./pages/employer/JobDetails";
+import CandidateDetailPage from "./pages/employer/CandidateDetailPage";
 import { useFetchRefreshToken } from "./services/utils/hooks/useFetchRefreshToken";
 import ForgotPassword from "./pages/ForgotPassword";
 
@@ -125,7 +126,8 @@ const App = () => {
                       <Route path="talent-marketplace" element={<TalentMarketplace />} />
                       <Route path="ai-screening" element={<AIScreening />} />
                       <Route path="job/:jobId" element={<JobDetailsPage />} />
-                      <Route path="job/:jobId/candidates" element={<AppliedCandidates />} />
+                      <Route path="job/:jobId/candidates" element={<JobCandidates />} />
+                      <Route path="job/:jobId/candidate/:candidateId" element={<CandidateDetailPage />} />
                       <Route path="interview-results/:candidateId" element={<AIInterviewResults />} />
                     </Route>
 
