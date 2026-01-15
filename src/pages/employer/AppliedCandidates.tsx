@@ -634,64 +634,192 @@ const AppliedCandidates = () => {
 
       {/* Send Test Modal */}
       <Dialog open={showTestModal} onOpenChange={setShowTestModal}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Send Skill Test Invite</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <ClipboardCheck className="h-5 w-5 text-amber-600" />
+              Assign Skill Test
+            </DialogTitle>
           </DialogHeader>
-          <div className="py-4">
-            <p className="text-muted-foreground">
-              Send a skill test invite to <strong>{candidateForAction?.name}</strong>?
+          <div className="py-4 space-y-4">
+            <p className="text-muted-foreground text-sm">
+              Assign a skill test to <strong>{candidateForAction?.name}</strong>
             </p>
-            <div className="mt-4 p-4 bg-muted/50 rounded-lg space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Test Type:</span>
-                <span className="font-medium">Coding Challenge</span>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Test Type</label>
+                <Select defaultValue="coding">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select test type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="coding">Coding Challenge</SelectItem>
+                    <SelectItem value="mcq">MCQ Assessment</SelectItem>
+                    <SelectItem value="system-design">System Design</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>Duration:</span>
-                <span className="font-medium">60 minutes</span>
+              
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Difficulty Level</label>
+                <Select defaultValue="medium">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select difficulty" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="easy">Easy</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="hard">Hard</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>Deadline:</span>
-                <span className="font-medium">7 days</span>
+              
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Time Limit</label>
+                <Select defaultValue="60">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select time limit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="30">30 minutes</SelectItem>
+                    <SelectItem value="60">60 minutes</SelectItem>
+                    <SelectItem value="90">90 minutes</SelectItem>
+                    <SelectItem value="120">120 minutes</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Deadline</label>
+                <Select defaultValue="7">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select deadline" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3">3 days</SelectItem>
+                    <SelectItem value="5">5 days</SelectItem>
+                    <SelectItem value="7">7 days</SelectItem>
+                    <SelectItem value="14">14 days</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Auto-Reject Below Score</label>
+                <Select defaultValue="50">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select threshold" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">No auto-reject</SelectItem>
+                    <SelectItem value="40">40%</SelectItem>
+                    <SelectItem value="50">50%</SelectItem>
+                    <SelectItem value="60">60%</SelectItem>
+                    <SelectItem value="70">70%</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowTestModal(false)}>Cancel</Button>
-            <Button onClick={confirmSendTest}>Send Invite</Button>
+            <Button onClick={confirmSendTest} className="bg-primary">
+              <Play className="h-4 w-4 mr-2" />
+              Send Test Invite
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
       {/* Send Interview Modal */}
       <Dialog open={showInterviewModal} onOpenChange={setShowInterviewModal}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Send AI Interview Invite</DialogTitle>
+            <DialogTitle className="flex items-center gap-2">
+              <Brain className="h-5 w-5 text-purple-600" />
+              Assign AI Interview
+            </DialogTitle>
           </DialogHeader>
-          <div className="py-4">
-            <p className="text-muted-foreground">
-              Send an AI interview invite to <strong>{candidateForAction?.name}</strong>?
+          <div className="py-4 space-y-4">
+            <p className="text-muted-foreground text-sm">
+              Assign an AI interview to <strong>{candidateForAction?.name}</strong>
             </p>
-            <div className="mt-4 p-4 bg-muted/50 rounded-lg space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Interview Type:</span>
-                <span className="font-medium">Technical + Behavioral</span>
+            
+            <div className="space-y-3">
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Interview Type</label>
+                <Select defaultValue="mixed">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select interview type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="technical">Technical Only</SelectItem>
+                    <SelectItem value="behavioral">Behavioral Only</SelectItem>
+                    <SelectItem value="mixed">Technical + Behavioral</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>Duration:</span>
-                <span className="font-medium">30-45 minutes</span>
+              
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Evaluation Criteria</label>
+                <div className="space-y-2 mt-2">
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" defaultChecked className="rounded border-gray-300" />
+                    Communication Skills
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" defaultChecked className="rounded border-gray-300" />
+                    Problem Solving
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" defaultChecked className="rounded border-gray-300" />
+                    Technical Depth
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" className="rounded border-gray-300" />
+                    Leadership Qualities
+                  </label>
+                </div>
               </div>
-              <div className="flex justify-between text-sm">
-                <span>Deadline:</span>
-                <span className="font-medium">5 days</span>
+              
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Deadline</label>
+                <Select defaultValue="5">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select deadline" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="3">3 days</SelectItem>
+                    <SelectItem value="5">5 days</SelectItem>
+                    <SelectItem value="7">7 days</SelectItem>
+                    <SelectItem value="10">10 days</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium mb-1.5 block">Auto-Advance Rule</label>
+                <Select defaultValue="80">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select threshold" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="0">Manual review only</SelectItem>
+                    <SelectItem value="70">Auto-advance if score ≥ 70%</SelectItem>
+                    <SelectItem value="80">Auto-advance if score ≥ 80%</SelectItem>
+                    <SelectItem value="90">Auto-advance if score ≥ 90%</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowInterviewModal(false)}>Cancel</Button>
-            <Button onClick={confirmSendInterview}>Send Invite</Button>
+            <Button onClick={confirmSendInterview} className="bg-primary">
+              <Video className="h-4 w-4 mr-2" />
+              Send Interview Invite
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

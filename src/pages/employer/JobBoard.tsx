@@ -245,7 +245,7 @@ const JobBoard = () => {
                 <TableRow key={job.id} className="hover:bg-muted/30">
                   <TableCell>
                     <button 
-                      onClick={() => navigate(`/employer-dashboard/job/${job.id}/candidates`)}
+                      onClick={() => navigate(`/employer-dashboard/job/${job.id}`)}
                       className="font-medium text-primary hover:underline text-left"
                     >
                       {job.title}
@@ -292,9 +292,9 @@ const JobBoard = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-40">
-                        <DropdownMenuItem onClick={() => navigate(`/employer-dashboard/job/${job.id}/candidates`)}>
+                        <DropdownMenuItem onClick={() => navigate(`/employer-dashboard/job/${job.id}`)}>
                           <Eye className="h-4 w-4 mr-2" />
-                          View
+                          View Job
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => navigate(`/employer-dashboard/edit-job/${job.id}`)}>
                           <Edit className="h-4 w-4 mr-2" />

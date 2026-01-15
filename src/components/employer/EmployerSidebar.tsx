@@ -26,8 +26,6 @@ const menuItems = [
   { title: 'Dashboard', icon: LayoutDashboard, path: '/employer-dashboard', isAI: false },
   { title: 'Job Board', icon: Briefcase, path: '/employer-dashboard/job-board', isAI: false },
   { title: 'Create Job', icon: FileText, path: '/employer-dashboard/create-job', isAI: false },
-  { title: 'Hire Full-Time', icon: Briefcase, path: '/employer-dashboard/hire-fulltime', isAI: false },
-  { title: 'Hire Interns', icon: GraduationCap, path: '/employer-dashboard/hire-interns', isAI: false },
   { title: 'Contract Hiring', icon: Clock, path: '/employer-dashboard/contract-hiring', isAI: false },
   { title: 'Talent Marketplace', icon: Globe, path: '/employer-dashboard/talent-marketplace', isAI: false },
   { title: 'AI Screening', icon: Bot, path: '/employer-dashboard/ai-screening', isAI: true },
