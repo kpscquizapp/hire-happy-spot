@@ -59,14 +59,20 @@ const ScrollToTop = () => {
   return null;
 };
 
-const App = () => {
+// Component to handle refresh token logic - must be inside all providers
+const RefreshTokenHandler = () => {
   useFetchRefreshToken();
+  return null;
+};
+
+const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
         <TooltipProvider>
           <LanguageProvider>
             <AuthProvider>
+              <RefreshTokenHandler />
               <Toaster />
               <Sonner />
               <BrowserRouter>
