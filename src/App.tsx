@@ -38,6 +38,9 @@ import ContractHiring from "./pages/employer/ContractHiring";
 import TalentMarketplace from "./pages/employer/TalentMarketplace";
 import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
+import JobBoard from "./pages/employer/JobBoard";
+import CreateJob from "./pages/employer/CreateJob";
+import AppliedCandidates from "./pages/employer/AppliedCandidates";
 import { useFetchRefreshToken } from "./services/utils/hooks/useFetchRefreshToken";
 import ForgotPassword from "./pages/ForgotPassword";
 
