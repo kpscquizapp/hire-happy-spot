@@ -1,0 +1,52 @@
+name: Deploy React Frontend
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React
+        run: npm run build
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            DEPLOY_DIR="/var/www/html/hireon-fe"
+            BACKUP_DIR="/var/www/html/backups"
+            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+            echo "Creating backup directory if not exists"
+            sudo mkdir -p $BACKUP_DIR
+
+            if [ -d "$DEPLOY_DIR" ]; then
+              echo "Backing up existing deployment"
+              sudo tar -czf $BACKUP_DIR/hireon-fe_$TIMESTAMP.tar.gz -C /var/www/html hireon-fe
+            fi
+
+            echo "Cleaning old backups (keep last 3)"
+            sudo ls -tp $BACKUP_DIR | grep hireon-fe | tail -n +4 | xargs -r sudo rm --
+
+            echo "Removing old deployment"
+            sudo rm -rf $DEPLOY_DIR
+
+            echo "Deploying new build"
+            sudo mkdir -p $DEPLOY_DIR
+            sudo cp -r ./build/* $DEPLOY_DIR/
+
+            echo "Restarting Apache"
+            sudo systemctl restart httpd
+            
