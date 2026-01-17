@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useCreateJobMutation } from '@/app/queries/jobApi';
 
 const STEPS = [
   { id: 1, title: 'Job Details', icon: FileText },
@@ -46,6 +47,8 @@ const STEPS = [
 ];
 
 const CreateJob = () => {
+
+  const [createJob, { isLoading: createJobLoading }] = useCreateJobMutation();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [skillInput, setSkillInput] = useState('');
@@ -81,6 +84,8 @@ const CreateJob = () => {
     autoAdvanceScore: 70,
   });
 
+
+  
   const updateFormData = (field: string, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -134,10 +139,109 @@ const CreateJob = () => {
     toast.info('Preview functionality coming soon');
   };
 
-  const handlePublish = () => {
-    toast.success('Job posted successfully!');
-    setTimeout(() => navigate('/employer-dashboard/job-board'), 1500);
+
+
+    const buildCreateJobPayload = () => {
+  return {
+    title: formData.jobTitle,
+    description: formData.jobDescription,
+
+    // category: "Engineering",
+    // role: "Frontend Engineer",
+
+    // location: formData.workLocation,
+    // city: "Bangalore",
+    // state: "Karnataka",
+    // country: "India",
+
+    employmentType: formData.employmentType,
+
+    workMode: formData.workLocation, // remote | hybrid | onsite
+
+    experienceLevel: formData.experienceLevel,
+    // maxExperience: formData.experienceLevel === "senior" ? 8 : 7,
+    // fresherAllowed: formData.experienceLevel === "entry",
+
+    salaryMin: Number(formData.salaryMin),
+    salaryMax: Number(formData.salaryMax),
+    // salaryType: "fixed-range",
+    // currency: "INR",
+
+    // numberOfOpenings: 1,
+    // duration: 12,
+    // mltipleLocationsAllowed: false,
+
+    // jobVisibility: "public",
+    // urgency: "normal",
+
+    enableAiTalentMatching: true,
+    aiMatchingEnabled: true,
+    autoScreenCandidates: true,
+
+    enableSkillAssessment: formData.enableSkillTest,
+
+    testType: formData.testType,
+    difficultyLevel: formData.difficultyLevel,
+    timeLimit: formData.timeLimit,
+    autoRejectBelowScore: formData.autoRejectScore,
+    interviewType: formData.interviewType,
+    aiEvaluationCriteria: [
+      formData.evaluateCommunication && "Communication",
+      formData.evaluateProblemSolving && "Problem Solving",
+      formData.evaluateTechnicalDepth && "Technical Depth",
+    ],
+    
+    autoAdvanceScore: formData.autoAdvanceScore,
+
+    scheduleAIInterviews: formData.enableAIInterview,
+
+    // healthInsurance: true,
+    // ESOPs: true,
+    // performanceBonus: true,
+    // remoteAllowance: formData.workLocation === "remote",
+
+    // educationQualification: "B.Tech / B.E",
+    // languagesKnown: "English, Hindi",
+
+    // equalOpportunityEmployer: true,
+    // dataPrivacyPolicies: true,
+    // termsAndConditions: true,
+
+    expiresAt: new Date(
+      new Date().setMonth(new Date().getMonth() + 2),
+    ).toISOString(),
+
+    skills: formData.requiredSkills.map((skill) => ({
+      name: skill.name,
+      proficiencyLevel: skill.level.toLowerCase(),
+    })),
+    niceToHaveSkills: formData.niceToHaveSkills.map((skill) => ({
+      name: skill,
+      // proficiencyLevel: "beginner",
+    })),
   };
+};
+
+  // const handlePublish = () => {
+  //   toast.success('Job posted successfully!');
+  //   setTimeout(() => navigate('/employer-dashboard/job-board'), 1500);
+  // };
+
+const handlePublish = async () => {
+  try {
+    const payload = buildCreateJobPayload();
+
+    await createJob(payload).unwrap();
+
+    toast.success("Job posted successfully!");
+    navigate("/employer-dashboard/job-board");
+  } catch (error: any) {
+    toast.error(error?.data?.message || "Failed to create job");
+  }
+};
+
+
+
 
   // Step 1: Job Details
   const renderJobDetails = () => (
@@ -446,6 +550,7 @@ const CreateJob = () => {
               <Label>AI Evaluation Criteria</Label>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 p-3 bg-muted/30 rounded-lg">
+                
                   <Checkbox 
                     id="communication"
                     checked={formData.evaluateCommunication}
