@@ -5,102 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import {
-  Download,
-  Clock,
-  DollarSign,
-  Globe,
-  MapPin,
-  Briefcase,
-  Sparkles,
-} from "lucide-react";
+import { Clock, DollarSign, Globe, MapPin, Briefcase } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useGetProfileQuery } from "@/app/queries/loginApi";
-import { useSelector } from "react-redux";
-import { RootState } from "@/app/store";
+import { useGetProfileQuery } from "@/app/queries/profileApi";
+import CandidateProfileUpdate from "./CandidateProfileUpdate";
 
 const CandidateProfile = () => {
-  const candidate = {
-    id: 1,
-    name: "Amit Sharma",
-    title: "Senior React Native Developer",
-    avatar: "amit",
-    profileType: "bench",
-    matchPercentage: 96,
-    topMatch: true,
-    hourlyRate: "$25 - $35",
-    availability: "Immediate",
-    location: "Bangalore, India",
-    experience: "5.5 Years",
-    language: "Professional",
-    skills: [
-      "React Native",
-      "TypeScript",
-      "Redux",
-      "Node.js",
-      "GraphQL",
-      "Jest",
-      "Firebase",
-    ],
-    certifications: [
-      { name: "Meta React Native", issueDate: "Issued 2023" },
-      { name: "AWS Certified Dev", issueDate: "Issued 2022" },
-    ],
-    about:
-      "Senior React Native Developer with over 5 years of experience building high-performance mobile applications for both iOS and Android. Proven track record of delivering scalable solutions for FinTech and E-commerce domains. Currently on bench at Infosys and available for immediate contract deployment.\n\nProficient in TypeScript, Redux Toolkit, and integrating native modules. Experienced in working with agile teams and mentoring junior developers.",
-    workHistory: [
-      {
-        role: "Senior Systems Engineer",
-        company: "Infosys Ltd.",
-        period: "Jan 2022 - Present",
-        location: "Bangalore",
-        bullets: [
-          "Led the mobile development team for a major US banking client app.",
-          "Optimized app startup time by 40% using Hermes engine.",
-          "Managed a team of 5 developers and handled code reviews.",
-        ],
-      },
-      {
-        role: "Software Developer",
-        company: "TechMahindra",
-        period: "Jun 2019 - Dec 2021",
-        location: "Hyderabad",
-        bullets: [
-          "Developed cross-platform mobile apps for retail customers.",
-          "Integrated payment gateways and third-party analytics tools.",
-          "Worked closely with UX designers to implement pixel-perfect UI.",
-        ],
-      },
-    ],
-    projects: [
-      {
-        name: "FinPay Wallet App",
-        tech: "React Native, Redux, Node.js",
-        icon: "wallet",
-      },
-      {
-        name: "ShopEase E-commerce",
-        tech: "React Native, Firebase, Stripe",
-        icon: "shopping",
-      },
-    ],
-    aiScores: { technical: 9.5, communication: 8.8, problemSolving: 9.2 },
-  };
-
-  const slugify = (s: string) =>
-    s
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)/g, "")
-      .slice(0, 40);
-
-  const candidateId = React.useMemo(() => {
-    const nameSlug = slugify(candidate.name || "candidate");
-    return nameSlug;
-  }, [candidate.name]);
-
   const { data: { data } = {}, isLoading, isError } = useGetProfileQuery();
-  console.log(data, isLoading, isError);
+
+  // const slugify = (s: string) =>
+  //   s
+  //     .toLowerCase()
+  //     .replace(/[^a-z0-9]+/g, "-")
+  //     .replace(/(^-|-$)/g, "")
+  //     .slice(0, 40);
+
+  const candidateId = crypto.randomUUID();
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-50 via-white to-neutral-50">
@@ -127,14 +47,14 @@ const CandidateProfile = () => {
                 >
                   <CardContent className="p-4 sm:p-6 text-center">
                     <Avatar className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 mx-auto mb-4 shadow-xl ring-4 ring-white/90 dark:ring-slate-700/90">
-                      <AvatarImage src={data.avatar} />
+                      <AvatarImage src={data?.avatar || ""} />
                       <AvatarFallback>Avatar</AvatarFallback>
                     </Avatar>
                     <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-1 dark:text-slate-100 break-words">
                       {data.firstName} {data.lastName}
                     </h2>
                     <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-3 font-semibold break-words">
-                      {candidate.title}
+                      {data?.title}
                     </p>
 
                     {/* Details Card */}
@@ -229,9 +149,7 @@ const CandidateProfile = () => {
                         data.candidateProfile.certifications.map(
                           ({ name, issueDate }, cIndex) => (
                             <div
-                              id={`AiMatchedProfile-${candidateId}-cert-${slugify(
-                                name
-                              )}-${cIndex}`}
+                              id={`AiMatchedProfile-${candidateId}-cert-${cIndex}`}
                               className="flex items-start gap-2 sm:gap-3"
                               key={`${name}-${cIndex}`}
                             >
@@ -331,9 +249,7 @@ const CandidateProfile = () => {
                                   location,
                                   bullets,
                                 } = entry;
-                                const entryId = `${candidateId}-work-${slugify(
-                                  role
-                                )}-${index}`;
+                                const entryId = `${candidateId}-work-${index}`;
                                 return (
                                   <div
                                     key={entryId}
@@ -393,9 +309,7 @@ const CandidateProfile = () => {
                           {data.candidateProfile.projects?.map(
                             ({ name, tech, icon }, pIndex) => (
                               <Card
-                                id={`AiMatchedProfile-${candidateId}-project-${slugify(
-                                  name
-                                )}-${pIndex}`}
+                                id={`AiMatchedProfile-${candidateId}-project-`}
                                 className="border dark:border-slate-700 dark:bg-slate-800 w-full"
                                 key={`${name}-${pIndex}`}
                               >
@@ -439,7 +353,7 @@ const CandidateProfile = () => {
                   <TabsContent value="assessment" className="space-y-4">
                     <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
                       <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
-                        Edit Profile coming soon...
+                        <CandidateProfileUpdate data={data} />
                       </CardContent>
                     </Card>
                   </TabsContent>

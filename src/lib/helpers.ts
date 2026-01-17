@@ -21,7 +21,7 @@ export const useScreenWidth = (): number => {
 export const createSelectOption = (
   arr: any[],
   value: string,
-  label: string
+  label: string,
 ) => {
   const newArr = arr?.map((item) => {
     return {
