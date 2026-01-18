@@ -657,12 +657,19 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
               <input
                 type="text"
                 placeholder="Tech Stack (comma separated, e.g., Node.js, PostgreSQL)"
-                value={project.techStack.join(", ")}
+                value={
+                  Array.isArray(project.techStack)
+                    ? project.techStack.join(", ")
+                    : (project.techStack ?? "")
+                }
                 onChange={(e) =>
                   updateProject(
                     index,
                     "techStack",
-                    e.target.value.split(",").map((s) => s.trim()),
+                    e.target.value
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean),
                   )
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"

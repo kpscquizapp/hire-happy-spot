@@ -269,7 +269,12 @@ const CandidateProfile = () => {
                                       {startDate}-{endDate} • {location}
                                     </p>
                                     <ul className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
-                                      {description?.map((bullet, bIndex) => (
+                                      {(Array.isArray(description)
+                                        ? description
+                                        : description
+                                          ? [description]
+                                          : []
+                                      ).map((bullet, bIndex) => (
                                         <li
                                           key={`${entryId}-bullet-${bIndex}`}
                                           className="break-words"
