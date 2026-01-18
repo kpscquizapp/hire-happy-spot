@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useId } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -11,22 +11,11 @@ import { useGetProfileQuery } from "@/app/queries/profileApi";
 import CandidateProfileUpdate from "./CandidateProfileUpdate";
 
 const CandidateProfile = () => {
-  const {
-    data: { data } = {},
-    isLoading,
-    isError,
-  } = useGetProfileQuery("myQuery");
+  const { data: response, isLoading, isError } = useGetProfileQuery("myQuery");
+  const data = response?.data;
   const profile = data?.candidateProfile;
 
-  // const slugify = (s: string) =>
-  //   s
-  //     .toLowerCase()
-  //     .replace(/[^a-z0-9]+/g, "-")
-  //     .replace(/(^-|-$)/g, "")
-  //     .slice(0, 40);
-
-  const candidateId = useRef(crypto.randomUUID()).current;
-
+  const candidateId = useId();
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-50 via-white to-neutral-50">
       <Header />
@@ -65,18 +54,19 @@ const CandidateProfile = () => {
                     {/* Details Card */}
                     <div className="border-t-2 border-t-gray-200 dark:border-t-slate-700 mt-6 sm:mt-8" />
                     <div className="p-0 my-6 sm:my-8 space-y-3">
-                      {profile?.hourlyRateMin && (
-                        <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
-                          <span className="text-gray-600 dark:text-slate-400 flex items-center gap-1 sm:gap-2 min-w-0">
-                            <DollarSign className="w-4 h-4 flex-shrink-0" />
-                            <span className="truncate">Hourly Rate</span>
-                          </span>
-                          <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                            ${profile?.hourlyRateMin}-${profile?.hourlyRateMax}
-                            /hr
-                          </span>
-                        </div>
-                      )}
+                      {profile?.hourlyRateMin != null &&
+                        profile?.hourlyRateMax != null && (
+                          <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
+                            <span className="text-gray-600 dark:text-slate-400 flex items-center gap-1 sm:gap-2 min-w-0">
+                              <DollarSign className="w-4 h-4 flex-shrink-0" />
+                              <span className="truncate">Hourly Rate</span>
+                            </span>
+                            <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
+                              ${profile.hourlyRateMin}-${profile.hourlyRateMax}
+                              /hr
+                            </span>
+                          </div>
+                        )}
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
                         <span className="text-gray-600 dark:text-slate-400 flex items-center gap-1 sm:gap-2 min-w-0">
                           <Clock className="w-4 h-4 flex-shrink-0" />
@@ -232,7 +222,7 @@ const CandidateProfile = () => {
                           className="text-sm sm:text-base text-gray-700 dark:text-slate-300 mb-3 break-words"
                           style={{ lineHeight: "1.8" }}
                         >
-                          {data?.candidateProfile.bio || "No bio"}
+                          {profile?.bio ?? "No bio"}
                         </p>
                       </CardContent>
                     </Card>

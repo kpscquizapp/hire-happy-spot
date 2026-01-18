@@ -50,19 +50,25 @@ const JobDetailsPage = () => {
   if (isLoading) return <div className="p-6">Loading...</div>;
   if (isError || !apiJob) return <div className="p-6">Job not found</div>;
 
+  const statusMap: Record<string, string> = {
+    published: "Live",
+    draft: "Draft",
+    paused: "Paused",
+    closed: "Closed",
+  };
+
   const jobData = {
     title: apiJob.title,
     description: apiJob.description,
 
-    status: apiJob.status === "published" ? "Live" : "Draft",
+    status: statusMap[apiJob.status] || "Draft",
 
     employmentType:
       employmentTypeMap[apiJob.employmentType] || apiJob.employmentType,
 
-    experienceLevel: apiJob.experienceLevel,
-    workMode: apiJob.workMode,
-
-    location: apiJob.workLocation,
+    experienceLevel: apiJob.experienceLevel || "Not specified",
+    workMode: apiJob.workMode || "Not specified",
+    location: apiJob.workLocation || "Not specified",
     salaryRange:
       apiJob.salaryMin && apiJob.salaryMax
         ? `${apiJob.currency} ${apiJob.salaryMin} - ${apiJob.salaryMax}`
@@ -281,7 +287,10 @@ const JobDetailsPage = () => {
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              Posted on {new Date(jobData.postedDate).toLocaleDateString()}
+              Posted on{" "}
+              {jobData.postedDate
+                ? new Date(jobData.postedDate).toLocaleDateString()
+                : "N/A"}
             </div>
           </CardContent>
         </Card>
@@ -310,18 +319,20 @@ const JobDetailsPage = () => {
                 <>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Test Type</span>
-                    <span className="font-medium">{jobData.skillTestType}</span>
+                    <span className="font-medium">
+                      {jobData.skillTestType || "Not configured"}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Difficulty</span>
                     <span className="font-medium">
-                      {jobData.skillTestDifficulty}
+                      {jobData.skillTestDifficulty || "Not configured"}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Duration</span>
                     <span className="font-medium">
-                      {jobData.skillTestDuration}
+                      {jobData.skillTestDuration || "Not configured"}
                     </span>
                   </div>
                   <Button variant="outline" size="sm" className="w-full mt-2">
