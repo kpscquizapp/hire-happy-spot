@@ -11,7 +11,7 @@ import { useGetProfileQuery } from "@/app/queries/profileApi";
 import CandidateProfileUpdate from "./CandidateProfileUpdate";
 
 const CandidateProfile = () => {
-  const { data: response, isLoading, isError } = useGetProfileQuery("myQuery");
+  const { data: response, isLoading, isError } = useGetProfileQuery();
   const data = response?.data;
   const profile = data?.candidateProfile;
 

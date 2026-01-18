@@ -9,7 +9,7 @@ export const profileApi = createApi({
   }),
   tagTypes: ["Profile"],
   endpoints: (builder) => ({
-    getProfile: builder.query({
+    getProfile: builder.query<any, void>({
       query: (data) => ({
         headers: getAuthHeaders(),
         method: "GET",

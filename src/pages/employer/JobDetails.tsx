@@ -73,23 +73,12 @@ const JobDetailsPage = () => {
         ? `${apiJob.currency} ${apiJob.salaryMin} - ${apiJob.salaryMax}`
         : "Not Disclosed",
 
-    salary:
-      apiJob.salaryMin && apiJob.salaryMax
-        ? `${apiJob.currency} ${apiJob.salaryMin} - ${apiJob.salaryMax}`
-        : "Not Disclosed",
-
     postedDate: apiJob.createdAt,
 
     applicants: Number(apiJob.applicationCount || 0),
 
     skills: apiJob.skills?.map((s: { name: string }) => s.name) || [],
 
-    // skillTest: {
-    //   enabled: apiJob.enableSkillAssessment,
-    //   type: apiJob.testType,
-    //   difficulty: apiJob.difficultyLevel,
-    //   duration: apiJob.timeLimit,
-    // },
     niceToHaveSkills:
       apiJob.niceToHaveSkills?.map((s: { name: string }) => s.name) || [],
     skillTestEnabled: apiJob.enableSkillAssessment,
@@ -99,12 +88,6 @@ const JobDetailsPage = () => {
     aiInterviewEnabled: apiJob.scheduleAIInterviews,
     aiInterviewType: apiJob.interviewType,
     aiInterviewEvaluation: apiJob.aiEvaluationCriteria,
-
-    // aiInterview: {
-    //   enabled: apiJob.scheduleAIInterviews,
-    //   type: apiJob.interviewType,
-    //   evaluation: apiJob.aiEvaluationCriteria,
-    // },
   };
 
   const getStatusBadge = (status: string) => {

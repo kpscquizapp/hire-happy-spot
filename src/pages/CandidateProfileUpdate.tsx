@@ -176,8 +176,21 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
   };
 
   const handleSubmit = () => {
-    updateProfile(formData);
+    const payload = {
+      ...formData,
+      workExperiences: formData.workExperiences.map((exp) => ({
+        ...exp,
+        description: Array.isArray(exp.description)
+          ? exp.description
+          : String(exp.description ?? "")
+              .split("\n")
+              .map((line) => line.trim())
+              .filter(Boolean),
+      })),
+    };
+    updateProfile(payload);
   };
+
   return (
     <div className="sm:p-8">
       <div className="space-y-8">
@@ -574,7 +587,11 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
 
               <textarea
                 placeholder="Description of your role and achievements..."
-                value={exp.description}
+                value={
+                  Array.isArray(exp.description)
+                    ? exp.description.join("\n")
+                    : exp.description
+                }
                 onChange={(e) =>
                   updateWorkExperience(index, "description", e.target.value)
                 }
