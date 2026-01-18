@@ -99,6 +99,12 @@ const JobBoard = () => {
       internship: "Internship",
       freelance: "Freelance",
     };
+    const statusMap: Record<string, string> = {
+      published: "Live",
+      draft: "Draft",
+      paused: "Paused",
+      closed: "Closed",
+    };
     return {
       id: job.id,
       title: job.title,
@@ -108,12 +114,7 @@ const JobBoard = () => {
       skills: job.skills?.map((s: any) => s.name) || [],
 
       applicants: job.applicantCount ?? 0, // backend not sending yet
-      status:
-        job.status === "published"
-          ? "Live"
-          : job.status === "draft"
-            ? "Draft"
-            : "Closed",
+      status: statusMap[job.status] || "Closed",
 
       postedDate: job.createdAt,
     };
@@ -141,15 +142,15 @@ const JobBoard = () => {
 
   const filteredJobs = mappedJobs
     .filter((job: any) => {
-      const matchesSearch = job.title
+      const matchesSearch = (job.title ?? "")
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
-
       const matchesStatus =
         statusFilter === "all" || job.status.toLowerCase() === statusFilter;
 
       const matchesType =
-        typeFilter === "all" || job.employmentType.toLowerCase() === typeFilter;
+        typeFilter === "all" ||
+        (job.employmentType ?? "").toLowerCase() === typeFilter;
 
       return matchesSearch && matchesStatus && matchesType;
     })

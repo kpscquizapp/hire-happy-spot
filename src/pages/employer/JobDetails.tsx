@@ -63,7 +63,10 @@ const JobDetailsPage = () => {
     workMode: apiJob.workMode,
 
     location: apiJob.workLocation,
-    salaryRange: `${apiJob.currency} ${apiJob.salaryMin} - ${apiJob.salaryMax}`,
+    salaryRange:
+      apiJob.salaryMin && apiJob.salaryMax
+        ? `${apiJob.currency} ${apiJob.salaryMin} - ${apiJob.salaryMax}`
+        : "Not Disclosed",
 
     salary:
       apiJob.salaryMin && apiJob.salaryMax

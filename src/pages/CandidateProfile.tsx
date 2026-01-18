@@ -16,6 +16,7 @@ const CandidateProfile = () => {
     isLoading,
     isError,
   } = useGetProfileQuery("myQuery");
+  const profile = data?.candidateProfile;
 
   // const slugify = (s: string) =>
   //   s
@@ -64,15 +65,15 @@ const CandidateProfile = () => {
                     {/* Details Card */}
                     <div className="border-t-2 border-t-gray-200 dark:border-t-slate-700 mt-6 sm:mt-8" />
                     <div className="p-0 my-6 sm:my-8 space-y-3">
-                      {data.candidateProfile.hourlyRateMin && (
+                      {profile?.hourlyRateMin && (
                         <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
                           <span className="text-gray-600 dark:text-slate-400 flex items-center gap-1 sm:gap-2 min-w-0">
                             <DollarSign className="w-4 h-4 flex-shrink-0" />
                             <span className="truncate">Hourly Rate</span>
                           </span>
                           <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                            ${data?.candidateProfile.hourlyRateMin}-$
-                            {data?.candidateProfile.hourlyRateMax}/hr
+                            ${profile?.hourlyRateMin}-${profile?.hourlyRateMax}
+                            /hr
                           </span>
                         </div>
                       )}
@@ -82,7 +83,7 @@ const CandidateProfile = () => {
                           <span className="truncate">Availability</span>
                         </span>
                         <span className="font-semibold text-green-600 whitespace-nowrap text-right">
-                          {data?.candidateProfile.availability || "None"}
+                          {profile?.availability || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -91,7 +92,7 @@ const CandidateProfile = () => {
                           <span className="truncate">Location</span>
                         </span>
                         <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right max-w-[50%] truncate">
-                          {data?.candidateProfile.location || "None"}
+                          {profile?.location || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -100,7 +101,7 @@ const CandidateProfile = () => {
                           <span className="truncate">Experience</span>
                         </span>
                         <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                          {data?.candidateProfile.yearsExperience || "None"}
+                          {profile?.yearsExperience || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -109,7 +110,7 @@ const CandidateProfile = () => {
                           <span className="truncate">English</span>
                         </span>
                         <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                          {data?.candidateProfile.englishProficiency || "None"}
+                          {profile?.englishProficiency || "None"}
                         </span>
                       </div>
                     </div>
@@ -129,7 +130,7 @@ const CandidateProfile = () => {
                       id={`AiMatchedProfile-${candidateId}-skills`}
                       className="flex flex-wrap gap-2"
                     >
-                      {data?.candidateProfile.skills?.map(({ name, id }) => (
+                      {profile?.skills?.map(({ name, id }) => (
                         <Badge
                           key={id}
                           variant="secondary"
@@ -149,8 +150,8 @@ const CandidateProfile = () => {
                       Certifications
                     </h3>
                     <div className="space-y-3">
-                      {data?.candidateProfile.certifications?.length ? (
-                        data.candidateProfile.certifications.map(
+                      {profile?.certifications?.length ? (
+                        profile.certifications.map(
                           ({ name, issueDate }, cIndex) => (
                             <div
                               id={`AiMatchedProfile-${candidateId}-cert-${cIndex}`}
@@ -242,51 +243,49 @@ const CandidateProfile = () => {
                         <h3 className="text-base sm:text-lg font-bold mb-4 dark:text-slate-100">
                           Work Experience
                         </h3>
-                        {data?.candidateProfile.workExperiences?.length > 0 ? (
+                        {profile?.workExperiences?.length > 0 ? (
                           <div className="space-y-6">
-                            {data?.candidateProfile.workExperiences.map(
-                              (entry, index) => {
-                                const {
-                                  role,
-                                  companyName,
-                                  startDate,
-                                  endDate,
-                                  location,
-                                  description,
-                                } = entry;
-                                const entryId = `${candidateId}-work-${index}`;
-                                return (
-                                  <div
-                                    key={entryId}
-                                    id={entryId}
-                                    className="flex gap-3 sm:gap-4"
-                                  >
-                                    <div className="w-1 bg-blue-500 rounded-full flex-shrink-0"></div>
-                                    <div className="flex-1 min-w-0">
-                                      <h4 className="font-bold text-sm sm:text-base dark:text-slate-100 break-words">
-                                        {role}
-                                      </h4>
-                                      <p className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm mb-1 font-semibold break-words">
-                                        {companyName}
-                                      </p>
-                                      <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mb-2 break-words">
-                                        {startDate}-{endDate} • {location}
-                                      </p>
-                                      <ul className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
-                                        {description?.map((bullet, bIndex) => (
-                                          <li
-                                            key={`${entryId}-bullet-${bIndex}`}
-                                            className="break-words"
-                                          >
-                                            {bullet}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
+                            {profile?.workExperiences.map((entry, index) => {
+                              const {
+                                role,
+                                companyName,
+                                startDate,
+                                endDate,
+                                location,
+                                description,
+                              } = entry;
+                              const entryId = `${candidateId}-work-${index}`;
+                              return (
+                                <div
+                                  key={entryId}
+                                  id={entryId}
+                                  className="flex gap-3 sm:gap-4"
+                                >
+                                  <div className="w-1 bg-blue-500 rounded-full flex-shrink-0"></div>
+                                  <div className="flex-1 min-w-0">
+                                    <h4 className="font-bold text-sm sm:text-base dark:text-slate-100 break-words">
+                                      {role}
+                                    </h4>
+                                    <p className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm mb-1 font-semibold break-words">
+                                      {companyName}
+                                    </p>
+                                    <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mb-2 break-words">
+                                      {startDate}-{endDate} • {location}
+                                    </p>
+                                    <ul className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
+                                      {description?.map((bullet, bIndex) => (
+                                        <li
+                                          key={`${entryId}-bullet-${bIndex}`}
+                                          className="break-words"
+                                        >
+                                          {bullet}
+                                        </li>
+                                      ))}
+                                    </ul>
                                   </div>
-                                );
-                              },
-                            )}
+                                </div>
+                              );
+                            })}
                           </div>
                         ) : (
                           <p className="text-sm sm:text-base text-gray-700 dark:text-slate-300">
@@ -311,7 +310,7 @@ const CandidateProfile = () => {
                           </Button>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                          {data?.candidateProfile.projects?.map(
+                          {profile?.projects?.map(
                             ({ title, techStack, projectUrl }, pIndex) => (
                               <Card
                                 id={`AiMatchedProfile-${candidateId}-project-${pIndex}`}
