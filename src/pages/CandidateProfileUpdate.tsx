@@ -7,23 +7,23 @@ type FormElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 const CandidateProfileUpdate = ({ data }): JSX.Element => {
   const [skillInput, setSkillInput] = useState("");
   const [formData, setFormData] = useState({
-    location: data.candidateProfile.location || "",
-    availability: data.candidateProfile.availability || "",
-    bio: data.candidateProfile.bio || "",
-    yearsExperience: data.candidateProfile.yearsExperience || "",
+    location: data?.candidateProfile.location || "",
+    availability: data?.candidateProfile.availability || "",
+    bio: data?.candidateProfile.bio || "",
+    yearsExperience: data?.candidateProfile.yearsExperience || "",
     skills:
-      data.candidateProfile.skills?.map((s) =>
+      data?.candidateProfile.skills?.map((s) =>
         typeof s === "string" ? { name: s } : s,
       ) || [],
-    headline: data.candidateProfile.headline || "",
-    resourceType: data.candidateProfile.resourceType || "",
-    availableIn: data.candidateProfile.availableIn || "",
-    englishProficiency: data.candidateProfile.englishProficiency || "",
-    hourlyRateMin: data.candidateProfile.hourlyRateMin || "",
-    hourlyRateMax: data.candidateProfile.hourlyRateMax || "",
-    workExperiences: data.candidateProfile.workExperiences || [],
-    projects: data.candidateProfile.projects || [],
-    certifications: data.candidateProfile.certifications || [],
+    headline: data?.candidateProfile.headline || "",
+    resourceType: data?.candidateProfile.resourceType || "",
+    availableIn: data?.candidateProfile.availableIn || "",
+    englishProficiency: data?.candidateProfile.englishProficiency || "",
+    hourlyRateMin: data?.candidateProfile.hourlyRateMin || "",
+    hourlyRateMax: data?.candidateProfile.hourlyRateMax || "",
+    workExperiences: data?.candidateProfile.workExperiences || [],
+    projects: data?.candidateProfile.projects || [],
+    certifications: data?.candidateProfile.certifications || [],
   });
 
   const [updateProfile] = useUpdateProfileMutation();

@@ -120,15 +120,21 @@ const CandidateProfile = () => {
                       id={`AiMatchedProfile-${candidateId}-skills`}
                       className="flex flex-wrap gap-2"
                     >
-                      {profile?.skills?.map(({ name, id }) => (
-                        <Badge
-                          key={id}
-                          variant="secondary"
-                          className="bg-gray-100 text-xs dark:bg-slate-700 dark:text-slate-200"
-                        >
-                          {name}
-                        </Badge>
-                      ))}
+                      {profile?.skills?.length ? (
+                        profile.skills.map(({ name, id }) => (
+                          <Badge
+                            key={id}
+                            variant="secondary"
+                            className="bg-gray-100 text-xs dark:bg-slate-700 dark:text-slate-200"
+                          >
+                            {name}
+                          </Badge>
+                        ))
+                      ) : (
+                        <span className="text-xs text-gray-500 dark:text-slate-400">
+                          No skills listed
+                        </span>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -233,7 +239,7 @@ const CandidateProfile = () => {
                         <h3 className="text-base sm:text-lg font-bold mb-4 dark:text-slate-100">
                           Work Experience
                         </h3>
-                        {profile?.workExperiences?.length > 0 ? (
+                        {(profile?.workExperiences?.length ?? 0) > 0 ? (
                           <div className="space-y-6">
                             {profile?.workExperiences.map((entry, index) => {
                               const {

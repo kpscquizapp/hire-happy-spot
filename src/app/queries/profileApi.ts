@@ -10,7 +10,7 @@ export const profileApi = createApi({
   tagTypes: ["Profile"],
   endpoints: (builder) => ({
     getProfile: builder.query({
-      query: () => ({
+      query: (data) => ({
         headers: getAuthHeaders(),
         method: "GET",
         url: "jobboard/profile",

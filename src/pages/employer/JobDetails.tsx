@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -83,15 +82,16 @@ const JobDetailsPage = () => {
 
     applicants: Number(apiJob.applicationCount || 0),
 
-    skills: apiJob.skills?.map((s: any) => s.name) || [],
+    skills: apiJob.skills?.map((s: { name: string }) => s.name) || [],
 
-    skillTest: {
-      enabled: apiJob.enableSkillAssessment,
-      type: apiJob.testType,
-      difficulty: apiJob.difficultyLevel,
-      duration: apiJob.timeLimit,
-    },
-    niceToHaveSkills: apiJob.niceToHaveSkills?.map((s: any) => s.name) || [],
+    // skillTest: {
+    //   enabled: apiJob.enableSkillAssessment,
+    //   type: apiJob.testType,
+    //   difficulty: apiJob.difficultyLevel,
+    //   duration: apiJob.timeLimit,
+    // },
+    niceToHaveSkills:
+      apiJob.niceToHaveSkills?.map((s: { name: string }) => s.name) || [],
     skillTestEnabled: apiJob.enableSkillAssessment,
     skillTestType: apiJob.testType,
     skillTestDifficulty: apiJob.difficultyLevel,
@@ -100,11 +100,11 @@ const JobDetailsPage = () => {
     aiInterviewType: apiJob.interviewType,
     aiInterviewEvaluation: apiJob.aiEvaluationCriteria,
 
-    aiInterview: {
-      enabled: apiJob.scheduleAIInterviews,
-      type: apiJob.interviewType,
-      evaluation: apiJob.aiEvaluationCriteria,
-    },
+    // aiInterview: {
+    //   enabled: apiJob.scheduleAIInterviews,
+    //   type: apiJob.interviewType,
+    //   evaluation: apiJob.aiEvaluationCriteria,
+    // },
   };
 
   const getStatusBadge = (status: string) => {
@@ -373,7 +373,7 @@ const JobDetailsPage = () => {
                       Interview Type
                     </span>
                     <span className="font-medium">
-                      {jobData.aiInterviewType}
+                      {jobData.aiInterviewType || "Not configured"}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
