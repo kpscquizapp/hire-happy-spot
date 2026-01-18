@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -18,13 +18,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   Briefcase,
   Users,
@@ -41,99 +41,129 @@ import {
   ArrowUpDown,
   Filter,
   Calendar,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-// Mock data for jobs
-const mockJobs = [
-  {
-    id: 1,
-    title: 'Senior Frontend Developer',
-    employmentType: 'Permanent',
-    skills: ['React', 'TypeScript', 'Node.js'],
-    applicants: 45,
-    status: 'Live',
-    postedDate: '2024-01-10',
-  },
-  {
-    id: 2,
-    title: 'UX/UI Designer',
-    employmentType: 'Contract',
-    skills: ['Figma', 'Adobe XD', 'Prototyping'],
-    applicants: 32,
-    status: 'Live',
-    postedDate: '2024-01-08',
-  },
-  {
-    id: 3,
-    title: 'Data Scientist',
-    employmentType: 'Permanent',
-    skills: ['Python', 'ML', 'TensorFlow'],
-    applicants: 28,
-    status: 'Draft',
-    postedDate: '2024-01-05',
-  },
-  {
-    id: 4,
-    title: 'DevOps Engineer',
-    employmentType: 'Contract',
-    skills: ['AWS', 'Docker', 'Kubernetes'],
-    applicants: 19,
-    status: 'Closed',
-    postedDate: '2024-01-02',
-  },
-  {
-    id: 5,
-    title: 'Product Manager',
-    employmentType: 'Permanent',
-    skills: ['Agile', 'Roadmapping', 'Analytics'],
-    applicants: 56,
-    status: 'Live',
-    postedDate: '2024-01-12',
-  },
-];
-
-const stats = [
-  { label: 'Active Jobs', value: 12, icon: Briefcase, color: 'bg-primary/10 text-primary' },
-  { label: 'Total Applicants', value: 234, icon: Users, color: 'bg-blue-100 text-blue-600' },
-  { label: 'In Skill Test', value: 45, icon: ClipboardCheck, color: 'bg-amber-100 text-amber-600' },
-  { label: 'In AI Interview', value: 23, icon: Brain, color: 'bg-purple-100 text-purple-600' },
-  { label: 'Hires (This Month)', value: 8, icon: UserCheck, color: 'bg-green-100 text-green-600' },
-];
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  useGetDashboardJobsQuery,
+  useGetJobsQuery,
+} from "@/app/queries/jobApi";
 
 const JobBoard = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [typeFilter, setTypeFilter] = useState('all');
-  const [sortBy, setSortBy] = useState('date');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("date");
+  const { data: jobs, isLoading: jobsLoading } = useGetJobsQuery("");
+  const { data: Dashboard, isLoading: DashboardLoading } =
+    useGetDashboardJobsQuery("");
+
+  const stats = [
+    {
+      label: "Active Jobs",
+      value: Dashboard?.data?.openJobs ?? 0,
+      icon: Briefcase,
+      color: "bg-primary/10 text-primary",
+    },
+    {
+      label: "Candidates in Pipeline",
+      value: Dashboard?.data?.candidatesInPipeline ?? 0,
+      icon: Users,
+      color: "bg-blue-100 text-blue-600",
+    },
+    {
+      label: "Interviews Scheduled",
+      value: Dashboard?.data?.interviewsScheduled ?? 0,
+      icon: ClipboardCheck,
+      color: "bg-amber-100 text-amber-600",
+    },
+    {
+      label: "Offers Extended",
+      value: Dashboard?.data?.offersExtended ?? 0,
+      icon: Brain,
+      color: "bg-purple-100 text-purple-600",
+    },
+    {
+      label: "AI Screened",
+      value: Dashboard?.data?.aiScreened ?? 0,
+      icon: UserCheck,
+      color: "bg-green-100 text-green-600",
+    },
+  ];
+
+  const mapApiJobToUiJob = (job: any) => {
+    const employmentTypeMap: Record<string, string> = {
+      "full-time": "Permanent",
+      permanent: "Permanent",
+      contract: "Contract",
+      internship: "Internship",
+      freelance: "Freelance",
+    };
+    return {
+      id: job.id,
+      title: job.title,
+      employmentType:
+        employmentTypeMap[job.employmentType] || job.employmentType,
+
+      skills: job.skills?.map((s: any) => s.name) || [],
+
+      applicants: job.applicantCount ?? 0, // backend not sending yet
+      status:
+        job.status === "published"
+          ? "Live"
+          : job.status === "draft"
+            ? "Draft"
+            : "Closed",
+
+      postedDate: job.createdAt,
+    };
+  };
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      Live: 'bg-green-100 text-green-700 border-green-200',
-      Draft: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-      Closed: 'bg-red-100 text-red-700 border-red-200',
-      Paused: 'bg-gray-100 text-gray-700 border-gray-200',
+      Live: "bg-green-100 text-green-700 border-green-200",
+      Draft: "bg-yellow-100 text-yellow-700 border-yellow-200",
+      Closed: "bg-red-100 text-red-700 border-red-200",
+      Paused: "bg-gray-100 text-gray-700 border-gray-200",
     };
     return styles[status as keyof typeof styles] || styles.Draft;
   };
 
   const getTypeBadge = (type: string) => {
-    return type === 'Permanent' 
-      ? 'bg-blue-50 text-blue-700 border-blue-200' 
-      : 'bg-orange-50 text-orange-700 border-orange-200';
+    return type === "Permanent"
+      ? "bg-blue-50 text-blue-700 border-blue-200"
+      : "bg-orange-50 text-orange-700 border-orange-200";
   };
 
-  const filteredJobs = mockJobs.filter(job => {
-    const matchesSearch = job.title.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || job.status.toLowerCase() === statusFilter;
-    const matchesType = typeFilter === 'all' || job.employmentType.toLowerCase() === typeFilter;
-    return matchesSearch && matchesStatus && matchesType;
-  }).sort((a, b) => {
-    if (sortBy === 'date') return new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime();
-    if (sortBy === 'applicants') return b.applicants - a.applicants;
-    return 0;
-  });
+  const apiJobs = jobs?.data?.jobs || [];
+
+  const mappedJobs = apiJobs.map(mapApiJobToUiJob);
+
+  const filteredJobs = mappedJobs
+    .filter((job: any) => {
+      const matchesSearch = job.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      const matchesStatus =
+        statusFilter === "all" || job.status.toLowerCase() === statusFilter;
+
+      const matchesType =
+        typeFilter === "all" || job.employmentType.toLowerCase() === typeFilter;
+
+      return matchesSearch && matchesStatus && matchesType;
+    })
+    .sort((a: any, b: any) => {
+      if (sortBy === "date") {
+        return (
+          new Date(b.postedDate).getTime() - new Date(a.postedDate).getTime()
+        );
+      }
+      if (sortBy === "applicants") {
+        return b.applicants - a.applicants;
+      }
+      return 0;
+    });
 
   return (
     <div className="space-y-6">
@@ -141,10 +171,12 @@ const JobBoard = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Job Board</h1>
-          <p className="text-muted-foreground">Manage your job postings and track hiring progress</p>
+          <p className="text-muted-foreground">
+            Manage your job postings and track hiring progress
+          </p>
         </div>
-        <Button 
-          onClick={() => navigate('/employer-dashboard/create-job')}
+        <Button
+          onClick={() => navigate("/employer-dashboard/create-job")}
           className="bg-primary hover:bg-primary/90"
         >
           <Plus className="h-4 w-4 mr-2" />
@@ -165,7 +197,9 @@ const JobBoard = () => {
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stat.value}</p>
-                    <p className="text-xs text-muted-foreground">{stat.label}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {stat.label}
+                    </p>
                   </div>
                 </div>
               </CardContent>
@@ -234,32 +268,52 @@ const JobBoard = () => {
                 <TableHead className="font-semibold">Job Title</TableHead>
                 <TableHead className="font-semibold">Type</TableHead>
                 <TableHead className="font-semibold">Skills Required</TableHead>
-                <TableHead className="font-semibold text-center">Applicants</TableHead>
+                <TableHead className="font-semibold text-center">
+                  Applicants
+                </TableHead>
                 <TableHead className="font-semibold">Status</TableHead>
                 <TableHead className="font-semibold">Posted</TableHead>
-                <TableHead className="font-semibold text-right">Actions</TableHead>
+                <TableHead className="font-semibold text-right">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredJobs.map((job) => (
+              {jobsLoading && (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-10">
+                    Loading jobs...
+                  </TableCell>
+                </TableRow>
+              )}
+              {filteredJobs.map((job: any) => (
                 <TableRow key={job.id} className="hover:bg-muted/30">
                   <TableCell>
-                    <button 
-                      onClick={() => navigate(`/employer-dashboard/job/${job.id}`)}
+                    <button
+                      onClick={() =>
+                        navigate(`/employer-dashboard/job/${job.id}`)
+                      }
                       className="font-medium text-primary hover:underline text-left"
                     >
                       {job.title}
                     </button>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className={getTypeBadge(job.employmentType)}>
+                    <Badge
+                      variant="outline"
+                      className={getTypeBadge(job.employmentType)}
+                    >
                       {job.employmentType}
                     </Badge>
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {job.skills.slice(0, 3).map((skill) => (
-                        <Badge key={skill} variant="secondary" className="text-xs">
+                        <Badge
+                          key={skill}
+                          variant="secondary"
+                          className="text-xs"
+                        >
                           {skill}
                         </Badge>
                       ))}
@@ -267,14 +321,19 @@ const JobBoard = () => {
                   </TableCell>
                   <TableCell className="text-center">
                     <button
-                      onClick={() => navigate(`/employer-dashboard/job/${job.id}/candidates`)}
+                      onClick={() =>
+                        navigate(`/employer-dashboard/job/${job.id}/candidates`)
+                      }
                       className="font-semibold text-primary hover:underline"
                     >
                       {job.applicants}
                     </button>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline" className={getStatusBadge(job.status)}>
+                    <Badge
+                      variant="outline"
+                      className={getStatusBadge(job.status)}
+                    >
                       {job.status}
                     </Badge>
                   </TableCell>
@@ -287,16 +346,28 @@ const JobBoard = () => {
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                        >
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-40">
-                        <DropdownMenuItem onClick={() => navigate(`/employer-dashboard/job/${job.id}`)}>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate(`/employer-dashboard/job/${job.id}`)
+                          }
+                        >
                           <Eye className="h-4 w-4 mr-2" />
                           View Job
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => navigate(`/employer-dashboard/edit-job/${job.id}`)}>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate(`/employer-dashboard/edit-job/${job.id}`)
+                          }
+                        >
                           <Edit className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
@@ -315,12 +386,14 @@ const JobBoard = () => {
               ))}
             </TableBody>
           </Table>
-          
+
           {filteredJobs.length === 0 && (
             <div className="p-12 text-center">
               <Briefcase className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
               <h3 className="font-medium text-lg mb-1">No jobs found</h3>
-              <p className="text-muted-foreground text-sm">Try adjusting your filters or create a new job posting.</p>
+              <p className="text-muted-foreground text-sm">
+                Try adjusting your filters or create a new job posting.
+              </p>
             </div>
           )}
         </CardContent>

@@ -1,8 +1,8 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
   Briefcase,
@@ -18,53 +18,112 @@ import {
   Calendar,
   CheckCircle2,
   Settings,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-
-// Mock job data
-const mockJob = {
-  id: 1,
-  title: 'Senior Frontend Developer',
-  description: 'We are looking for an experienced Frontend Developer to join our team. You will be responsible for building and maintaining user interfaces using React and TypeScript.',
-  employmentType: 'Permanent',
-  experienceLevel: 'Senior (5+ years)',
-  location: 'Bangalore (Hybrid)',
-  salaryRange: '₹25L - ₹35L per annum',
-  skills: ['React', 'TypeScript', 'Node.js', 'GraphQL', 'CSS/Tailwind'],
-  niceToHaveSkills: ['Next.js', 'AWS', 'Docker'],
-  status: 'Live',
-  postedDate: '2024-01-10',
-  applicants: 45,
-  inSkillTest: 12,
-  inAIInterview: 8,
-  shortlisted: 5,
-  skillTestEnabled: true,
-  skillTestType: 'Coding Challenge',
-  skillTestDifficulty: 'Medium',
-  skillTestDuration: '60 minutes',
-  aiInterviewEnabled: true,
-  aiInterviewType: 'Technical + Behavioral',
-};
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useGetJobsByIdQuery } from "@/app/queries/jobApi";
 
 const JobDetailsPage = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
 
+  const numericJobId = Number(jobId);
+
+  if (!jobId || isNaN(numericJobId)) {
+    return <div className="p-6">Invalid job ID</div>;
+  }
+
+  const { data, isLoading, isError } = useGetJobsByIdQuery({
+    id: numericJobId,
+  });
+
+  const apiJob = data?.data?.[0];
+
+  if (isLoading) return <div className="p-6">Loading...</div>;
+  if (isError || !apiJob) return <div className="p-6">Job not found</div>;
+
+  const jobData = {
+    title: apiJob.title,
+    description: apiJob.description,
+
+    status: apiJob.status === "published" ? "Live" : "Draft",
+
+    employmentType:
+      apiJob.employmentType === "full-time" ? "Permanent" : "Contract",
+
+    experienceLevel: apiJob.experienceLevel,
+    workMode: apiJob.workMode,
+
+    location: apiJob.workLocation,
+    salaryRange: `${apiJob.currency} ${apiJob.salaryMin} - ${apiJob.salaryMax}`,
+
+    salary:
+      apiJob.salaryMin && apiJob.salaryMax
+        ? `${apiJob.currency} ${apiJob.salaryMin} - ${apiJob.salaryMax}`
+        : "Not Disclosed",
+
+    postedDate: apiJob.createdAt,
+
+    applicants: Number(apiJob.applicationCount || 0),
+
+    skills: apiJob.skills?.map((s: any) => s.name) || [],
+
+    skillTest: {
+      enabled: apiJob.enableSkillAssessment,
+      type: apiJob.testType,
+      difficulty: apiJob.difficultyLevel,
+      duration: apiJob.timeLimit,
+    },
+    niceToHaveSkills: apiJob.niceToHaveSkills?.map((s: any) => s.name) || [],
+    skillTestEnabled: apiJob.enableSkillAssessment,
+    skillTestType: apiJob.testType,
+    skillTestDifficulty: apiJob.difficultyLevel,
+    skillTestDuration: apiJob.timeLimit,
+    aiInterviewEnabled: apiJob.scheduleAIInterviews,
+    aiInterviewType: apiJob.interviewType,
+    aiInterviewEvaluation: apiJob.aiEvaluationCriteria,
+
+    aiInterview: {
+      enabled: apiJob.scheduleAIInterviews,
+      type: apiJob.interviewType,
+      evaluation: apiJob.aiEvaluationCriteria,
+    },
+  };
+
   const getStatusBadge = (status: string) => {
     const styles = {
-      Live: 'bg-green-100 text-green-700 border-green-200',
-      Draft: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-      Closed: 'bg-red-100 text-red-700 border-red-200',
-      Paused: 'bg-gray-100 text-gray-700 border-gray-200',
+      Live: "bg-green-100 text-green-700 border-green-200",
+      Draft: "bg-yellow-100 text-yellow-700 border-yellow-200",
+      Closed: "bg-red-100 text-red-700 border-red-200",
+      Paused: "bg-gray-100 text-gray-700 border-gray-200",
     };
     return styles[status as keyof typeof styles] || styles.Draft;
   };
 
   const stats = [
-    { label: 'Total Applicants', value: mockJob.applicants, icon: Users, color: 'text-blue-600 bg-blue-100' },
-    { label: 'In Skill Test', value: mockJob.inSkillTest, icon: ClipboardCheck, color: 'text-amber-600 bg-amber-100' },
-    { label: 'In AI Interview', value: mockJob.inAIInterview, icon: Brain, color: 'text-purple-600 bg-purple-100' },
-    { label: 'Shortlisted', value: mockJob.shortlisted, icon: CheckCircle2, color: 'text-green-600 bg-green-100' },
+    {
+      label: "Total Applicants",
+      value: jobData.applicants,
+      icon: Users,
+      color: "text-blue-600 bg-blue-100",
+    },
+    {
+      label: "In Skill Test",
+      value: 0,
+      icon: ClipboardCheck,
+      color: "text-amber-600 bg-amber-100",
+    },
+    {
+      label: "In AI Interview",
+      value: 0,
+      icon: Brain,
+      color: "text-purple-600 bg-purple-100",
+    },
+    {
+      label: "Shortlisted",
+      value: 0,
+      icon: CheckCircle2,
+      color: "text-green-600 bg-green-100",
+    },
   ];
 
   return (
@@ -72,21 +131,33 @@ const JobDetailsPage = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/employer-dashboard/job-board')}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate("/employer-dashboard/job-board")}
+          >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-foreground">{mockJob.title}</h1>
-              <Badge variant="outline" className={getStatusBadge(mockJob.status)}>
-                {mockJob.status}
+              <h1 className="text-2xl font-bold text-foreground">
+                {jobData.title}
+              </h1>
+              <Badge
+                variant="outline"
+                className={getStatusBadge(jobData.status)}
+              >
+                {jobData.status}
               </Badge>
             </div>
             <p className="text-muted-foreground">Job ID: {jobId}</p>
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => navigate(`/employer-dashboard/edit-job/${jobId}`)}>
+          <Button
+            variant="outline"
+            onClick={() => navigate(`/employer-dashboard/edit-job/${jobId}`)}
+          >
             <Edit className="h-4 w-4 mr-2" />
             Edit
           </Button>
@@ -106,10 +177,12 @@ const JobDetailsPage = () => {
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card 
-              key={stat.label} 
+            <Card
+              key={stat.label}
               className="border-0 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => navigate(`/employer-dashboard/job/${jobId}/candidates`)}
+              onClick={() =>
+                navigate(`/employer-dashboard/job/${jobId}/candidates`)
+              }
             >
               <CardContent className="p-4 flex items-center gap-3">
                 <div className={cn("p-2.5 rounded-lg", stat.color)}>
@@ -126,13 +199,13 @@ const JobDetailsPage = () => {
       </div>
 
       {/* View Candidates Button */}
-      <Button 
-        size="lg" 
+      <Button
+        size="lg"
         className="w-full bg-primary hover:bg-primary/90"
         onClick={() => navigate(`/employer-dashboard/job/${jobId}/candidates`)}
       >
         <Users className="h-5 w-5 mr-2" />
-        View All Candidates ({mockJob.applicants})
+        View All Candidates ({jobData.applicants})
       </Button>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -143,50 +216,60 @@ const JobDetailsPage = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">Description</h4>
-              <p className="text-sm">{mockJob.description}</p>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                Description
+              </h4>
+              <p className="text-sm">{jobData.description}</p>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="flex items-center gap-2 text-sm">
                 <Briefcase className="h-4 w-4 text-muted-foreground" />
-                <span>{mockJob.employmentType}</span>
+                <span>{jobData.employmentType}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span>{mockJob.experienceLevel}</span>
+                <span>{jobData.experienceLevel}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
-                <span>{mockJob.location}</span>
+                <span>{jobData.location}</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
-                <span>{mockJob.salaryRange}</span>
+                <span>{jobData.salaryRange}</span>
               </div>
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">Required Skills</h4>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                Required Skills
+              </h4>
               <div className="flex flex-wrap gap-2">
-                {mockJob.skills.map((skill) => (
-                  <Badge key={skill} variant="secondary">{skill}</Badge>
+                {jobData.skills.map((skill) => (
+                  <Badge key={skill} variant="secondary">
+                    {skill}
+                  </Badge>
                 ))}
               </div>
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">Nice to Have</h4>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                Nice to Have
+              </h4>
               <div className="flex flex-wrap gap-2">
-                {mockJob.niceToHaveSkills.map((skill) => (
-                  <Badge key={skill} variant="outline">{skill}</Badge>
+                {jobData.niceToHaveSkills.map((skill) => (
+                  <Badge key={skill} variant="outline">
+                    {skill}
+                  </Badge>
                 ))}
               </div>
             </div>
 
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              Posted on {new Date(mockJob.postedDate).toLocaleDateString()}
+              Posted on {new Date(jobData.postedDate).toLocaleDateString()}
             </div>
           </CardContent>
         </Card>
@@ -200,24 +283,34 @@ const JobDetailsPage = () => {
                 <ClipboardCheck className="h-5 w-5 text-amber-600" />
                 Skill Test
               </CardTitle>
-              <Badge className={mockJob.skillTestEnabled ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}>
-                {mockJob.skillTestEnabled ? 'Enabled' : 'Disabled'}
+              <Badge
+                className={
+                  jobData.skillTestEnabled
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-600"
+                }
+              >
+                {jobData.skillTestEnabled ? "Enabled" : "Disabled"}
               </Badge>
             </CardHeader>
             <CardContent className="space-y-3">
-              {mockJob.skillTestEnabled ? (
+              {jobData.skillTestEnabled ? (
                 <>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Test Type</span>
-                    <span className="font-medium">{mockJob.skillTestType}</span>
+                    <span className="font-medium">{jobData.skillTestType}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Difficulty</span>
-                    <span className="font-medium">{mockJob.skillTestDifficulty}</span>
+                    <span className="font-medium">
+                      {jobData.skillTestDifficulty}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Duration</span>
-                    <span className="font-medium">{mockJob.skillTestDuration}</span>
+                    <span className="font-medium">
+                      {jobData.skillTestDuration}
+                    </span>
                   </div>
                   <Button variant="outline" size="sm" className="w-full mt-2">
                     <Settings className="h-4 w-4 mr-2" />
@@ -225,7 +318,9 @@ const JobDetailsPage = () => {
                   </Button>
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground">Skill test is not enabled for this job.</p>
+                <p className="text-sm text-muted-foreground">
+                  Skill test is not enabled for this job.
+                </p>
               )}
             </CardContent>
           </Card>
@@ -237,20 +332,32 @@ const JobDetailsPage = () => {
                 <Brain className="h-5 w-5 text-purple-600" />
                 AI Interview
               </CardTitle>
-              <Badge className={mockJob.aiInterviewEnabled ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}>
-                {mockJob.aiInterviewEnabled ? 'Enabled' : 'Disabled'}
+              <Badge
+                className={
+                  jobData.aiInterviewEnabled
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-600"
+                }
+              >
+                {jobData.aiInterviewEnabled ? "Enabled" : "Disabled"}
               </Badge>
             </CardHeader>
             <CardContent className="space-y-3">
-              {mockJob.aiInterviewEnabled ? (
+              {jobData.aiInterviewEnabled ? (
                 <>
                   <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Interview Type</span>
-                    <span className="font-medium">{mockJob.aiInterviewType}</span>
+                    <span className="text-muted-foreground">
+                      Interview Type
+                    </span>
+                    <span className="font-medium">
+                      {jobData.aiInterviewType}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Evaluation</span>
-                    <span className="font-medium">Communication, Problem Solving, Technical</span>
+                    <span className="font-medium">
+                      Communication, Problem Solving, Technical
+                    </span>
                   </div>
                   <Button variant="outline" size="sm" className="w-full mt-2">
                     <Settings className="h-4 w-4 mr-2" />
@@ -258,7 +365,9 @@ const JobDetailsPage = () => {
                   </Button>
                 </>
               ) : (
-                <p className="text-sm text-muted-foreground">AI Interview is not enabled for this job.</p>
+                <p className="text-sm text-muted-foreground">
+                  AI Interview is not enabled for this job.
+                </p>
               )}
             </CardContent>
           </Card>
