@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 export const config = {
   //TODO: need to change this base url when deploying to production
-  baseURL: "https://hirion-backend.vercel.app/api/v1/",
+  baseURL: "http://localhost:4000/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

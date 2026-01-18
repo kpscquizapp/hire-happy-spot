@@ -5,7 +5,7 @@ import { useUpdateProfileMutation } from "@/app/queries/profileApi";
 type FormElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 const CandidateProfileUpdate = ({ data }): JSX.Element => {
-  console.log(data);
+  const [skillInput, setSkillInput] = useState("");
   const [formData, setFormData] = useState({
     location: data.candidateProfile.location || "",
     availability: data.candidateProfile.availability || "",
@@ -14,7 +14,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
     skills: data.candidateProfile.skills || [],
     headline: data.candidateProfile.headline || "",
     resourceType: data.candidateProfile.resourceType || "",
-    availabeIn: data.candidateProfile.availableIn || "",
+    availableIn: data.candidateProfile.availableIn || "",
     englishProficiency: data.candidateProfile.englishProficiency || "",
     hourlyRateMin: data.candidateProfile.hourlyRateMin || "",
     hourlyRateMax: data.candidateProfile.hourlyRateMax || "",
@@ -22,9 +22,8 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
     projects: data.candidateProfile.projects || [],
     certifications: data.candidateProfile.certifications || [],
   });
-
+  console.log(data.candidateProfile);
   const [updateProfile] = useUpdateProfileMutation();
-  const [skillInput, setSkillInput] = useState("");
 
   const availabilityOptions = [
     "freelance",
@@ -58,13 +57,10 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
   };
 
   const addSkill = () => {
-    if (
-      skillInput.trim() &&
-      !formData.skills.some((skill) => skill.name === skillInput.trim())
-    ) {
+    if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
       setFormData((prev) => ({
         ...prev,
-        skills: [...prev.skills, { name: skillInput.trim(), id: Date.now() }], // Adds to existing array
+        skills: [...prev.skills, skillInput.trim()], // Adds to existing array
       }));
       setSkillInput("");
     }
@@ -99,7 +95,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
     setFormData((prev) => ({
       ...prev,
       workExperiences: prev.workExperiences.map((exp, i) =>
-        i === index ? { ...exp, [field]: value } : exp
+        i === index ? { ...exp, [field]: value } : exp,
       ),
     }));
   };
@@ -131,7 +127,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
     setFormData((prev) => ({
       ...prev,
       projects: prev.projects.map((proj, i) =>
-        i === index ? { ...proj, [field]: value } : proj
+        i === index ? { ...proj, [field]: value } : proj,
       ),
     }));
   };
@@ -163,7 +159,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
     setFormData((prev) => ({
       ...prev,
       certifications: prev.certifications.map((cert, i) =>
-        i === index ? { ...cert, [field]: value } : cert
+        i === index ? { ...cert, [field]: value } : cert,
       ),
     }));
   };
@@ -329,7 +325,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
               </label>
               <select
                 name="availableIn"
-                value={formData.availabeIn}
+                value={formData.availableIn}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
               >
@@ -521,7 +517,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
                     updateWorkExperience(
                       index,
                       "employmentType",
-                      e.target.value
+                      e.target.value,
                     )
                   }
                   className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -646,7 +642,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
                   updateProject(
                     index,
                     "techStack",
-                    e.target.value.split(",").map((s) => s.trim())
+                    e.target.value.split(",").map((s) => s.trim()),
                   )
                 }
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
