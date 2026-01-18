@@ -27,8 +27,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import {
   useCreateCandidateMutation,
@@ -76,10 +74,8 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const userDetails = useSelector(
-    (state: RootState) => state.user.userDetails
-  );
-// console.log(userDetails.role)
+  const userDetails = useSelector((state: RootState) => state.user.userDetails);
+
   useEffect(() => {
     if (userDetails) {
       if (userDetails.role === "candidate") {
@@ -88,7 +84,7 @@ const Login = () => {
         navigate("/employer-dashboard");
       }
     }
-  },[userDetails])
+  }, [userDetails]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

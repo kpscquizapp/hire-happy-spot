@@ -49,7 +49,10 @@ const ProfileMenu = ({
             </span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48 bg-white">
+        <DropdownMenuContent
+          align="end"
+          className="w-48 bg-white dark:bg-[#0f1729] dark:text-slate-400"
+        >
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleProfile}>

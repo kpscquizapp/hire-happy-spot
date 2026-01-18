@@ -23,13 +23,6 @@ export const loginApi = createApi({
         url: "jobboard/register/candidate",
       }),
     }),
-    getProfile: builder.query<any, void>({
-      query: () => ({
-        headers: getAuthHeaders(),
-        method: "GET",
-        url: "jobboard/profile",
-      }),
-    }),
     login: builder.mutation({
       query: (data) => ({
         method: "POST",
@@ -62,5 +55,4 @@ export const {
   useLoginMutation,
   useGetRefreshTokenMutation,
   useLogoutMutation,
-  useGetProfileQuery,
 } = loginApi;
