@@ -861,13 +861,37 @@ const CandidateProfileUpdate = ({
             {isUpdating ? "Updating..." : "Update Profile"}
           </button>
           <button
+            onClick={() => {
+              setFormData({
+                location: data?.candidateProfile.location || "",
+                availability: data?.candidateProfile.availability || "",
+                bio: data?.candidateProfile.bio || "",
+                yearsExperience: data?.candidateProfile.yearsExperience || "",
+                skills:
+                  data?.candidateProfile.skills?.map((s) =>
+                    typeof s === "string" ? { name: s } : s,
+                  ) || [],
+                headline: data?.candidateProfile.headline || "",
+                resourceType: data?.candidateProfile.resourceType || "",
+                availableIn: data?.candidateProfile.availableIn || "",
+                englishProficiency:
+                  data?.candidateProfile.englishProficiency || "",
+                hourlyRateMin: data?.candidateProfile.hourlyRateMin || "",
+                hourlyRateMax: data?.candidateProfile.hourlyRateMax || "",
+                workExperiences: data?.candidateProfile.workExperiences || [],
+                projects: data?.candidateProfile.projects || [],
+                certifications: data?.candidateProfile.certifications || [],
+              });
+            }}
             type="button"
             className="px-6 py-3 border border-gray-300 rounded-md hover:bg-red-600 hover:text-white transition font-medium"
           >
             Cancel
           </button>
           {updateError && (
-            <p className="text-red-600 text-sm">Failed to update profile</p>
+            <p className="text-red-600 text-sm mt-2">
+              Failed to update profile
+            </p>
           )}
         </div>
       </div>

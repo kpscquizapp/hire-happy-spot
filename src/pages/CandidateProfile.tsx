@@ -266,7 +266,8 @@ const CandidateProfile = () => {
                                       {companyName}
                                     </p>
                                     <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mb-2 break-words">
-                                      {startDate}-{endDate} • {location}
+                                      {startDate} - {endDate ?? "Present"} •{" "}
+                                      {location}
                                     </p>
                                     <ul className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
                                       {(Array.isArray(description)
@@ -312,7 +313,7 @@ const CandidateProfile = () => {
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                           {profile?.projects?.length ? (
-                            +profile.projects.map(
+                            profile.projects.map(
                               ({ title, techStack, projectUrl }, pIndex) => (
                                 <Card
                                   id={`AiMatchedProfile-${candidateId}-project-${pIndex}`}
