@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,11 @@ import { useGetProfileQuery } from "@/app/queries/profileApi";
 import CandidateProfileUpdate from "./CandidateProfileUpdate";
 
 const CandidateProfile = () => {
-  const { data: { data } = {}, isLoading, isError } = useGetProfileQuery();
+  const {
+    data: { data } = {},
+    isLoading,
+    isError,
+  } = useGetProfileQuery("myQuery");
 
   // const slugify = (s: string) =>
   //   s
@@ -20,7 +24,7 @@ const CandidateProfile = () => {
   //     .replace(/(^-|-$)/g, "")
   //     .slice(0, 40);
 
-  const candidateId = crypto.randomUUID();
+  const candidateId = useRef(crypto.randomUUID()).current;
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-50 via-white to-neutral-50">
@@ -51,7 +55,7 @@ const CandidateProfile = () => {
                       <AvatarFallback>Avatar</AvatarFallback>
                     </Avatar>
                     <h2 className="text-base sm:text-lg lg:text-xl font-bold mb-1 dark:text-slate-100 break-words">
-                      {data.firstName} {data.lastName}
+                      {data?.firstName} {data?.lastName}
                     </h2>
                     <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-3 font-semibold break-words">
                       {data?.title}
@@ -67,8 +71,8 @@ const CandidateProfile = () => {
                             <span className="truncate">Hourly Rate</span>
                           </span>
                           <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                            ${data.candidateProfile.hourlyRateMin}-$
-                            {data.candidateProfile.hourlyRateMax}/hr
+                            ${data?.candidateProfile.hourlyRateMin}-$
+                            {data?.candidateProfile.hourlyRateMax}/hr
                           </span>
                         </div>
                       )}
@@ -78,7 +82,7 @@ const CandidateProfile = () => {
                           <span className="truncate">Availability</span>
                         </span>
                         <span className="font-semibold text-green-600 whitespace-nowrap text-right">
-                          {data.candidateProfile.availability || "None"}
+                          {data?.candidateProfile.availability || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -87,7 +91,7 @@ const CandidateProfile = () => {
                           <span className="truncate">Location</span>
                         </span>
                         <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right max-w-[50%] truncate">
-                          {data.candidateProfile.location || "None"}
+                          {data?.candidateProfile.location || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -96,7 +100,7 @@ const CandidateProfile = () => {
                           <span className="truncate">Experience</span>
                         </span>
                         <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                          {data.candidateProfile.yearsExperience || "None"}
+                          {data?.candidateProfile.yearsExperience || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -105,7 +109,7 @@ const CandidateProfile = () => {
                           <span className="truncate">English</span>
                         </span>
                         <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                          {data.candidateProfile.englishProficiency || "None"}
+                          {data?.candidateProfile.englishProficiency || "None"}
                         </span>
                       </div>
                     </div>
@@ -145,7 +149,7 @@ const CandidateProfile = () => {
                       Certifications
                     </h3>
                     <div className="space-y-3">
-                      {data.candidateProfile.certifications?.length ? (
+                      {data?.candidateProfile.certifications?.length ? (
                         data.candidateProfile.certifications.map(
                           ({ name, issueDate }, cIndex) => (
                             <div
@@ -167,7 +171,7 @@ const CandidateProfile = () => {
                                 </p>
                               </div>
                             </div>
-                          )
+                          ),
                         )
                       ) : (
                         <div className="flex items-center gap-2 sm:gap-3">
@@ -227,7 +231,7 @@ const CandidateProfile = () => {
                           className="text-sm sm:text-base text-gray-700 dark:text-slate-300 mb-3 break-words"
                           style={{ lineHeight: "1.8" }}
                         >
-                          {data.candidateProfile.bio || "No bio"}
+                          {data?.candidateProfile.bio || "No bio"}
                         </p>
                       </CardContent>
                     </Card>
@@ -238,16 +242,17 @@ const CandidateProfile = () => {
                         <h3 className="text-base sm:text-lg font-bold mb-4 dark:text-slate-100">
                           Work Experience
                         </h3>
-                        {data.candidateProfile.workExperiences?.length > 0 ? (
+                        {data?.candidateProfile.workExperiences?.length > 0 ? (
                           <div className="space-y-6">
-                            {data.candidateProfile.workExperiences.map(
+                            {data?.candidateProfile.workExperiences.map(
                               (entry, index) => {
                                 const {
                                   role,
-                                  company,
-                                  period,
+                                  companyName,
+                                  startDate,
+                                  endDate,
                                   location,
-                                  bullets,
+                                  description,
                                 } = entry;
                                 const entryId = `${candidateId}-work-${index}`;
                                 return (
@@ -262,13 +267,13 @@ const CandidateProfile = () => {
                                         {role}
                                       </h4>
                                       <p className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm mb-1 font-semibold break-words">
-                                        {company}
+                                        {companyName}
                                       </p>
                                       <p className="text-xs sm:text-sm text-gray-500 dark:text-slate-400 mb-2 break-words">
-                                        {period} • {location}
+                                        {startDate}-{endDate} • {location}
                                       </p>
                                       <ul className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
-                                        {bullets?.map((bullet, bIndex) => (
+                                        {description?.map((bullet, bIndex) => (
                                           <li
                                             key={`${entryId}-bullet-${bIndex}`}
                                             className="break-words"
@@ -280,7 +285,7 @@ const CandidateProfile = () => {
                                     </div>
                                   </div>
                                 );
-                              }
+                              },
                             )}
                           </div>
                         ) : (
@@ -306,28 +311,28 @@ const CandidateProfile = () => {
                           </Button>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                          {data.candidateProfile.projects?.map(
-                            ({ name, tech, icon }, pIndex) => (
+                          {data?.candidateProfile.projects?.map(
+                            ({ title, techStack, projectUrl }, pIndex) => (
                               <Card
-                                id={`AiMatchedProfile-${candidateId}-project-`}
+                                id={`AiMatchedProfile-${candidateId}-project-${pIndex}`}
                                 className="border dark:border-slate-700 dark:bg-slate-800 w-full"
-                                key={`${name}-${pIndex}`}
+                                key={`${title}-${pIndex}`}
                               >
                                 <CardContent className="p-4 sm:p-6">
                                   <div className="w-full h-24 sm:h-32 bg-gray-100 dark:bg-slate-700/50 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
                                     <div className="w-10 h-14 sm:w-12 sm:h-16 border-2 border-gray-300 dark:border-slate-500 rounded flex items-center justify-center text-2xl dark:text-slate-300">
-                                      {icon}
+                                      {projectUrl ? "🌐" : "📂"}
                                     </div>
                                   </div>
                                   <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base dark:text-slate-100 break-words">
-                                    {name}
+                                    {title}
                                   </h4>
                                   <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words">
-                                    {tech}
+                                    {techStack}
                                   </p>
                                 </CardContent>
                               </Card>
-                            )
+                            ),
                           )}
                         </div>
                       </CardContent>

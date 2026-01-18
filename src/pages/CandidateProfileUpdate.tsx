@@ -11,7 +11,10 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
     availability: data.candidateProfile.availability || "",
     bio: data.candidateProfile.bio || "",
     yearsExperience: data.candidateProfile.yearsExperience || "",
-    skills: data.candidateProfile.skills || [],
+    skills:
+      data.candidateProfile.skills?.map((s) =>
+        typeof s === "string" ? { name: s } : s,
+      ) || [],
     headline: data.candidateProfile.headline || "",
     resourceType: data.candidateProfile.resourceType || "",
     availableIn: data.candidateProfile.availableIn || "",
@@ -22,7 +25,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
     projects: data.candidateProfile.projects || [],
     certifications: data.candidateProfile.certifications || [],
   });
-  console.log(data.candidateProfile);
+
   const [updateProfile] = useUpdateProfileMutation();
 
   const availabilityOptions = [
@@ -57,10 +60,11 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
   };
 
   const addSkill = () => {
-    if (skillInput.trim() && !formData.skills.includes(skillInput.trim())) {
+    const name = skillInput.trim();
+    if (name && !formData.skills.some((s) => s.name === name)) {
       setFormData((prev) => ({
         ...prev,
-        skills: [...prev.skills, skillInput.trim()], // Adds to existing array
+        skills: [...prev.skills, { name }], // Adds to existing array
       }));
       setSkillInput("");
     }
@@ -172,7 +176,6 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
   };
 
   const handleSubmit = () => {
-    console.log("Form submitted:", formData);
     updateProfile(formData);
   };
   return (

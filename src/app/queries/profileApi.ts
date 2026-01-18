@@ -7,21 +7,24 @@ export const profileApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: config.baseURL,
   }),
+  tagTypes: ["Profile"],
   endpoints: (builder) => ({
-    getProfile: builder.query<any, void>({
+    getProfile: builder.query({
       query: () => ({
         headers: getAuthHeaders(),
         method: "GET",
         url: "jobboard/profile",
       }),
+      providesTags: ["Profile"],
     }),
-    updateProfile: builder.mutation<any, any>({
+    updateProfile: builder.mutation({
       query: (data) => ({
         headers: getAuthHeaders(),
         method: "PUT",
         url: "jobboard/profile",
         body: data,
       }),
+      invalidatesTags: ["Profile"],
     }),
   }),
 });

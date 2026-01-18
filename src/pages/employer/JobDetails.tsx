@@ -22,20 +22,29 @@ import {
 import { cn } from "@/lib/utils";
 import { useGetJobsByIdQuery } from "@/app/queries/jobApi";
 
+const employmentTypeMap: Record<string, string> = {
+  "full-time": "Permanent",
+  permanent: "Permanent",
+  contract: "Contract",
+  internship: "Internship",
+  freelance: "Freelance",
+};
+
 const JobDetailsPage = () => {
   const { jobId } = useParams();
   const navigate = useNavigate();
 
   const numericJobId = Number(jobId);
+  const isInvalidJobId = !jobId || Number.isNaN(numericJobId);
 
-  if (!jobId || isNaN(numericJobId)) {
+  const { data, isLoading, isError } = useGetJobsByIdQuery(
+    { id: numericJobId },
+    { skip: isInvalidJobId },
+  );
+
+  if (isInvalidJobId) {
     return <div className="p-6">Invalid job ID</div>;
   }
-
-  const { data, isLoading, isError } = useGetJobsByIdQuery({
-    id: numericJobId,
-  });
-
   const apiJob = data?.data?.[0];
 
   if (isLoading) return <div className="p-6">Loading...</div>;
@@ -48,7 +57,7 @@ const JobDetailsPage = () => {
     status: apiJob.status === "published" ? "Live" : "Draft",
 
     employmentType:
-      apiJob.employmentType === "full-time" ? "Permanent" : "Contract",
+      employmentTypeMap[apiJob.employmentType] || apiJob.employmentType,
 
     experienceLevel: apiJob.experienceLevel,
     workMode: apiJob.workMode,
@@ -356,7 +365,9 @@ const JobDetailsPage = () => {
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Evaluation</span>
                     <span className="font-medium">
-                      Communication, Problem Solving, Technical
+                      {jobData.aiInterviewEvaluation?.length
+                        ? jobData.aiInterviewEvaluation.join(", ")
+                        : "Not specified"}
                     </span>
                   </div>
                   <Button variant="outline" size="sm" className="w-full mt-2">

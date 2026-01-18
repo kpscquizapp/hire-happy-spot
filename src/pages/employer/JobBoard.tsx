@@ -243,6 +243,8 @@ const JobBoard = () => {
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="permanent">Permanent</SelectItem>
                 <SelectItem value="contract">Contract</SelectItem>
+                <SelectItem value="internship">Internship</SelectItem>
+                <SelectItem value="freelance">Freelance</SelectItem>
               </SelectContent>
             </Select>
             <Select value={sortBy} onValueChange={setSortBy}>
@@ -387,7 +389,7 @@ const JobBoard = () => {
             </TableBody>
           </Table>
 
-          {filteredJobs.length === 0 && (
+          {!jobsLoading && filteredJobs.length === 0 && (
             <div className="p-12 text-center">
               <Briefcase className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
               <h3 className="font-medium text-lg mb-1">No jobs found</h3>
