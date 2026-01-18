@@ -311,28 +311,34 @@ const CandidateProfile = () => {
                           </Button>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                          {profile?.projects?.map(
-                            ({ title, techStack, projectUrl }, pIndex) => (
-                              <Card
-                                id={`AiMatchedProfile-${candidateId}-project-${pIndex}`}
-                                className="border dark:border-slate-700 dark:bg-slate-800 w-full"
-                                key={`${title}-${pIndex}`}
-                              >
-                                <CardContent className="p-4 sm:p-6">
-                                  <div className="w-full h-24 sm:h-32 bg-gray-100 dark:bg-slate-700/50 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
-                                    <div className="w-10 h-14 sm:w-12 sm:h-16 border-2 border-gray-300 dark:border-slate-500 rounded flex items-center justify-center text-2xl dark:text-slate-300">
-                                      {projectUrl ? "🌐" : "📂"}
+                          {profile?.projects?.length ? (
+                            +profile.projects.map(
+                              ({ title, techStack, projectUrl }, pIndex) => (
+                                <Card
+                                  id={`AiMatchedProfile-${candidateId}-project-${pIndex}`}
+                                  className="border dark:border-slate-700 dark:bg-slate-800 w-full"
+                                  key={`${title}-${pIndex}`}
+                                >
+                                  <CardContent className="p-4 sm:p-6">
+                                    <div className="w-full h-24 sm:h-32 bg-gray-100 dark:bg-slate-700/50 rounded-lg flex items-center justify-center mb-3 sm:mb-4">
+                                      <div className="w-10 h-14 sm:w-12 sm:h-16 border-2 border-gray-300 dark:border-slate-500 rounded flex items-center justify-center text-2xl dark:text-slate-300">
+                                        {projectUrl ? "🌐" : "📂"}
+                                      </div>
                                     </div>
-                                  </div>
-                                  <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base dark:text-slate-100 break-words">
-                                    {title}
-                                  </h4>
-                                  <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words">
-                                    {techStack}
-                                  </p>
-                                </CardContent>
-                              </Card>
-                            ),
+                                    <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base dark:text-slate-100 break-words">
+                                      {title}
+                                    </h4>
+                                    <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words">
+                                      {techStack}
+                                    </p>
+                                  </CardContent>
+                                </Card>
+                              ),
+                            )
+                          ) : (
+                            <p className="text-sm text-gray-500 dark:text-slate-400 col-span-2">
+                              No projects yet
+                            </p>
                           )}
                         </div>
                       </CardContent>
@@ -358,7 +364,11 @@ const CandidateProfile = () => {
                   <TabsContent value="assessment" className="space-y-4">
                     <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
                       <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
-                        <CandidateProfileUpdate data={data} />
+                        {data ? (
+                          <CandidateProfileUpdate data={data} />
+                        ) : (
+                          <p>Profile data unavailable</p>
+                        )}
                       </CardContent>
                     </Card>
                   </TabsContent>

@@ -1,10 +1,54 @@
 import { ChangeEvent, useState } from "react";
 import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
 import { useUpdateProfileMutation } from "@/app/queries/profileApi";
+import { toast } from "sonner";
 
 type FormElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
-const CandidateProfileUpdate = ({ data }): JSX.Element => {
+interface CandidateProfileUpdateProps {
+  data: {
+    candidateProfile: {
+      location?: string;
+      availability?: string;
+      bio?: string;
+      yearsExperience?: string | number;
+      skills?: Array<{ name: string; id?: string } | string>;
+      headline?: string;
+      resourceType?: string;
+      availableIn?: string;
+      englishProficiency?: string;
+      hourlyRateMin?: number | string;
+      hourlyRateMax?: number | string;
+      workExperiences?: Array<{
+        companyName: string;
+        role: string;
+        employmentType: string;
+        startDate: string;
+        endDate: string | null;
+        description: string | string[];
+        location: string;
+      }>;
+      projects?: Array<{
+        title: string;
+        description: string;
+        techStack: string[] | string;
+        projectUrl: string;
+        isFeatured: boolean;
+      }>;
+      certifications?: Array<{
+        name: string;
+        issuedBy: string;
+        issueDate: string;
+        expiryDate?: string;
+        credentialUrl: string;
+      }>;
+    };
+  };
+}
+
+const CandidateProfileUpdate = ({
+  data,
+}: CandidateProfileUpdateProps): JSX.Element => {
   const [skillInput, setSkillInput] = useState("");
   const [formData, setFormData] = useState({
     location: data?.candidateProfile.location || "",
@@ -26,7 +70,10 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
     certifications: data?.candidateProfile.certifications || [],
   });
 
-  const [updateProfile] = useUpdateProfileMutation();
+  const [
+    updateProfile,
+    { isLoading: isUpdating, isError: updateError, isSuccess },
+  ] = useUpdateProfileMutation();
 
   const availabilityOptions = [
     "freelance",
@@ -188,7 +235,14 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
               .filter(Boolean),
       })),
     };
-    updateProfile(payload);
+    updateProfile(payload)
+      .unwrap()
+      .then(() => {
+        toast.success("Profile updated successfully!");
+      })
+      .catch((err) => {
+        toast.error(err?.data?.message || "Failed to update profile");
+      });
   };
 
   return (
@@ -436,7 +490,7 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
                 type="text"
                 value={skillInput}
                 onChange={(e) => setSkillInput(e.target.value)}
-                onKeyPress={(e) =>
+                onKeyDown={(e) =>
                   e.key === "Enter" && (e.preventDefault(), addSkill())
                 }
                 placeholder="Add a skill (e.g., TypeScript)"
@@ -801,9 +855,10 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
         <div className="flex gap-4 pt-4">
           <button
             onClick={handleSubmit}
+            disabled={isUpdating}
             className="flex-1 bg-primary text-white py-3 px-6 rounded-md hover:bg-primary/90 transition font-medium"
           >
-            Update Profile
+            {isUpdating ? "Updating..." : "Update Profile"}
           </button>
           <button
             type="button"
@@ -811,6 +866,9 @@ const CandidateProfileUpdate = ({ data }): JSX.Element => {
           >
             Cancel
           </button>
+          {updateError && (
+            <p className="text-red-600 text-sm">Failed to update profile</p>
+          )}
         </div>
       </div>
     </div>
