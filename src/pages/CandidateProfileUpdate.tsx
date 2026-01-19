@@ -7,6 +7,9 @@ type FormElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 interface CandidateProfileUpdateProps {
   data: {
+    firstName: string;
+    lastName: string;
+    email: string;
     candidateProfile: {
       location?: string;
       availability?: string;
@@ -25,13 +28,13 @@ interface CandidateProfileUpdateProps {
         employmentType: string;
         startDate: string;
         endDate: string | null;
-        description: string | string[];
+        description: string;
         location: string;
       }>;
       projects?: Array<{
         title: string;
         description: string;
-        techStack: string[] | string;
+        techStack: string[];
         projectUrl: string;
         isFeatured: boolean;
       }>;
@@ -50,24 +53,73 @@ const CandidateProfileUpdate = ({
   data,
 }: CandidateProfileUpdateProps): JSX.Element => {
   const [skillInput, setSkillInput] = useState("");
+
+  const skills =
+    data?.candidateProfile?.skills?.map((skill) =>
+      typeof skill === "string" ? skill : skill.name,
+    ) || [];
+
+  const workExperiences =
+    data?.candidateProfile?.workExperiences.map(
+      ({
+        companyName,
+        role,
+        employmentType,
+        startDate,
+        endDate,
+        description,
+        location,
+      }) => ({
+        companyName,
+        role,
+        employmentType,
+        startDate,
+        endDate,
+        description,
+        location,
+      }),
+    ) || [];
+
+  const projects =
+    data?.candidateProfile?.projects.map(
+      ({ title, description, techStack, projectUrl, isFeatured }) => ({
+        title,
+        description,
+        techStack,
+        projectUrl,
+        isFeatured,
+      }),
+    ) || [];
+
+  const certification =
+    data?.candidateProfile?.certifications.map(
+      ({ name, issueDate, issuedBy, expiryDate, credentialUrl }) => ({
+        name,
+        issueDate,
+        issuedBy,
+        expiryDate,
+        credentialUrl,
+      }),
+    ) || [];
+
   const [formData, setFormData] = useState({
+    firstName: data?.firstName || "",
+    lastName: data?.lastName || "",
+    email: data?.email || "",
     location: data?.candidateProfile.location || "",
     availability: data?.candidateProfile.availability || "",
     bio: data?.candidateProfile.bio || "",
     yearsExperience: data?.candidateProfile.yearsExperience || "",
-    skills:
-      data?.candidateProfile.skills?.map((s) =>
-        typeof s === "string" ? { name: s } : s,
-      ) || [],
+    skills: skills,
     headline: data?.candidateProfile.headline || "",
     resourceType: data?.candidateProfile.resourceType || "",
     availableIn: data?.candidateProfile.availableIn || "",
     englishProficiency: data?.candidateProfile.englishProficiency || "",
-    hourlyRateMin: data?.candidateProfile.hourlyRateMin || "",
-    hourlyRateMax: data?.candidateProfile.hourlyRateMax || "",
-    workExperiences: data?.candidateProfile.workExperiences || [],
-    projects: data?.candidateProfile.projects || [],
-    certifications: data?.candidateProfile.certifications || [],
+    hourlyRateMin: Number(data?.candidateProfile.hourlyRateMin) || Number(),
+    hourlyRateMax: Number(data?.candidateProfile.hourlyRateMax) || Number(),
+    workExperiences: workExperiences || [],
+    projects: projects || [],
+    certifications: certification || [],
   });
 
   const [
@@ -86,12 +138,12 @@ const CandidateProfileUpdate = ({
     "ACTIVE RESOURCE",
     "AVAILABLE",
   ];
-  const availableInOptions = ["Immediate", "1 Week", "2 Weeks", "1 Month"];
+  const availableInOptions = ["Immediate", "15 Days", "30 Days"];
   const englishProficiencyOptions = [
-    "Native",
-    "Professional",
-    "Intermediate",
     "Basic",
+    "Professional",
+    "Fluent",
+    "Native",
   ];
   const employmentTypeOptions = [
     "Full-time",
@@ -103,15 +155,32 @@ const CandidateProfileUpdate = ({
 
   const handleInputChange = (e: ChangeEvent<FormElement>) => {
     const { name, value } = e.target;
+
+    switch (name) {
+      case "hourlyRateMin":
+      case "hourlyRateMax":
+      case "yearsExperience":
+        setFormData((prev) => ({
+          ...prev,
+          [name]: Number(value),
+        }));
+        return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const addSkill = () => {
     const name = skillInput.trim();
-    if (name && !formData.skills.some((s) => s.name === name)) {
-      setFormData((prev) => ({
-        ...prev,
-        skills: [...prev.skills, { name }], // Adds to existing array
+    if (
+      name &&
+      !formData.skills.some(
+        (skill) => skill.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      setFormData((prevData) => ({
+        ...prevData,
+        skills: [...prevData.skills, name],
       }));
       setSkillInput("");
     }
@@ -120,7 +189,7 @@ const CandidateProfileUpdate = ({
   const removeSkill = (skillToRemove) => {
     setFormData((prev) => ({
       ...prev,
-      skills: prev.skills.filter((skill) => skill.name !== skillToRemove.name),
+      skills: prev.skills.filter((name) => name !== skillToRemove.name),
     }));
   };
 
@@ -223,16 +292,21 @@ const CandidateProfileUpdate = ({
   };
 
   const handleSubmit = () => {
+    const cleanDate = (date: string | null | undefined) => {
+      if (!date || date.trim() === "") return null;
+      return date;
+    };
     const payload = {
       ...formData,
+      certifications: formData.certifications.map((cert) => ({
+        ...cert,
+        expiryDate: cleanDate(cert.expiryDate),
+      })),
       workExperiences: formData.workExperiences.map((exp) => ({
         ...exp,
         description: Array.isArray(exp.description)
-          ? exp.description
-          : String(exp.description ?? "")
-              .split("\n")
-              .map((line) => line.trim())
-              .filter(Boolean),
+          ? exp.description.join("\n")
+          : String(exp.description ?? ""),
       })),
     };
     updateProfile(payload)
@@ -249,7 +323,7 @@ const CandidateProfileUpdate = ({
     <div className="sm:p-8">
       <div className="space-y-8">
         {/* Basic Information */}
-        {/* <div className="space-y-4">
+        <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-800 border-b pb-6 text-left">
             Basic Information
           </h2>
@@ -310,7 +384,7 @@ const CandidateProfileUpdate = ({
               />
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* Professional Details */}
         <div className="space-y-4 text-left">
@@ -506,15 +580,15 @@ const CandidateProfileUpdate = ({
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {formData.skills.map((skill, index) => (
+              {formData.skills.map((name, index) => (
                 <span
-                  key={skill.id || index}
+                  key={name || index}
                   className="inline-flex items-center gap-1 px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm"
                 >
-                  {skill.name}
+                  {name}
                   <button
                     type="button"
-                    onClick={() => removeSkill(skill)}
+                    onClick={() => removeSkill(name)}
                     className="hover:text-teal-900"
                   >
                     <X className="w-4 h-4" />
@@ -717,6 +791,9 @@ const CandidateProfileUpdate = ({
                     : (project.techStack ?? "")
                 }
                 onChange={(e) =>
+                  updateProject(index, "techStack", e.target.value)
+                }
+                onBlur={(e) =>
                   updateProject(
                     index,
                     "techStack",
@@ -829,9 +906,13 @@ const CandidateProfileUpdate = ({
                   </label>
                   <input
                     type="date"
-                    value={cert.expiryDate || ""}
+                    value={cert.expiryDate ?? ""}
                     onChange={(e) =>
-                      updateCertification(index, "expiryDate", e.target.value)
+                      updateCertification(
+                        index,
+                        "expiryDate",
+                        e.target.value || null,
+                      )
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
@@ -863,24 +944,26 @@ const CandidateProfileUpdate = ({
           <button
             onClick={() => {
               setFormData({
+                firstName: data?.firstName || "",
+                lastName: data?.lastName || "",
+                email: data?.email || "",
                 location: data?.candidateProfile.location || "",
                 availability: data?.candidateProfile.availability || "",
                 bio: data?.candidateProfile.bio || "",
                 yearsExperience: data?.candidateProfile.yearsExperience || "",
-                skills:
-                  data?.candidateProfile.skills?.map((s) =>
-                    typeof s === "string" ? { name: s } : s,
-                  ) || [],
+                skills: skills || [],
                 headline: data?.candidateProfile.headline || "",
                 resourceType: data?.candidateProfile.resourceType || "",
                 availableIn: data?.candidateProfile.availableIn || "",
                 englishProficiency:
                   data?.candidateProfile.englishProficiency || "",
-                hourlyRateMin: data?.candidateProfile.hourlyRateMin || "",
-                hourlyRateMax: data?.candidateProfile.hourlyRateMax || "",
-                workExperiences: data?.candidateProfile.workExperiences || [],
-                projects: data?.candidateProfile.projects || [],
-                certifications: data?.candidateProfile.certifications || [],
+                hourlyRateMin:
+                  Number(data?.candidateProfile.hourlyRateMin) || Number(0),
+                hourlyRateMax:
+                  Number(data?.candidateProfile.hourlyRateMax) || Number(0),
+                workExperiences: workExperiences || [],
+                projects: projects || [],
+                certifications: certification || [],
               });
             }}
             type="button"
@@ -888,12 +971,10 @@ const CandidateProfileUpdate = ({
           >
             Cancel
           </button>
-          {updateError && (
-            <p className="text-red-600 text-sm mt-2">
-              Failed to update profile
-            </p>
-          )}
         </div>
+        {updateError && (
+          <p className="text-red-600 text-sm mt-2">Failed to update profile</p>
+        )}
       </div>
     </div>
   );

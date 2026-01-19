@@ -121,9 +121,9 @@ const CandidateProfile = () => {
                       className="flex flex-wrap gap-2"
                     >
                       {profile?.skills?.length ? (
-                        profile.skills.map(({ name, id }) => (
+                        profile.skills.map(({ name, id }, index) => (
                           <Badge
-                            key={id}
+                            key={id ?? name ?? index}
                             variant="secondary"
                             className="bg-gray-100 text-xs dark:bg-slate-700 dark:text-slate-200"
                           >
@@ -269,21 +269,21 @@ const CandidateProfile = () => {
                                       {startDate} - {endDate ?? "Present"} •{" "}
                                       {location}
                                     </p>
-                                    <ul className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
+                                    <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
                                       {(Array.isArray(description)
                                         ? description
                                         : description
                                           ? [description]
                                           : []
                                       ).map((bullet, bIndex) => (
-                                        <li
+                                        <p
                                           key={`${entryId}-bullet-${bIndex}`}
                                           className="break-words"
                                         >
                                           {bullet}
-                                        </li>
+                                        </p>
                                       ))}
-                                    </ul>
+                                    </div>
                                   </div>
                                 </div>
                               );
@@ -364,11 +364,13 @@ const CandidateProfile = () => {
 
                   <TabsContent value="assessment" className="space-y-4">
                     <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
-                      <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
+                      <CardContent className="p-6">
                         {data ? (
                           <CandidateProfileUpdate data={data} />
                         ) : (
-                          <p>Profile data unavailable</p>
+                          <p className="text-center text-gray-500 dark:text-slate-400">
+                            Profile data unavailable
+                          </p>
                         )}
                       </CardContent>
                     </Card>
