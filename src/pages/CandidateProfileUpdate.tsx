@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
 import { useUpdateProfileMutation } from "@/app/queries/profileApi";
 import { toast } from "sonner";
@@ -130,6 +130,37 @@ const CandidateProfileUpdate = ({
     certifications: certification || [],
   });
 
+  useEffect(() => {
+    if (!data) return;
+    setFormData({
+      firstName: data?.firstName || "",
+      lastName: data?.lastName || "",
+      email: data?.email || "",
+      location: data?.candidateProfile.location || "",
+      availability: data?.candidateProfile.availability || "",
+      bio: data?.candidateProfile.bio || "",
+      yearsExperience: data?.candidateProfile.yearsExperience ?? "",
+      skills: skills,
+      headline: data?.candidateProfile.headline || "",
+      resourceType: data?.candidateProfile.resourceType || "",
+      availableIn: data?.candidateProfile.availableIn || "",
+      englishProficiency: data?.candidateProfile.englishProficiency || "",
+      hourlyRateMin:
+        data?.candidateProfile.hourlyRateMin == null ||
+        data?.candidateProfile.hourlyRateMin === ""
+          ? ""
+          : Number(data?.candidateProfile.hourlyRateMin),
+      hourlyRateMax:
+        data?.candidateProfile.hourlyRateMax == null ||
+        data?.candidateProfile.hourlyRateMax === ""
+          ? ""
+          : Number(data?.candidateProfile.hourlyRateMax),
+      workExperiences: workExperiences || [],
+      projects: projects || [],
+      certifications: certification || [],
+    });
+  }, [data]);
+
   const [updateProfile, { isLoading: isUpdating, isError: updateError }] =
     useUpdateProfileMutation();
 
@@ -166,10 +197,15 @@ const CandidateProfileUpdate = ({
       case "hourlyRateMin":
       case "hourlyRateMax":
       case "yearsExperience":
-        setFormData((prev) => ({
-          ...prev,
-          [name]: value === "" ? "" : Number(value),
-        }));
+        {
+          const parsed = value === "" ? "" : Number(value);
+          if (parsed === "" || !Number.isNaN(parsed)) {
+            setFormData((prev) => ({
+              ...prev,
+              [name]: parsed,
+            }));
+          }
+        }
         return;
     }
 
