@@ -640,7 +640,7 @@ const CandidateProfileUpdate = ({
                   <button
                     type="button"
                     onClick={() => removeSkill(name)}
-                    className="hover:text-teal-900"
+                    className="hover:text-teal-900 min-w-0 min-h-0"
                   >
                     <X className="w-4 h-4" />
                   </button>
