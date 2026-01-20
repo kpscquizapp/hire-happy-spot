@@ -975,9 +975,15 @@ const CandidateProfileUpdate = ({
                 englishProficiency:
                   data?.candidateProfile.englishProficiency || "",
                 hourlyRateMin:
-                  Number(data?.candidateProfile.hourlyRateMin) || Number(0),
+                  data?.candidateProfile.hourlyRateMin == null ||
+                  data?.candidateProfile.hourlyRateMin === ""
+                    ? ""
+                    : Number(data?.candidateProfile.hourlyRateMin),
                 hourlyRateMax:
-                  Number(data?.candidateProfile.hourlyRateMax) || Number(0),
+                  data?.candidateProfile.hourlyRateMax == null ||
+                  data?.candidateProfile.hourlyRateMax === ""
+                    ? ""
+                    : Number(data?.candidateProfile.hourlyRateMax),
                 workExperiences: workExperiences || [],
                 projects: projects || [],
                 certifications: certification || [],

@@ -14,7 +14,6 @@ const CandidateProfile = () => {
   const { data: response, isLoading, isError } = useGetProfileQuery();
   const data = response?.data;
   const profile = data?.candidateProfile;
-  console.log(profile);
 
   const candidateId = useId();
   return (
@@ -92,7 +91,7 @@ const CandidateProfile = () => {
                           <span className="truncate">Experience</span>
                         </span>
                         <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                          {profile?.yearsExperience || "None"}
+                          {profile?.yearsExperience + " Years" || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -122,15 +121,22 @@ const CandidateProfile = () => {
                       className="flex flex-wrap gap-2"
                     >
                       {profile?.skills?.length ? (
-                        profile.skills.map(({ name, id }, index) => (
-                          <Badge
-                            key={id ?? name ?? index}
-                            variant="secondary"
-                            className="bg-gray-100 text-xs dark:bg-slate-700 dark:text-slate-200"
-                          >
-                            {name}
-                          </Badge>
-                        ))
+                        profile.skills.map((skill, index) => {
+                          const name =
+                            typeof skill === "string" ? skill : skill.name;
+                          const id =
+                            typeof skill === "string" ? undefined : skill.id;
+                          if (!name) return null;
+                          return (
+                            <Badge
+                              key={id ?? name ?? index}
+                              variant="secondary"
+                              className="bg-gray-100 text-xs dark:bg-slate-700 dark:text-slate-200"
+                            >
+                              {name}
+                            </Badge>
+                          );
+                        })
                       ) : (
                         <span className="text-xs text-gray-500 dark:text-slate-400">
                           No skills listed
@@ -333,6 +339,7 @@ const CandidateProfile = () => {
                                       {projectUrl && (
                                         <a
                                           href={projectUrl}
+                                          rel="noopener noreferrer"
                                           target="_blank"
                                           className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words mb-1 font-semibold hover:underline"
                                         >
