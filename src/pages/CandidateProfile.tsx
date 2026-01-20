@@ -91,7 +91,7 @@ const CandidateProfile = () => {
                           <span className="truncate">Experience</span>
                         </span>
                         <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                          {profile?.yearsExperience || "None"}
+                          {profile?.yearsExperience + " Years" || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -121,15 +121,22 @@ const CandidateProfile = () => {
                       className="flex flex-wrap gap-2"
                     >
                       {profile?.skills?.length ? (
-                        profile.skills.map(({ name, id }) => (
-                          <Badge
-                            key={id}
-                            variant="secondary"
-                            className="bg-gray-100 text-xs dark:bg-slate-700 dark:text-slate-200"
-                          >
-                            {name}
-                          </Badge>
-                        ))
+                        profile.skills.map((skill, index) => {
+                          const name =
+                            typeof skill === "string" ? skill : skill.name;
+                          const id =
+                            typeof skill === "string" ? undefined : skill.id;
+                          if (!name) return null;
+                          return (
+                            <Badge
+                              key={id ?? name ?? index}
+                              variant="secondary"
+                              className="bg-gray-100 text-xs dark:bg-slate-700 dark:text-slate-200"
+                            >
+                              {name}
+                            </Badge>
+                          );
+                        })
                       ) : (
                         <span className="text-xs text-gray-500 dark:text-slate-400">
                           No skills listed
@@ -198,12 +205,6 @@ const CandidateProfile = () => {
                       Overview
                     </TabsTrigger>
                     <TabsTrigger
-                      value="projects"
-                      className="text-xs sm:text-sm dark:data-[state=active]:bg-slate-900 dark:data-[state=active]:text-slate-100"
-                    >
-                      Projects
-                    </TabsTrigger>
-                    <TabsTrigger
                       value="resume"
                       className="text-xs sm:text-sm dark:data-[state=active]:bg-slate-900 dark:data-[state=active]:text-slate-100"
                     >
@@ -269,21 +270,23 @@ const CandidateProfile = () => {
                                       {startDate} - {endDate ?? "Present"} •{" "}
                                       {location}
                                     </p>
-                                    <ul className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
+                                    <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1">
                                       {(Array.isArray(description)
                                         ? description
                                         : description
-                                          ? [description]
+                                          ? description
+                                              .split(/\r?\n/)
+                                              .filter(Boolean)
                                           : []
                                       ).map((bullet, bIndex) => (
-                                        <li
+                                        <p
                                           key={`${entryId}-bullet-${bIndex}`}
                                           className="break-words"
                                         >
                                           {bullet}
-                                        </li>
+                                        </p>
                                       ))}
-                                    </ul>
+                                    </div>
                                   </div>
                                 </div>
                               );
@@ -314,7 +317,10 @@ const CandidateProfile = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                           {profile?.projects?.length ? (
                             profile.projects.map(
-                              ({ title, techStack, projectUrl }, pIndex) => (
+                              (
+                                { title, techStack, projectUrl, description },
+                                pIndex,
+                              ) => (
                                 <Card
                                   id={`AiMatchedProfile-${candidateId}-project-${pIndex}`}
                                   className="border dark:border-slate-700 dark:bg-slate-800 w-full"
@@ -326,11 +332,27 @@ const CandidateProfile = () => {
                                         {projectUrl ? "🌐" : "📂"}
                                       </div>
                                     </div>
-                                    <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base dark:text-slate-100 break-words">
-                                      {title}
-                                    </h4>
+                                    <div className="flex items-center justify-between">
+                                      <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base dark:text-slate-100 break-words">
+                                        {title}
+                                      </h4>
+                                      {projectUrl && (
+                                        <a
+                                          href={projectUrl}
+                                          rel="noopener noreferrer"
+                                          target="_blank"
+                                          className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words mb-1 font-semibold hover:underline"
+                                        >
+                                          Link
+                                        </a>
+                                      )}
+                                    </div>
                                     <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words">
                                       {techStack}
+                                    </p>
+
+                                    <p className="mt-3 text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words">
+                                      {description}
                                     </p>
                                   </CardContent>
                                 </Card>
@@ -346,14 +368,6 @@ const CandidateProfile = () => {
                     </Card>
                   </TabsContent>
 
-                  <TabsContent value="projects" className="space-y-4">
-                    <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
-                      <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
-                        Projects content coming soon...
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-
                   <TabsContent value="resume" className="space-y-4">
                     <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
                       <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
@@ -364,11 +378,13 @@ const CandidateProfile = () => {
 
                   <TabsContent value="assessment" className="space-y-4">
                     <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
-                      <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
+                      <CardContent className="p-6">
                         {data ? (
                           <CandidateProfileUpdate data={data} />
                         ) : (
-                          <p>Profile data unavailable</p>
+                          <p className="text-center text-gray-500 dark:text-slate-400">
+                            Profile data unavailable
+                          </p>
                         )}
                       </CardContent>
                     </Card>

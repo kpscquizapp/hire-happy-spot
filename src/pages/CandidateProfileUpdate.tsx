@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
 import { useUpdateProfileMutation } from "@/app/queries/profileApi";
 import { toast } from "sonner";
@@ -7,6 +7,9 @@ type FormElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
 interface CandidateProfileUpdateProps {
   data: {
+    firstName: string;
+    lastName: string;
+    email: string;
     candidateProfile: {
       location?: string;
       availability?: string;
@@ -25,13 +28,13 @@ interface CandidateProfileUpdateProps {
         employmentType: string;
         startDate: string;
         endDate: string | null;
-        description: string | string[];
+        description: string;
         location: string;
       }>;
       projects?: Array<{
         title: string;
         description: string;
-        techStack: string[] | string;
+        techStack: string[];
         projectUrl: string;
         isFeatured: boolean;
       }>;
@@ -50,30 +53,116 @@ const CandidateProfileUpdate = ({
   data,
 }: CandidateProfileUpdateProps): JSX.Element => {
   const [skillInput, setSkillInput] = useState("");
+
+  const skills =
+    data?.candidateProfile?.skills?.map((skill) =>
+      typeof skill === "string" ? skill : skill.name,
+    ) || [];
+
+  const workExperiences =
+    data?.candidateProfile?.workExperiences?.map(
+      ({
+        companyName,
+        role,
+        employmentType,
+        startDate,
+        endDate,
+        description,
+        location,
+      }) => ({
+        companyName,
+        role,
+        employmentType,
+        startDate,
+        endDate,
+        description,
+        location,
+      }),
+    ) || [];
+
+  const projects =
+    data?.candidateProfile?.projects?.map(
+      ({ title, description, techStack, projectUrl, isFeatured }) => ({
+        title,
+        description,
+        techStack,
+        projectUrl,
+        isFeatured,
+      }),
+    ) || [];
+
+  const certification =
+    data?.candidateProfile?.certifications?.map(
+      ({ name, issueDate, issuedBy, expiryDate, credentialUrl }) => ({
+        name,
+        issueDate,
+        issuedBy,
+        expiryDate,
+        credentialUrl,
+      }),
+    ) || [];
+
   const [formData, setFormData] = useState({
+    firstName: data?.firstName || "",
+    lastName: data?.lastName || "",
+    email: data?.email || "",
     location: data?.candidateProfile.location || "",
     availability: data?.candidateProfile.availability || "",
     bio: data?.candidateProfile.bio || "",
-    yearsExperience: data?.candidateProfile.yearsExperience || "",
-    skills:
-      data?.candidateProfile.skills?.map((s) =>
-        typeof s === "string" ? { name: s } : s,
-      ) || [],
+    yearsExperience: data?.candidateProfile.yearsExperience ?? "",
+    skills: skills,
     headline: data?.candidateProfile.headline || "",
     resourceType: data?.candidateProfile.resourceType || "",
     availableIn: data?.candidateProfile.availableIn || "",
     englishProficiency: data?.candidateProfile.englishProficiency || "",
-    hourlyRateMin: data?.candidateProfile.hourlyRateMin || "",
-    hourlyRateMax: data?.candidateProfile.hourlyRateMax || "",
-    workExperiences: data?.candidateProfile.workExperiences || [],
-    projects: data?.candidateProfile.projects || [],
-    certifications: data?.candidateProfile.certifications || [],
+    hourlyRateMin:
+      data?.candidateProfile.hourlyRateMin == null ||
+      data?.candidateProfile.hourlyRateMin === ""
+        ? ""
+        : Number(data?.candidateProfile.hourlyRateMin),
+    hourlyRateMax:
+      data?.candidateProfile.hourlyRateMax == null ||
+      data?.candidateProfile.hourlyRateMax === ""
+        ? ""
+        : Number(data?.candidateProfile.hourlyRateMax),
+    workExperiences: workExperiences || [],
+    projects: projects || [],
+    certifications: certification || [],
   });
 
-  const [
-    updateProfile,
-    { isLoading: isUpdating, isError: updateError, isSuccess },
-  ] = useUpdateProfileMutation();
+  useEffect(() => {
+    if (!data) return;
+    setFormData({
+      firstName: data?.firstName || "",
+      lastName: data?.lastName || "",
+      email: data?.email || "",
+      location: data?.candidateProfile.location || "",
+      availability: data?.candidateProfile.availability || "",
+      bio: data?.candidateProfile.bio || "",
+      yearsExperience: data?.candidateProfile.yearsExperience ?? "",
+      skills: skills,
+      headline: data?.candidateProfile.headline || "",
+      resourceType: data?.candidateProfile.resourceType || "",
+      availableIn: data?.candidateProfile.availableIn || "",
+      englishProficiency: data?.candidateProfile.englishProficiency || "",
+      hourlyRateMin:
+        data?.candidateProfile.hourlyRateMin == null ||
+        data?.candidateProfile.hourlyRateMin === ""
+          ? ""
+          : Number(data?.candidateProfile.hourlyRateMin),
+      hourlyRateMax:
+        data?.candidateProfile.hourlyRateMax == null ||
+        data?.candidateProfile.hourlyRateMax === ""
+          ? ""
+          : Number(data?.candidateProfile.hourlyRateMax),
+      workExperiences: workExperiences || [],
+      projects: projects || [],
+      certifications: certification || [],
+    });
+  }, [data]);
+
+  const [updateProfile, { isLoading: isUpdating, isError: updateError }] =
+    useUpdateProfileMutation();
 
   const availabilityOptions = [
     "freelance",
@@ -86,12 +175,12 @@ const CandidateProfileUpdate = ({
     "ACTIVE RESOURCE",
     "AVAILABLE",
   ];
-  const availableInOptions = ["Immediate", "1 Week", "2 Weeks", "1 Month"];
+  const availableInOptions = ["Immediate", "15 Days", "30 Days"];
   const englishProficiencyOptions = [
-    "Native",
-    "Professional",
-    "Intermediate",
     "Basic",
+    "Professional",
+    "Fluent",
+    "Native",
   ];
   const employmentTypeOptions = [
     "Full-time",
@@ -103,24 +192,46 @@ const CandidateProfileUpdate = ({
 
   const handleInputChange = (e: ChangeEvent<FormElement>) => {
     const { name, value } = e.target;
+
+    switch (name) {
+      case "hourlyRateMin":
+      case "hourlyRateMax":
+      case "yearsExperience":
+        {
+          const parsed = value === "" ? "" : Number(value);
+          if (parsed === "" || !Number.isNaN(parsed)) {
+            setFormData((prev) => ({
+              ...prev,
+              [name]: parsed,
+            }));
+          }
+        }
+        return;
+    }
+
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const addSkill = () => {
     const name = skillInput.trim();
-    if (name && !formData.skills.some((s) => s.name === name)) {
-      setFormData((prev) => ({
-        ...prev,
-        skills: [...prev.skills, { name }], // Adds to existing array
+    if (
+      name &&
+      !formData.skills.some(
+        (skill) => skill.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      setFormData((prevData) => ({
+        ...prevData,
+        skills: [...prevData.skills, name],
       }));
       setSkillInput("");
     }
   };
 
-  const removeSkill = (skillToRemove) => {
+  const removeSkill = (skillToRemove: string) => {
     setFormData((prev) => ({
       ...prev,
-      skills: prev.skills.filter((skill) => skill.name !== skillToRemove.name),
+      skills: prev.skills.filter((name) => name !== skillToRemove),
     }));
   };
 
@@ -142,7 +253,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const updateWorkExperience = (index, field, value) => {
+  const updateWorkExperience = (index: number, field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       workExperiences: prev.workExperiences.map((exp, i) =>
@@ -151,7 +262,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeWorkExperience = (index) => {
+  const removeWorkExperience = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       workExperiences: prev.workExperiences.filter((_, i) => i !== index),
@@ -174,7 +285,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const updateProject = (index, field, value) => {
+  const updateProject = (index: number, field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       projects: prev.projects.map((proj, i) =>
@@ -183,7 +294,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeProject = (index) => {
+  const removeProject = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       projects: prev.projects.filter((_, i) => i !== index),
@@ -206,7 +317,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const updateCertification = (index, field, value) => {
+  const updateCertification = (index: number, field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       certifications: prev.certifications.map((cert, i) =>
@@ -215,7 +326,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeCertification = (index) => {
+  const removeCertification = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       certifications: prev.certifications.filter((_, i) => i !== index),
@@ -223,16 +334,30 @@ const CandidateProfileUpdate = ({
   };
 
   const handleSubmit = () => {
+    const cleanDate = (date: string | null | undefined) => {
+      if (!date || date.trim() === "") return null;
+      return date;
+    };
     const payload = {
       ...formData,
+      certifications: formData.certifications.map((cert) => ({
+        ...cert,
+        expiryDate: cleanDate(cert.expiryDate),
+      })),
+      projects: formData.projects.map((project) => ({
+        ...project,
+        techStack: Array.isArray(project.techStack)
+          ? project.techStack
+          : String(project.techStack ?? "")
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
+      })),
       workExperiences: formData.workExperiences.map((exp) => ({
         ...exp,
         description: Array.isArray(exp.description)
-          ? exp.description
-          : String(exp.description ?? "")
-              .split("\n")
-              .map((line) => line.trim())
-              .filter(Boolean),
+          ? exp.description.join("\n")
+          : String(exp.description ?? ""),
       })),
     };
     updateProfile(payload)
@@ -249,7 +374,7 @@ const CandidateProfileUpdate = ({
     <div className="sm:p-8">
       <div className="space-y-8">
         {/* Basic Information */}
-        {/* <div className="space-y-4">
+        <div className="space-y-4">
           <h2 className="text-xl font-semibold text-gray-800 border-b pb-6 text-left">
             Basic Information
           </h2>
@@ -310,7 +435,7 @@ const CandidateProfileUpdate = ({
               />
             </div>
           </div>
-        </div> */}
+        </div>
 
         {/* Professional Details */}
         <div className="space-y-4 text-left">
@@ -506,16 +631,16 @@ const CandidateProfileUpdate = ({
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {formData.skills.map((skill, index) => (
+              {formData.skills.map((name, index) => (
                 <span
-                  key={skill.id || index}
+                  key={`${name}-${index}`}
                   className="inline-flex items-center gap-1 px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm"
                 >
-                  {skill.name}
+                  {name}
                   <button
                     type="button"
-                    onClick={() => removeSkill(skill)}
-                    className="hover:text-teal-900"
+                    onClick={() => removeSkill(name)}
+                    className="hover:text-teal-900 min-w-0 min-h-0"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -717,6 +842,9 @@ const CandidateProfileUpdate = ({
                     : (project.techStack ?? "")
                 }
                 onChange={(e) =>
+                  updateProject(index, "techStack", e.target.value)
+                }
+                onBlur={(e) =>
                   updateProject(
                     index,
                     "techStack",
@@ -829,9 +957,13 @@ const CandidateProfileUpdate = ({
                   </label>
                   <input
                     type="date"
-                    value={cert.expiryDate || ""}
+                    value={cert.expiryDate ?? ""}
                     onChange={(e) =>
-                      updateCertification(index, "expiryDate", e.target.value)
+                      updateCertification(
+                        index,
+                        "expiryDate",
+                        e.target.value || null,
+                      )
                     }
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   />
@@ -863,24 +995,32 @@ const CandidateProfileUpdate = ({
           <button
             onClick={() => {
               setFormData({
+                firstName: data?.firstName || "",
+                lastName: data?.lastName || "",
+                email: data?.email || "",
                 location: data?.candidateProfile.location || "",
                 availability: data?.candidateProfile.availability || "",
                 bio: data?.candidateProfile.bio || "",
-                yearsExperience: data?.candidateProfile.yearsExperience || "",
-                skills:
-                  data?.candidateProfile.skills?.map((s) =>
-                    typeof s === "string" ? { name: s } : s,
-                  ) || [],
+                yearsExperience: data?.candidateProfile.yearsExperience ?? "",
+                skills: skills || [],
                 headline: data?.candidateProfile.headline || "",
                 resourceType: data?.candidateProfile.resourceType || "",
                 availableIn: data?.candidateProfile.availableIn || "",
                 englishProficiency:
                   data?.candidateProfile.englishProficiency || "",
-                hourlyRateMin: data?.candidateProfile.hourlyRateMin || "",
-                hourlyRateMax: data?.candidateProfile.hourlyRateMax || "",
-                workExperiences: data?.candidateProfile.workExperiences || [],
-                projects: data?.candidateProfile.projects || [],
-                certifications: data?.candidateProfile.certifications || [],
+                hourlyRateMin:
+                  data?.candidateProfile.hourlyRateMin == null ||
+                  data?.candidateProfile.hourlyRateMin === ""
+                    ? ""
+                    : Number(data?.candidateProfile.hourlyRateMin),
+                hourlyRateMax:
+                  data?.candidateProfile.hourlyRateMax == null ||
+                  data?.candidateProfile.hourlyRateMax === ""
+                    ? ""
+                    : Number(data?.candidateProfile.hourlyRateMax),
+                workExperiences: workExperiences || [],
+                projects: projects || [],
+                certifications: certification || [],
               });
             }}
             type="button"
@@ -888,12 +1028,10 @@ const CandidateProfileUpdate = ({
           >
             Cancel
           </button>
-          {updateError && (
-            <p className="text-red-600 text-sm mt-2">
-              Failed to update profile
-            </p>
-          )}
         </div>
+        {updateError && (
+          <p className="text-red-600 text-sm mt-2">Failed to update profile</p>
+        )}
       </div>
     </div>
   );
