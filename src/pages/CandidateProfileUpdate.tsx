@@ -60,7 +60,7 @@ const CandidateProfileUpdate = ({
     ) || [];
 
   const workExperiences =
-    data?.candidateProfile?.workExperiences.map(
+    data?.candidateProfile?.workExperiences?.map(
       ({
         companyName,
         role,
@@ -81,7 +81,7 @@ const CandidateProfileUpdate = ({
     ) || [];
 
   const projects =
-    data?.candidateProfile?.projects.map(
+    data?.candidateProfile?.projects?.map(
       ({ title, description, techStack, projectUrl, isFeatured }) => ({
         title,
         description,
@@ -92,7 +92,7 @@ const CandidateProfileUpdate = ({
     ) || [];
 
   const certification =
-    data?.candidateProfile?.certifications.map(
+    data?.candidateProfile?.certifications?.map(
       ({ name, issueDate, issuedBy, expiryDate, credentialUrl }) => ({
         name,
         issueDate,
@@ -186,10 +186,10 @@ const CandidateProfileUpdate = ({
     }
   };
 
-  const removeSkill = (skillToRemove) => {
+  const removeSkill = (skillToRemove: string) => {
     setFormData((prev) => ({
       ...prev,
-      skills: prev.skills.filter((name) => name !== skillToRemove.name),
+      skills: prev.skills.filter((name) => name !== skillToRemove),
     }));
   };
 

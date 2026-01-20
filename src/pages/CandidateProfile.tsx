@@ -269,7 +269,7 @@ const CandidateProfile = () => {
                                       {startDate} - {endDate ?? "Present"} •{" "}
                                       {location}
                                     </p>
-                                    <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1 list-disc list-inside">
+                                    <div className="text-xs sm:text-sm text-gray-700 dark:text-slate-300 space-y-1">
                                       {(Array.isArray(description)
                                         ? description
                                         : description
