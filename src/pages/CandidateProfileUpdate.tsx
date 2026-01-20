@@ -130,10 +130,8 @@ const CandidateProfileUpdate = ({
     certifications: certification || [],
   });
 
-  const [
-    updateProfile,
-    { isLoading: isUpdating, isError: updateError, isSuccess },
-  ] = useUpdateProfileMutation();
+  const [updateProfile, { isLoading: isUpdating, isError: updateError }] =
+    useUpdateProfileMutation();
 
   const availabilityOptions = [
     "freelance",
@@ -219,7 +217,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const updateWorkExperience = (index, field, value) => {
+  const updateWorkExperience = (index: number, field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       workExperiences: prev.workExperiences.map((exp, i) =>
@@ -228,7 +226,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeWorkExperience = (index) => {
+  const removeWorkExperience = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       workExperiences: prev.workExperiences.filter((_, i) => i !== index),
@@ -251,7 +249,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const updateProject = (index, field, value) => {
+  const updateProject = (index: number, field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       projects: prev.projects.map((proj, i) =>
@@ -260,7 +258,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeProject = (index) => {
+  const removeProject = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       projects: prev.projects.filter((_, i) => i !== index),
@@ -283,7 +281,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const updateCertification = (index, field, value) => {
+  const updateCertification = (index: number, field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       certifications: prev.certifications.map((cert, i) =>
@@ -292,7 +290,7 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeCertification = (index) => {
+  const removeCertification = (index: number) => {
     setFormData((prev) => ({
       ...prev,
       certifications: prev.certifications.filter((_, i) => i !== index),
@@ -967,7 +965,7 @@ const CandidateProfileUpdate = ({
                 location: data?.candidateProfile.location || "",
                 availability: data?.candidateProfile.availability || "",
                 bio: data?.candidateProfile.bio || "",
-                yearsExperience: data?.candidateProfile.yearsExperience || "",
+                yearsExperience: data?.candidateProfile.yearsExperience ?? "",
                 skills: skills || [],
                 headline: data?.candidateProfile.headline || "",
                 resourceType: data?.candidateProfile.resourceType || "",
