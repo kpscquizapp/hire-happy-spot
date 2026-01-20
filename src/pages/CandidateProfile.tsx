@@ -14,6 +14,7 @@ const CandidateProfile = () => {
   const { data: response, isLoading, isError } = useGetProfileQuery();
   const data = response?.data;
   const profile = data?.candidateProfile;
+  console.log(profile);
 
   const candidateId = useId();
   return (
@@ -198,12 +199,6 @@ const CandidateProfile = () => {
                       Overview
                     </TabsTrigger>
                     <TabsTrigger
-                      value="projects"
-                      className="text-xs sm:text-sm dark:data-[state=active]:bg-slate-900 dark:data-[state=active]:text-slate-100"
-                    >
-                      Projects
-                    </TabsTrigger>
-                    <TabsTrigger
                       value="resume"
                       className="text-xs sm:text-sm dark:data-[state=active]:bg-slate-900 dark:data-[state=active]:text-slate-100"
                     >
@@ -273,7 +268,9 @@ const CandidateProfile = () => {
                                       {(Array.isArray(description)
                                         ? description
                                         : description
-                                          ? [description]
+                                          ? description
+                                              .split(/\r?\n/)
+                                              .filter(Boolean)
                                           : []
                                       ).map((bullet, bIndex) => (
                                         <p
@@ -314,7 +311,10 @@ const CandidateProfile = () => {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                           {profile?.projects?.length ? (
                             profile.projects.map(
-                              ({ title, techStack, projectUrl }, pIndex) => (
+                              (
+                                { title, techStack, projectUrl, description },
+                                pIndex,
+                              ) => (
                                 <Card
                                   id={`AiMatchedProfile-${candidateId}-project-${pIndex}`}
                                   className="border dark:border-slate-700 dark:bg-slate-800 w-full"
@@ -326,11 +326,26 @@ const CandidateProfile = () => {
                                         {projectUrl ? "🌐" : "📂"}
                                       </div>
                                     </div>
-                                    <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base dark:text-slate-100 break-words">
-                                      {title}
-                                    </h4>
+                                    <div className="flex items-center justify-between">
+                                      <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base dark:text-slate-100 break-words">
+                                        {title}
+                                      </h4>
+                                      {projectUrl && (
+                                        <a
+                                          href={projectUrl}
+                                          target="_blank"
+                                          className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words mb-1 font-semibold hover:underline"
+                                        >
+                                          Link
+                                        </a>
+                                      )}
+                                    </div>
                                     <p className="text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words">
                                       {techStack}
+                                    </p>
+
+                                    <p className="mt-3 text-xs sm:text-sm text-gray-600 dark:text-slate-400 break-words">
+                                      {description}
                                     </p>
                                   </CardContent>
                                 </Card>
@@ -342,14 +357,6 @@ const CandidateProfile = () => {
                             </p>
                           )}
                         </div>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-
-                  <TabsContent value="projects" className="space-y-4">
-                    <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
-                      <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
-                        Projects content coming soon...
                       </CardContent>
                     </Card>
                   </TabsContent>

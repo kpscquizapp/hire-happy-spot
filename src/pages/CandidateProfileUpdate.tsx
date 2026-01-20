@@ -109,14 +109,22 @@ const CandidateProfileUpdate = ({
     location: data?.candidateProfile.location || "",
     availability: data?.candidateProfile.availability || "",
     bio: data?.candidateProfile.bio || "",
-    yearsExperience: data?.candidateProfile.yearsExperience || "",
+    yearsExperience: data?.candidateProfile.yearsExperience ?? "",
     skills: skills,
     headline: data?.candidateProfile.headline || "",
     resourceType: data?.candidateProfile.resourceType || "",
     availableIn: data?.candidateProfile.availableIn || "",
     englishProficiency: data?.candidateProfile.englishProficiency || "",
-    hourlyRateMin: Number(data?.candidateProfile.hourlyRateMin) || Number(),
-    hourlyRateMax: Number(data?.candidateProfile.hourlyRateMax) || Number(),
+    hourlyRateMin:
+      data?.candidateProfile.hourlyRateMin == null ||
+      data?.candidateProfile.hourlyRateMin === ""
+        ? ""
+        : Number(data?.candidateProfile.hourlyRateMin),
+    hourlyRateMax:
+      data?.candidateProfile.hourlyRateMax == null ||
+      data?.candidateProfile.hourlyRateMax === ""
+        ? ""
+        : Number(data?.candidateProfile.hourlyRateMax),
     workExperiences: workExperiences || [],
     projects: projects || [],
     certifications: certification || [],
@@ -162,7 +170,7 @@ const CandidateProfileUpdate = ({
       case "yearsExperience":
         setFormData((prev) => ({
           ...prev,
-          [name]: Number(value),
+          [name]: value === "" ? "" : Number(value),
         }));
         return;
     }
@@ -301,6 +309,15 @@ const CandidateProfileUpdate = ({
       certifications: formData.certifications.map((cert) => ({
         ...cert,
         expiryDate: cleanDate(cert.expiryDate),
+      })),
+      projects: formData.projects.map((project) => ({
+        ...project,
+        techStack: Array.isArray(project.techStack)
+          ? project.techStack
+          : String(project.techStack ?? "")
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean),
       })),
       workExperiences: formData.workExperiences.map((exp) => ({
         ...exp,
@@ -582,7 +599,7 @@ const CandidateProfileUpdate = ({
             <div className="flex flex-wrap gap-2">
               {formData.skills.map((name, index) => (
                 <span
-                  key={name || index}
+                  key={`${name}-${index}`}
                   className="inline-flex items-center gap-1 px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm"
                 >
                   {name}
