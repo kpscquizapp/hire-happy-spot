@@ -48,6 +48,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   // Common
   const [firstName, setFirstName] = useState("");
@@ -92,7 +93,7 @@ const Login = () => {
     e.preventDefault();
 
     if (isLogin) {
-      const success = await login({ email, password, rememberMe: true });
+      const success = await login({ email, password, rememberMe });
       if (success) {
         // console.log(success , 'success')
         dispatch(setUser(success?.data));
@@ -167,23 +168,32 @@ const Login = () => {
                     <div>
                       <div className="flex items-center gap-2 mb-8">
                         <Building2 className="h-8 w-8 text-green-600 dark:text-green-500" />
-                        <span className="text-xl font-bold text-slate-900 dark:text-white">HIRION</span>
+                        <span className="text-xl font-bold text-slate-900 dark:text-white">
+                          HIRION
+                        </span>
                       </div>
                       <div className="inline-block mb-4 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-full">
                         Enterprise Grade
                       </div>
                       <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-3 leading-tight">
-                        Move beyond resumes.<br />Deploy verified talent.
+                        Move beyond resumes.
+                        <br />
+                        Deploy verified talent.
                       </h1>
                       <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
-                        Sign in to manage hiring, deployments, and bench monetization from a single, AI-enabled employer workspace.
+                        Sign in to manage hiring, deployments, and bench
+                        monetization from a single, AI-enabled employer
+                        workspace.
                       </p>
                     </div>
 
                     {/* Login Form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
                       <div className="space-y-2">
-                        <Label htmlFor="email" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        <Label
+                          htmlFor="email"
+                          className="text-sm font-semibold text-slate-700 dark:text-slate-200"
+                        >
                           Email
                         </Label>
                         <div className="relative">
@@ -201,7 +211,10 @@ const Login = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="password" className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                        <Label
+                          htmlFor="password"
+                          className="text-sm font-semibold text-slate-700 dark:text-slate-200"
+                        >
                           Password
                         </Label>
                         <div className="relative">
@@ -219,6 +232,10 @@ const Login = () => {
                             type="button"
                             className="absolute right-4 top-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
                             onClick={() => setShowPassword(!showPassword)}
+                            aria-label={
+                              showPassword ? "Hide password" : "Show password"
+                            }
+                            aria-pressed={showPassword}
                           >
                             {showPassword ? (
                               <EyeOff className="h-5 w-5" />
@@ -234,9 +251,12 @@ const Login = () => {
                           <input
                             type="checkbox"
                             className="w-4 h-4 text-blue-600 border-slate-300 dark:border-slate-600 dark:bg-slate-800 rounded focus:ring-blue-500 dark:focus:ring-blue-400"
-                            defaultChecked
+                            checked={rememberMe}
+                            onChange={(e) => setRememberMe(e.target.checked)}
                           />
-                          <span className="ml-2 text-sm text-slate-700 dark:text-slate-300">Keep me signed in</span>
+                          <span className="ml-2 text-sm text-slate-700 dark:text-slate-300">
+                            Keep me signed in
+                          </span>
                         </label>
                       </div>
 
@@ -262,7 +282,6 @@ const Login = () => {
                         <User className="h-4 w-4" />
                         Employer Login
                       </Link>
-                      
                     </div>
 
                     {/* Sign Up Link */}
@@ -291,7 +310,9 @@ const Login = () => {
                       Hire faster. Deploy smarter. Monetize your bench.
                     </h2>
                     <p className="text-slate-600 dark:text-slate-300 text-lg">
-                      Move beyond resume matching. Deploy verified talent with AI-driven scoring, bench monetization, and career growth tools built for modern staffing and enterprises.
+                      Move beyond resume matching. Deploy verified talent with
+                      AI-driven scoring, bench monetization, and career growth
+                      tools built for modern staffing and enterprises.
                     </p>
                   </div>
 
@@ -319,10 +340,13 @@ const Login = () => {
                         <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                           <Zap className="h-5 w-5 text-blue-600 dark:text-blue-300" />
                         </div>
-                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm">AI technical fit score</h3>
+                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
+                          AI technical fit score
+                        </h3>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                        Skip up to three rounds with 0-100 fit scores from coding tests and real-world assessments.
+                        Skip up to three rounds with 0-100 fit scores from
+                        coding tests and real-world assessments.
                       </p>
                     </Card>
 
@@ -332,10 +356,13 @@ const Login = () => {
                         <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
                           <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-300" />
                         </div>
-                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm">Bench-to-billable</h3>
+                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
+                          Bench-to-billable
+                        </h3>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                        List idle talent, get matched to contract demand, and turn bench into a profit center.
+                        List idle talent, get matched to contract demand, and
+                        turn bench into a profit center.
                       </p>
                     </Card>
 
@@ -345,10 +372,13 @@ const Login = () => {
                         <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                           <Target className="h-5 w-5 text-blue-600 dark:text-blue-300" />
                         </div>
-                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm">AI skill filtering</h3>
+                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
+                          AI skill filtering
+                        </h3>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                        Only validated experts surface to your recruiters across permanent, contract & project roles.
+                        Only validated experts surface to your recruiters across
+                        permanent, contract & project roles.
                       </p>
                     </Card>
 
@@ -358,10 +388,13 @@ const Login = () => {
                         <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
                           <Award className="h-5 w-5 text-purple-600 dark:text-purple-300" />
                         </div>
-                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm">Growth for top 1% talent</h3>
+                        <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
+                          Growth for top 1% talent
+                        </h3>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                        Career path visualization, paid mentorship, and continuous upskilling keep your best engaged.
+                        Career path visualization, paid mentorship, and
+                        continuous upskilling keep your best engaged.
                       </p>
                     </Card>
                   </div>
@@ -369,22 +402,33 @@ const Login = () => {
                   {/* Stats Section */}
                   <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200 dark:border-slate-700">
                     <div>
-                      <p className="text-3xl font-bold text-slate-900 dark:text-white">40%</p>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Reduction in time-to-hire</p>
+                      <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                        40%
+                      </p>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                        Reduction in time-to-hire
+                      </p>
                     </div>
                     <div>
-                      <p className="text-3xl font-bold text-slate-900 dark:text-white">3x</p>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Faster deployment from bench</p>
+                      <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                        3x
+                      </p>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                        Faster deployment from bench
+                      </p>
                     </div>
                     <div>
-                      <p className="text-3xl font-bold text-slate-900 dark:text-white">100%</p>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">Skills verified before interview</p>
+                      <p className="text-3xl font-bold text-slate-900 dark:text-white">
+                        100%
+                      </p>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                        Skills verified before interview
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 {/* Bottom tagline */}
-                
               </div>
             </div>
           ) : (
@@ -423,7 +467,10 @@ const Login = () => {
                   </Button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-5 sm:space-y-6"
+                >
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
                     {/* Common Fields */}
 
@@ -447,7 +494,10 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="lastName" className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200">
+                      <Label
+                        htmlFor="lastName"
+                        className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"
+                      >
                         Last Name
                       </Label>
                       <div className="relative">
@@ -463,7 +513,10 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="email" className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200">
+                      <Label
+                        htmlFor="email"
+                        className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"
+                      >
                         Email
                       </Label>
                       <div className="relative">
@@ -481,7 +534,10 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="password" className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200">
+                      <Label
+                        htmlFor="password"
+                        className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"
+                      >
                         Password
                       </Label>
                       <div className="relative">
@@ -497,8 +553,12 @@ const Login = () => {
                         />
                         <button
                           type="button"
-                          className="absolute right-2 sm:right-3 top-2 sm:top-3 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+                          className="absolute right-4 top-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
                           onClick={() => setShowPassword(!showPassword)}
+                          aria-label={
+                            showPassword ? "Hide password" : "Show password"
+                          }
+                          aria-pressed={showPassword}
                         >
                           {showPassword ? (
                             <EyeOff className="h-4 sm:h-5 w-4 sm:w-5" />
@@ -510,7 +570,10 @@ const Login = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="location" className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200">
+                      <Label
+                        htmlFor="location"
+                        className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"
+                      >
                         Location
                       </Label>
                       <div className="relative">
@@ -589,7 +652,10 @@ const Login = () => {
                         </div>
 
                         <div className="space-y-2 md:col-span-2">
-                          <Label htmlFor="bio" className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200">
+                          <Label
+                            htmlFor="bio"
+                            className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200"
+                          >
                             Short Bio
                           </Label>
                           <textarea
@@ -701,41 +767,43 @@ const Login = () => {
                     )}
                   </div>
 
-                <div className="sm:pt-2 md:pt-4">
-                  <Button
-                    type="submit"
-                    className="w-full h-10 sm:h-12 text-xs sm:text-sm md:text-base font-medium transition-all hover:scale-[1.02] shadow-lg dark:hover:opacity-90"
-                    disabled={
-                      isLoadingEmployer || isLoadingCandidate || isLoadingLogin
-                    }
-                  >
-                    {isLoadingEmployer ||
-                    isLoadingCandidate ||
-                    isLoadingLogin ? (
-                      <Loader className="mr-2 h-4 w-4 animate-spin" />
-                    ) : (
-                      <>{isLogin ? "Sign In" : "Create Account"}</>
-                    )}
-                  </Button>
-                </div>
+                  <div className="sm:pt-2 md:pt-4">
+                    <Button
+                      type="submit"
+                      className="w-full h-10 sm:h-12 text-xs sm:text-sm md:text-base font-medium transition-all hover:scale-[1.02] shadow-lg dark:hover:opacity-90"
+                      disabled={
+                        isLoadingEmployer ||
+                        isLoadingCandidate ||
+                        isLoadingLogin
+                      }
+                    >
+                      {isLoadingEmployer ||
+                      isLoadingCandidate ||
+                      isLoadingLogin ? (
+                        <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      ) : (
+                        <>{isLogin ? "Sign In" : "Create Account"}</>
+                      )}
+                    </Button>
+                  </div>
 
-                <div className="text-center text-xs sm:text-sm pt-2 md:pt-3">
-                  <span className="text-slate-600 dark:text-slate-400">
-                    {isLogin
-                      ? "Don't have an account? "
-                      : "Already have an account? "}
-                  </span>
-                  <button
-                    type="button"
-                    className="text-primary dark:text-blue-400 hover:text-primary/80 dark:hover:text-blue-300 font-semibold transition-colors"
-                    onClick={() => setIsLogin(!isLogin)}
-                  >
-                    {isLogin ? "Sign up" : "Sign in"}
-                  </button>
-                </div>
-              </form>
-            </CardContent>
-          </Card>
+                  <div className="text-center text-xs sm:text-sm pt-2 md:pt-3">
+                    <span className="text-slate-600 dark:text-slate-400">
+                      {isLogin
+                        ? "Don't have an account? "
+                        : "Already have an account? "}
+                    </span>
+                    <button
+                      type="button"
+                      className="text-primary dark:text-blue-400 hover:text-primary/80 dark:hover:text-blue-300 font-semibold transition-colors"
+                      onClick={() => setIsLogin(!isLogin)}
+                    >
+                      {isLogin ? "Sign up" : "Sign in"}
+                    </button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
           )}
         </div>
       </main>
