@@ -89,14 +89,29 @@ const Login = () => {
     e.preventDefault();
 
     if (isLogin) {
-      const result = await login({ email, password });
-      if ("data" in result) {
-        // console.log(success , 'success')
-        dispatch(setUser(result.data));
-        toast.success("Welcome back!");
-      } else {
-        toast.error("Invalid email or password");
+      try {
+        const result = await login({ email, password });
+        if ("data" in result) {
+          dispatch(setUser(result.data));
+          toast.success("Welcome back!");
+        } else {
+          toast.error("Invalid email or password");
+        }
+      } catch {
+        toast.error("Connection error. Please try again.");
       }
+      return;
+    }
+
+    const parsedSkills = skills.trim()
+      ? skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+
+    if (role === "candidate" && parsedSkills.length === 0) {
+      toast.error("Please enter at least one skill");
       return;
     }
 
@@ -110,12 +125,7 @@ const Login = () => {
             lastName,
             location,
             availability,
-            skills: skills.trim()
-              ? skills
-                  .split(",")
-                  .map((s) => s.trim())
-                  .filter(Boolean)
-              : [],
+            skills: parsedSkills,
             bio,
             yearsExperience,
           }
@@ -133,18 +143,18 @@ const Login = () => {
           };
 
     if (role === "candidate") {
-      const success = await createCandidate(payload);
-      if ("data" in success) {
-        dispatch(setUser(success.data));
+      const result = await createCandidate(payload);
+      if ("data" in result) {
+        dispatch(setUser(result.data));
         toast.success("Account created successfully!");
         navigate("/profile");
       } else {
         toast.error("Signup failed");
       }
     } else {
-      const success = await createEmployer(payload);
-      if ("data" in success) {
-        dispatch(setUser(success.data));
+      const result = await createEmployer(payload);
+      if ("data" in result) {
+        dispatch(setUser(result.data));
         toast.success("Account created successfully!");
         navigate("/employer-dashboard");
       } else {
@@ -624,6 +634,7 @@ const Login = () => {
                               placeholder="5"
                               type="number"
                               min="0"
+                              max="70"
                               value={yearsExperience}
                               onChange={(e) =>
                                 setYearsExperience(Number(e.target.value))
@@ -745,6 +756,7 @@ const Login = () => {
                           <div className="relative">
                             <Globe className="absolute left-3 top-3 h-4 sm:h-5 w-4 sm:w-5 text-slate-400 dark:text-slate-500" />
                             <Input
+                              type="url"
                               id="website"
                               className="pl-10 sm:pl-11 h-10 sm:h-12 text-xs sm:text-base dark:bg-slate-800 dark:text-white dark:border-slate-700"
                               placeholder="https://example.com"
