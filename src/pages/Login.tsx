@@ -163,8 +163,8 @@ const Login = () => {
                 {isLogin
                   ? "Sign in to continue your journey"
                   : role === "candidate"
-                  ? "Join HIRION to find your dream job"
-                  : "Post jobs and find top talent"}
+                    ? "Join HIRION to find your dream job"
+                    : "Post jobs and find top talent"}
               </CardDescription>
             </CardHeader>
 
