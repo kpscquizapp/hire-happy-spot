@@ -197,13 +197,6 @@ const EmployerLogin = () => {
                       Request employer access
                     </Button>
                   </form>
-
-                  <p className="text-center text-sm text-muted-foreground">
-                    Secure SSO available for enterprise accounts.{" "}
-                    <Link to="/contact" className="text-primary hover:underline font-medium">
-                      Talk to sales
-                    </Link>
-                  </p>
                 </div>
               </CardContent>
             </Card>
