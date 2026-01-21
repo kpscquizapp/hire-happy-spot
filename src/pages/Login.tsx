@@ -94,8 +94,6 @@ const Login = () => {
         // console.log(success , 'success')
         dispatch(setUser(result.data));
         toast.success("Welcome back!");
-        const userRole = result.data?.role;
-        navigate(userRole === "candidate" ? "/jobs" : "/employer-dashboard");
       } else {
         toast.error("Invalid email or password");
       }
@@ -112,7 +110,12 @@ const Login = () => {
             lastName,
             location,
             availability,
-            skills: skills.split(",").map((s) => s.trim()),
+            skills: skills.trim()
+              ? skills
+                  .split(",")
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+              : [],
             bio,
             yearsExperience,
           }
@@ -620,6 +623,7 @@ const Login = () => {
                               className="pl-10 sm:pl-11 h-10 sm:h-12 text-xs sm:text-base dark:bg-slate-800 dark:text-white dark:border-slate-700"
                               placeholder="5"
                               type="number"
+                              min="0"
                               value={yearsExperience}
                               onChange={(e) =>
                                 setYearsExperience(Number(e.target.value))
