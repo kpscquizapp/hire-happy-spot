@@ -63,10 +63,10 @@ const TalentMarketplace = () => {
               </Button>
               <Button 
                 variant="outline" 
-                onClick={() => navigate('/register-talent')}
+                onClick={() => navigate('/employer-login')}
                 className="border-border text-foreground px-6 py-5 rounded-lg hover:bg-muted"
               >
-                Register as Talent
+                List Your Talent
               </Button>
             </div>
           </div>

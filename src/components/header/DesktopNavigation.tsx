@@ -109,7 +109,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           items: [
             {
               label: "List Your Talent",
-              href: "/list-bench-talent",
+              href: "/employer-login",
               description: "Add bench resources",
             },
             {
