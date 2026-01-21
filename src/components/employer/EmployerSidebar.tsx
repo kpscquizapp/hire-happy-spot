@@ -28,6 +28,7 @@ interface EmployerSidebarProps {
 const menuItems = [
   { title: 'Dashboard', icon: LayoutDashboard, path: '/employer-dashboard/dashboard', isAI: false },
   { title: 'Post Bench Resource', icon: UserPlus, path: '/employer-dashboard/post-bench-resource', isAI: false },
+  { title: 'Active Resources', icon: Users, path: '/employer-dashboard/active-resources', isAI: false },
   { title: 'Visibility Settings', icon: Eye, path: '/employer-dashboard/visibility-settings', isAI: false },
 ];
 

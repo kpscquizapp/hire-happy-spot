@@ -40,6 +40,7 @@ import HireInterns from "./pages/employer/HireInterns";
 import ContractHiring from "./pages/employer/ContractHiring";
 import TalentMarketplace from "./pages/employer/TalentMarketplace";
 import PostBenchResource from "./pages/employer/PostBenchResource";
+import ActiveResources from "./pages/employer/ActiveResources";
 import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
 import JobBoard from "./pages/employer/JobBoard";
@@ -139,6 +140,7 @@ const App = () => {
                       <Route path="contract-hiring" element={<ContractHiring />} />
                       <Route path="talent-marketplace" element={<TalentMarketplace />} />
                       <Route path="post-bench-resource" element={<PostBenchResource />} />
+                      <Route path="active-resources" element={<ActiveResources />} />
                       <Route path="visibility-settings" element={<ProfileVisibility />} />
                       <Route path="ai-screening" element={<AIScreening />} />
                       <Route path="job/:jobId" element={<JobDetailsPage />} />
