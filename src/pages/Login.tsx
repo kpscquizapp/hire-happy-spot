@@ -267,7 +267,10 @@ const Login = () => {
                         disabled={isLoadingLogin}
                       >
                         {isLoadingLogin ? (
-                          <Loader className="mr-2 h-4 w-4 animate-spin" />
+                          <>
+                            <Loader className="mr-2 h-4 w-4 animate-spin" />
+                            Logging in...{" "}
+                          </>
                         ) : (
                           <>Login</>
                         )}
@@ -779,7 +782,10 @@ const Login = () => {
                       }
                     >
                       {isLoadingEmployer || isLoadingCandidate ? (
-                        <Loader className="mr-2 h-4 w-4 animate-spin" />
+                        <>
+                          <Loader className="mr-2 h-4 w-4 animate-spin" />
+                          Creating Account...
+                        </>
                       ) : (
                         <>Create Account</>
                       )}
