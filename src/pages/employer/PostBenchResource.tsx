@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { 
-  Building2, 
   Upload,
   FileText,
   CheckCircle2,
@@ -24,7 +23,9 @@ import {
   User,
   Calendar,
   AlertCircle,
-  ArrowRight
+  ArrowRight,
+  DollarSign,
+  Building2
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -40,16 +41,16 @@ const PostBenchResource = () => {
   ];
 
   const [formData, setFormData] = useState({
-    resourceName: "",
+    resourceName: "John D.",
     currentRole: "",
     totalExperience: "",
     employeeId: "",
-    skills: [] as string[],
+    skills: ["Java Spring Boot", "Microservices", "Kubernetes", "PostgreSQL"] as string[],
     professionalSummary: "",
     hourlyRate: "",
     currency: "USD - US Dollar",
     availableFrom: "",
-    minimumDuration: "",
+    minimumDuration: "1 Month",
     locationPreferences: {
       remote: true,
       hybrid: true,
@@ -97,318 +98,324 @@ const PostBenchResource = () => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Post Bench Resource</h1>
-          <p className="text-muted-foreground">List your available talent for contract opportunities</p>
-        </div>
-        <Button variant="outline" onClick={() => navigate("/employer-dashboard")}>
-          Dashboard
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
-        {/* Left Sidebar - Steps */}
-        <div className="space-y-6">
-          {/* Progress Steps */}
-          <Card className="border-border/50 rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                {steps.map((step, index) => (
-                  <div key={step.number} className="flex items-start gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 ${
-                      step.completed 
-                        ? "bg-primary text-primary-foreground" 
-                        : step.current 
-                          ? "bg-primary/20 text-primary border-2 border-primary" 
-                          : "bg-muted text-muted-foreground"
-                    }`}>
-                      {step.completed ? <CheckCircle2 className="h-4 w-4" /> : step.number}
-                    </div>
-                    <div>
-                      <p className={`text-sm font-medium ${step.current ? "text-primary" : "text-foreground"}`}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
+      <div className="max-w-7xl mx-auto p-6 space-y-6 animate-fade-in">
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+          {/* Left Sidebar */}
+          <div className="space-y-6">
+            {/* Title Card */}
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white">
+              <CardContent className="p-6">
+                <h1 className="text-xl font-bold text-slate-800 mb-6">Post Bench Resource</h1>
+                <div className="space-y-4">
+                  {steps.map((step, index) => (
+                    <div key={step.number} className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 transition-all ${
+                        step.completed 
+                          ? "bg-blue-500 text-white shadow-md shadow-blue-500/30" 
+                          : step.current 
+                            ? "bg-blue-100 text-blue-600 ring-2 ring-blue-500 ring-offset-2" 
+                            : "bg-slate-100 text-slate-400"
+                      }`}>
+                        {step.completed ? <CheckCircle2 className="h-4 w-4" /> : step.number}
+                      </div>
+                      <span className={`text-sm font-medium ${
+                        step.current ? "text-blue-600" : step.completed ? "text-slate-700" : "text-slate-400"
+                      }`}>
                         {step.title}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Quick Tip */}
-          <Card className="border-primary/30 bg-primary/5 rounded-xl overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-start gap-3">
-                <Lightbulb className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-semibold text-foreground mb-2">Quick Tip</p>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    Bench resources with verified skills and immediate availability get 3x more contract offers.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Main Form */}
-        <div className="space-y-6">
-          {/* Policy Alert */}
-          <Card className="border-orange-200 bg-orange-50 dark:bg-orange-950/30 rounded-xl overflow-hidden">
-            <CardContent className="p-4 flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-orange-600 shrink-0 mt-0.5" />
-              <p className="text-sm text-orange-800 dark:text-orange-200">
-                <strong>Bench Policy:</strong> Resources listed here must be on your company payroll. Profiles can be anonymized until an interview request is accepted.
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Resource Basic Info */}
-          <Card className="border-border/50 rounded-xl overflow-hidden shadow-sm">
-            <CardHeader className="pb-4 border-b border-border/50">
-              <div className="flex items-center gap-2">
-                <User className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle className="text-lg font-semibold">Resource Basic Info</CardTitle>
-                  <p className="text-sm text-muted-foreground">Details about the professional you want to deploy</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Resource Name (Internal)</Label>
-                  <Input
-                    placeholder="John D."
-                    value={formData.resourceName}
-                    onChange={(e) => setFormData({ ...formData, resourceName: e.target.value })}
-                    className="h-11 rounded-lg"
-                  />
-                  <p className="text-xs text-muted-foreground">Will be shown as "John D." publicly</p>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Current Role / Designation</Label>
-                  <Input
-                    placeholder="e.g. Senior Java Developer"
-                    value={formData.currentRole}
-                    onChange={(e) => setFormData({ ...formData, currentRole: e.target.value })}
-                    className="h-11 rounded-lg"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Total Experience (Years)</Label>
-                  <Select value={formData.totalExperience} onValueChange={(v) => setFormData({ ...formData, totalExperience: v })}>
-                    <SelectTrigger className="h-11 rounded-lg">
-                      <SelectValue placeholder="Select..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {["0-1", "1-3", "3-5", "5-8", "8-10", "10+"].map((exp) => (
-                        <SelectItem key={exp} value={exp}>{exp} years</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Employee ID / Ref Code</Label>
-                  <Input
-                    placeholder="Optional internal tracking code"
-                    value={formData.employeeId}
-                    onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
-                    className="h-11 rounded-lg"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Technical Skills *</Label>
-                <Input
-                  placeholder="Type skill and press enter..."
-                  value={skillInput}
-                  onChange={(e) => setSkillInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="h-11 rounded-lg"
-                />
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {formData.skills.map((skill) => (
-                    <Badge 
-                      key={skill} 
-                      variant="secondary" 
-                      className="px-3 py-1.5 rounded-full text-sm bg-primary/10 text-primary hover:bg-primary/20"
-                    >
-                      {skill}
-                      <X 
-                        className="h-3 w-3 ml-2 cursor-pointer hover:text-destructive" 
-                        onClick={() => removeSkill(skill)} 
-                      />
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Professional Summary</Label>
-                <Textarea
-                  placeholder="Brief summary of their expertise and key projects..."
-                  value={formData.professionalSummary}
-                  onChange={(e) => setFormData({ ...formData, professionalSummary: e.target.value })}
-                  rows={4}
-                  className="rounded-lg resize-none"
-                />
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Availability & Contract Terms */}
-          <Card className="border-border/50 rounded-xl overflow-hidden shadow-sm">
-            <CardHeader className="pb-4 border-b border-border/50">
-              <div className="flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-primary" />
-                <div>
-                  <CardTitle className="text-lg font-semibold">Availability & Contract Terms</CardTitle>
-                  <p className="text-sm text-muted-foreground">Define the commercials and deployment conditions</p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Hourly Rate (Client Billable)</Label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-3 text-muted-foreground">$</span>
-                    <Input
-                      placeholder="e.g. 45"
-                      value={formData.hourlyRate}
-                      onChange={(e) => setFormData({ ...formData, hourlyRate: e.target.value })}
-                      className="pl-8 h-11 rounded-lg"
-                    />
-                    <span className="absolute right-3 top-3 text-muted-foreground text-sm">/ hr</span>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Currency</Label>
-                  <Select value={formData.currency} onValueChange={(v) => setFormData({ ...formData, currency: v })}>
-                    <SelectTrigger className="h-11 rounded-lg">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {["USD - US Dollar", "EUR - Euro", "GBP - British Pound", "INR - Indian Rupee"].map((curr) => (
-                        <SelectItem key={curr} value={curr}>{curr}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Available From</Label>
-                  <div className="relative">
-                    <Calendar className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                    <Input
-                      type="date"
-                      value={formData.availableFrom}
-                      onChange={(e) => setFormData({ ...formData, availableFrom: e.target.value })}
-                      className="pl-10 h-11 rounded-lg"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium">Minimum Contract Duration</Label>
-                  <Select value={formData.minimumDuration} onValueChange={(v) => setFormData({ ...formData, minimumDuration: v })}>
-                    <SelectTrigger className="h-11 rounded-lg">
-                      <SelectValue placeholder="Select duration" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {["1 Month", "3 Months", "6 Months", "12 Months"].map((dur) => (
-                        <SelectItem key={dur} value={dur}>{dur}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Deployment Location Preference</Label>
-                <div className="flex gap-4">
-                  {[
-                    { id: "remote", label: "Remote" },
-                    { id: "hybrid", label: "Hybrid" },
-                    { id: "onSite", label: "On-site" }
-                  ].map((loc) => (
-                    <div key={loc.id} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={loc.id}
-                        checked={formData.locationPreferences[loc.id as keyof typeof formData.locationPreferences]}
-                        onCheckedChange={(checked) => setFormData({
-                          ...formData,
-                          locationPreferences: { ...formData.locationPreferences, [loc.id]: checked }
-                        })}
-                      />
-                      <label htmlFor={loc.id} className="text-sm cursor-pointer">{loc.label}</label>
+                      </span>
                     </div>
                   ))}
                 </div>
-              </div>
+              </CardContent>
+            </Card>
 
-              <div className="p-4 bg-primary/5 rounded-xl border border-primary/20 flex items-start gap-3">
-                <Checkbox 
-                  id="non-solicitation"
-                  checked={formData.requireNonSolicitation}
-                  onCheckedChange={(checked) => setFormData({ ...formData, requireNonSolicitation: checked as boolean })}
-                />
-                <div>
-                  <label htmlFor="non-solicitation" className="text-sm font-semibold text-foreground cursor-pointer">
-                    Require Non-Solicitation Agreement
-                  </label>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Client cannot hire this resource permanently for 12 months.
-                  </p>
+            {/* Quick Tip */}
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
+                    <Lightbulb className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold mb-2">Quick Tip</p>
+                    <p className="text-xs text-blue-100 leading-relaxed">
+                      Bench resources with verified skills and immediate availability get 3x more contract offers.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
 
-          {/* Documents */}
-          <Card className="border-border/50 rounded-xl overflow-hidden shadow-sm">
-            <CardHeader className="pb-4 border-b border-border/50">
-              <div className="flex items-center gap-2">
-                <FileText className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg font-semibold">Documents</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6">
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Upload Anonymized Resume (PDF)</Label>
-                <div className="border-2 border-dashed border-border rounded-xl p-8 text-center hover:border-primary transition-colors cursor-pointer">
-                  <Upload className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-                  <p className="text-sm font-medium text-foreground">Click to upload resume</p>
-                  <p className="text-xs text-muted-foreground mt-1">Max file size 5MB. Please remove contact details.</p>
+          {/* Main Form */}
+          <div className="space-y-6">
+            {/* Policy Alert */}
+            <Card className="border-0 shadow-sm rounded-2xl overflow-hidden bg-gradient-to-r from-orange-50 to-amber-50">
+              <CardContent className="p-4 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
+                  <AlertCircle className="h-4 w-4 text-orange-600" />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+                <p className="text-sm text-orange-800">
+                  <strong>Bench Policy:</strong> Resources listed here must be on your company payroll. Profiles can be anonymized until an interview request is accepted.
+                </p>
+              </CardContent>
+            </Card>
 
-          {/* Action Buttons */}
-          <div className="flex justify-end gap-4 pt-4">
-            <Button 
-              variant="outline" 
-              onClick={handleSaveDraft}
-              className="px-6 h-12 rounded-xl"
-            >
-              Save Draft
-            </Button>
-            <Button 
-              onClick={handleProceed}
-              className="px-8 h-12 rounded-xl bg-primary hover:bg-primary/90"
-            >
-              Proceed to Review
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            {/* Resource Basic Info */}
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white">
+              <CardHeader className="pb-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-blue-50/50">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <User className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-semibold text-slate-800">Resource Basic Info</CardTitle>
+                    <p className="text-sm text-slate-500">Details about the professional you want to deploy</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-5 p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-slate-700">Resource Name (Internal)</Label>
+                    <Input
+                      placeholder="John D."
+                      value={formData.resourceName}
+                      onChange={(e) => setFormData({ ...formData, resourceName: e.target.value })}
+                      className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    />
+                    <p className="text-xs text-slate-400">Will be shown as "John D." publicly</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-slate-700">Current Role / Designation</Label>
+                    <Input
+                      placeholder="e.g. Senior Java Developer"
+                      value={formData.currentRole}
+                      onChange={(e) => setFormData({ ...formData, currentRole: e.target.value })}
+                      className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-slate-700">Total Experience (Years)</Label>
+                    <Select value={formData.totalExperience} onValueChange={(v) => setFormData({ ...formData, totalExperience: v })}>
+                      <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["0-1", "1-3", "3-5", "5-8", "8-10", "10+"].map((exp) => (
+                          <SelectItem key={exp} value={exp}>{exp} years</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-slate-700">Employee ID / Ref Code</Label>
+                    <Input
+                      placeholder="Optional internal tracking code"
+                      value={formData.employeeId}
+                      onChange={(e) => setFormData({ ...formData, employeeId: e.target.value })}
+                      className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-slate-700">Technical Skills *</Label>
+                  <Input
+                    placeholder="Type skill and press enter..."
+                    value={skillInput}
+                    onChange={(e) => setSkillInput(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                  />
+                  <div className="flex flex-wrap gap-2 mt-3">
+                    {formData.skills.map((skill) => (
+                      <Badge 
+                        key={skill} 
+                        className="px-4 py-2 rounded-full text-sm bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 cursor-pointer shadow-sm shadow-blue-500/30 transition-all"
+                      >
+                        {skill}
+                        <X 
+                          className="h-3 w-3 ml-2 cursor-pointer hover:scale-110 transition-transform" 
+                          onClick={() => removeSkill(skill)} 
+                        />
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-slate-700">Professional Summary</Label>
+                  <Textarea
+                    placeholder="Brief summary of their expertise and key projects..."
+                    value={formData.professionalSummary}
+                    onChange={(e) => setFormData({ ...formData, professionalSummary: e.target.value })}
+                    rows={4}
+                    className="rounded-xl resize-none border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Availability & Contract Terms */}
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white">
+              <CardHeader className="pb-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-emerald-50/50">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                    <DollarSign className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg font-semibold text-slate-800">Availability & Contract Terms</CardTitle>
+                    <p className="text-sm text-slate-500">Define the commercials and deployment conditions</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-5 p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-slate-700">Hourly Rate (Client Billable)</Label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">$</span>
+                      <Input
+                        placeholder="e.g. 45"
+                        value={formData.hourlyRate}
+                        onChange={(e) => setFormData({ ...formData, hourlyRate: e.target.value })}
+                        className="pl-9 pr-14 h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      />
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">/ hr</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-slate-700">Currency</Label>
+                    <Select value={formData.currency} onValueChange={(v) => setFormData({ ...formData, currency: v })}>
+                      <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["USD - US Dollar", "EUR - Euro", "GBP - British Pound", "INR - Indian Rupee"].map((curr) => (
+                          <SelectItem key={curr} value={curr}>{curr}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-slate-700">Available From</Label>
+                    <div className="relative">
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                      <Input
+                        type="date"
+                        placeholder="dd-mm-yyyy"
+                        value={formData.availableFrom}
+                        onChange={(e) => setFormData({ ...formData, availableFrom: e.target.value })}
+                        className="pl-12 h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-sm font-medium text-slate-700">Minimum Contract Duration</Label>
+                    <Select value={formData.minimumDuration} onValueChange={(v) => setFormData({ ...formData, minimumDuration: v })}>
+                      <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                        <SelectValue placeholder="Select duration" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {["1 Month", "3 Months", "6 Months", "12 Months"].map((dur) => (
+                          <SelectItem key={dur} value={dur}>{dur}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium text-slate-700">Deployment Location Preference</Label>
+                  <div className="flex flex-wrap gap-4">
+                    {[
+                      { id: "remote", label: "Remote", checked: formData.locationPreferences.remote },
+                      { id: "hybrid", label: "Hybrid", checked: formData.locationPreferences.hybrid },
+                      { id: "onSite", label: "On-site", checked: formData.locationPreferences.onSite }
+                    ].map((loc) => (
+                      <div key={loc.id} className="flex items-center space-x-2 bg-slate-50 px-4 py-2.5 rounded-xl">
+                        <Checkbox 
+                          id={loc.id}
+                          checked={loc.checked}
+                          onCheckedChange={(checked) => setFormData({
+                            ...formData,
+                            locationPreferences: { ...formData.locationPreferences, [loc.id]: checked }
+                          })}
+                          className="border-slate-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                        />
+                        <label htmlFor={loc.id} className="text-sm cursor-pointer text-slate-600 font-medium">{loc.label}</label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 flex items-start gap-4">
+                  <Checkbox 
+                    id="non-solicitation"
+                    checked={formData.requireNonSolicitation}
+                    onCheckedChange={(checked) => setFormData({ ...formData, requireNonSolicitation: checked as boolean })}
+                    className="mt-0.5 border-blue-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                  />
+                  <div>
+                    <label htmlFor="non-solicitation" className="text-sm font-semibold text-slate-800 cursor-pointer">
+                      Require Non-Solicitation Agreement
+                    </label>
+                    <p className="text-xs text-slate-500 mt-1">
+                      Client cannot hire this resource permanently for 12 months.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Documents */}
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white">
+              <CardHeader className="pb-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-purple-50/50">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
+                    <FileText className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <CardTitle className="text-lg font-semibold text-slate-800">Documents</CardTitle>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 p-6">
+                <div className="space-y-2">
+                  <Label className="text-sm font-medium text-slate-700">Upload Anonymized Resume (PDF)</Label>
+                  <div className="border-2 border-dashed border-slate-200 rounded-2xl p-10 text-center hover:border-blue-400 hover:bg-blue-50/30 transition-all cursor-pointer group">
+                    <div className="w-14 h-14 rounded-2xl bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center mx-auto mb-4 transition-colors">
+                      <Upload className="h-6 w-6 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                    </div>
+                    <p className="text-sm font-medium text-slate-600 group-hover:text-blue-600 transition-colors">Click to upload resume</p>
+                    <p className="text-xs text-slate-400 mt-2">Max file size 5MB. Please remove contact details.</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Action Buttons */}
+            <div className="flex justify-end gap-4 pt-2 pb-8">
+              <Button 
+                variant="outline" 
+                onClick={handleSaveDraft}
+                className="px-8 h-12 rounded-xl border-slate-200 hover:bg-slate-50 text-slate-600 font-medium"
+              >
+                Save Draft
+              </Button>
+              <Button 
+                onClick={handleProceed}
+                className="px-10 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium shadow-lg shadow-blue-500/30 transition-all hover:shadow-xl hover:shadow-blue-500/40"
+              >
+                Proceed to Review
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

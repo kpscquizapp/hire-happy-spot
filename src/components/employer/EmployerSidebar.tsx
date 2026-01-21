@@ -26,14 +26,14 @@ interface EmployerSidebarProps {
 }
 
 const menuItems = [
-  { title: 'Dashboard', icon: LayoutDashboard, path: '/employer-dashboard', isAI: false },
+  { title: 'Post Bench Resource', icon: UserPlus, path: '/employer-dashboard', isAI: false },
+  { title: 'Dashboard', icon: LayoutDashboard, path: '/employer-dashboard/dashboard', isAI: false },
   { title: 'Job Board', icon: Briefcase, path: '/employer-dashboard/job-board', isAI: false },
   { title: 'Create Job', icon: FileText, path: '/employer-dashboard/create-job', isAI: false },
   { title: 'Contract Hiring', icon: Clock, path: '/employer-dashboard/contract-hiring', isAI: false },
   { title: 'Talent Marketplace', icon: Globe, path: '/employer-dashboard/talent-marketplace', isAI: false },
-  { title: 'Post Bench Resource', icon: UserPlus, path: '/employer-dashboard/post-bench-resource', isAI: false },
   { title: 'AI Screening', icon: Bot, path: '/employer-dashboard/ai-screening', isAI: true },
-  { title: 'Visibility Settings', icon: Eye, path: '/profile-visibility', isAI: false },
+  { title: 'Visibility Settings', icon: Eye, path: '/employer-dashboard/visibility-settings', isAI: false },
 ];
 
 const EmployerSidebar = ({ collapsed, onToggle }: EmployerSidebarProps) => {
