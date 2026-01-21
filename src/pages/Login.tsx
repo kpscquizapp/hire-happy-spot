@@ -48,7 +48,6 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
 
   // Common
   const [firstName, setFirstName] = useState("");
@@ -80,20 +79,17 @@ const Login = () => {
   const userDetails = useSelector((state: RootState) => state.user.userDetails);
 
   useEffect(() => {
-    if (userDetails) {
-      if (userDetails.role === "candidate") {
-        navigate("/jobs");
-      } else {
-        navigate("/employer-dashboard");
-      }
-    }
-  }, [userDetails, navigate]);
+    if (!userDetails || !isLogin) return;
+    navigate(
+      userDetails.role === "candidate" ? "/jobs" : "/employer-dashboard",
+    );
+  }, [userDetails, isLogin, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isLogin) {
-      const result = await login({ email, password, rememberMe });
+      const result = await login({ email, password });
       if ("data" in result) {
         // console.log(success , 'success')
         dispatch(setUser(result.data));
@@ -162,7 +158,7 @@ const Login = () => {
         <div className="container mx-auto w-full px-2 sm:px-4 md:max-w-7xl">
           {isLogin ? (
             // Login Layout - Two Column
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-stretch mt-8">
               {/* Left Column - Login Form */}
               <Card className="shadow-xl border-0 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border dark:border-slate-800">
                 <CardContent className="p-8 sm:p-10 flex flex-col justify-center">
@@ -178,15 +174,13 @@ const Login = () => {
                       <div className="inline-block mb-4 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-full">
                         Enterprise Grade
                       </div>
-                      <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-3 leading-tight">
-                        Move beyond resumes.
-                        <br />
-                        Deploy verified talent.
+                      <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white mb-3 leading-tight">
+                        Your next career opportunity awaits.
                       </h1>
-                      <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
-                        Sign in to manage hiring, deployments, and bench
-                        monetization from a single, AI-enabled employer
-                        workspace.
+                      <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Sign in to access AI-powered job matching, showcase your
+                        verified skills, and connect with top employers seeking
+                        talent like you.
                       </p>
                     </div>
 
@@ -233,7 +227,7 @@ const Login = () => {
                           />
                           <button
                             type="button"
-                            className="absolute right-4 top-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+                            className="absolute right-4 top-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors min-h-0 min-w-0"
                             onClick={() => setShowPassword(!showPassword)}
                             aria-label={
                               showPassword ? "Hide password" : "Show password"
@@ -250,17 +244,18 @@ const Login = () => {
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <label className="flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            className="w-4 h-4 text-blue-600 border-slate-300 dark:border-slate-600 dark:bg-slate-800 rounded focus:ring-blue-500 dark:focus:ring-blue-400"
-                            checked={rememberMe}
-                            onChange={(e) => setRememberMe(e.target.checked)}
-                          />
-                          <span className="ml-2 text-sm text-slate-700 dark:text-slate-300">
-                            Keep me signed in
-                          </span>
-                        </label>
+                        <Link
+                          to="/employer-login"
+                          className="text-sm text-primary hover:text-primary/80 font-medium"
+                        >
+                          Employer Login →
+                        </Link>
+                        <Link
+                          to="/forgot-password"
+                          className="text-sm text-primary hover:text-primary/80 font-medium"
+                        >
+                          Forgot password?
+                        </Link>
                       </div>
 
                       <Button
@@ -279,19 +274,8 @@ const Login = () => {
                       </Button>
                     </form>
 
-                    {/* Footer Links */}
-                    <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-slate-700">
-                      <Link
-                        to="/employer-login"
-                        className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 text-sm font-medium flex items-center gap-2 transition-colors"
-                      >
-                        <User className="h-4 w-4" />
-                        Employer Login
-                      </Link>
-                    </div>
-
                     {/* Sign Up Link */}
-                    <div className="text-center text-sm pt-4">
+                    <div className="text-center text-sm pt-2 sm:pt-3">
                       <span className="text-slate-600 dark:text-slate-400">
                         Don't have an account?{" "}
                       </span>
@@ -313,12 +297,12 @@ const Login = () => {
                   {/* Main Headline */}
                   <div>
                     <h2 className="text-4xl font-bold text-slate-900 dark:text-white mb-3 leading-tight">
-                      Hire faster. Deploy smarter. Monetize your bench.
+                      Get discovered. Get hired. Grow your career.
                     </h2>
                     <p className="text-slate-600 dark:text-slate-300 text-lg">
-                      Move beyond resume matching. Deploy verified talent with
-                      AI-driven scoring, bench monetization, and career growth
-                      tools built for modern staffing and enterprises.
+                      Stand out with AI-verified skills, get matched to
+                      opportunities that fit, and access career growth tools
+                      designed for top talent.
                     </p>
                   </div>
 
@@ -330,11 +314,11 @@ const Login = () => {
                     </div>
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-sm font-semibold">
                       <CheckCircle2 className="h-4 w-4" />
-                      Bench-to-billable marketplace
+                      Smart job matching
                     </div>
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-sm font-semibold">
                       <Target className="h-4 w-4" />
-                      Career growth ecosystem
+                      Career growth tools
                     </div>
                   </div>
 
@@ -342,7 +326,7 @@ const Login = () => {
                   <div className="grid grid-cols-2 gap-4 pt-4">
                     {/* Feature 1 */}
                     <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                      <div className="flex items-start gap-3 mb-3">
+                      <div className="flex items-center gap-3 mb-3">
                         <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                           <Zap className="h-5 w-5 text-blue-600 dark:text-blue-300" />
                         </div>
@@ -351,56 +335,58 @@ const Login = () => {
                         </h3>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                        Skip up to three rounds with 0-100 fit scores from
-                        coding tests and real-world assessments.
+                        Showcase your 0-100 skill score from coding tests and
+                        real-world assessments to stand out to employers.
                       </p>
                     </Card>
 
                     {/* Feature 2 */}
                     <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                      <div className="flex items-start gap-3 mb-3">
+                      <div className="flex items-center gap-3 mb-3">
                         <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
                           <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-300" />
                         </div>
                         <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
-                          Bench-to-billable
+                          Smart job matching
                         </h3>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                        List idle talent, get matched to contract demand, and
-                        turn bench into a profit center.
+                        Get matched to roles that fit your skills, experience
+                        level, and career goals across permanent, contract &
+                        freelance positions.
                       </p>
                     </Card>
 
                     {/* Feature 3 */}
                     <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                      <div className="flex items-start gap-3 mb-3">
+                      <div className="flex items-center gap-3 mb-3">
                         <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
                           <Target className="h-5 w-5 text-blue-600 dark:text-blue-300" />
                         </div>
                         <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
-                          AI skill filtering
+                          Career growth tools
                         </h3>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                        Only validated experts surface to your recruiters across
-                        permanent, contract & project roles.
+                        Access career path visualization, paid mentorship
+                        opportunities, and continuous upskilling to advance your
+                        career.
                       </p>
                     </Card>
 
                     {/* Feature 4 */}
                     <Card className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow">
-                      <div className="flex items-start gap-3 mb-3">
+                      <div className="flex items-center gap-3 mb-3">
                         <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg">
                           <Award className="h-5 w-5 text-purple-600 dark:text-purple-300" />
                         </div>
                         <h3 className="font-semibold text-slate-900 dark:text-white text-sm">
-                          Growth for top 1% talent
+                          Verified skills badge
                         </h3>
                       </div>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-                        Career path visualization, paid mentorship, and
-                        continuous upskilling keep your best engaged.
+                        Earn validation through assessments and let your proven
+                        expertise speak louder than any resume.
                       </p>
                     </Card>
                   </div>
@@ -409,10 +395,10 @@ const Login = () => {
                   <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200 dark:border-slate-700">
                     <div>
                       <p className="text-3xl font-bold text-slate-900 dark:text-white">
-                        40%
+                        50%
                       </p>
                       <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                        Reduction in time-to-hire
+                        Faster interview callbacks
                       </p>
                     </div>
                     <div>
@@ -420,7 +406,7 @@ const Login = () => {
                         3x
                       </p>
                       <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                        Faster deployment from bench
+                        More relevant job matches
                       </p>
                     </div>
                     <div>
@@ -428,7 +414,7 @@ const Login = () => {
                         100%
                       </p>
                       <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
-                        Skills verified before interview
+                        Skills verified, credibility proven
                       </p>
                     </div>
                   </div>
@@ -439,7 +425,7 @@ const Login = () => {
             </div>
           ) : (
             // Sign Up Layout - Keep original with dark mode & mobile responsiveness
-            <Card className="shadow-2xl border-0 overflow-hidden bg-white dark:bg-slate-900">
+            <Card className="shadow-2xl border-0 overflow-hidden bg-white dark:bg-slate-900 my-8">
               <CardHeader className="space-y-2 text-center bg-gradient-to-br from-primary to-primary/80 dark:from-primary/80 dark:to-primary/60 text-primary-foreground p-6 sm:p-8">
                 <CardTitle className="text-xl sm:text-2xl md:text-3xl font-bold">
                   Create Your Account
@@ -561,7 +547,7 @@ const Login = () => {
                         />
                         <button
                           type="button"
-                          className="absolute right-4 top-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+                          className="absolute right-4 top-3.5 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors min-h-0 min-w-0"
                           onClick={() => setShowPassword(!showPassword)}
                           aria-label={
                             showPassword ? "Hide password" : "Show password"
