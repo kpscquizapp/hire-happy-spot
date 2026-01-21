@@ -11,7 +11,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Users,
-  ClipboardCheck
+  ClipboardCheck,
+  UserPlus,
+  Eye,
+  Settings
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -28,7 +31,9 @@ const menuItems = [
   { title: 'Create Job', icon: FileText, path: '/employer-dashboard/create-job', isAI: false },
   { title: 'Contract Hiring', icon: Clock, path: '/employer-dashboard/contract-hiring', isAI: false },
   { title: 'Talent Marketplace', icon: Globe, path: '/employer-dashboard/talent-marketplace', isAI: false },
+  { title: 'Post Bench Resource', icon: UserPlus, path: '/employer-dashboard/post-bench-resource', isAI: false },
   { title: 'AI Screening', icon: Bot, path: '/employer-dashboard/ai-screening', isAI: true },
+  { title: 'Visibility Settings', icon: Eye, path: '/profile-visibility', isAI: false },
 ];
 
 const EmployerSidebar = ({ collapsed, onToggle }: EmployerSidebarProps) => {

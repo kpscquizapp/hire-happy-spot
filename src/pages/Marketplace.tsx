@@ -100,17 +100,17 @@ const Marketplace = () => {
                 </CardContent>
               </Card>
 
-              {/* Register Talent Card */}
+              {/* List Your Talent Card - For Employers */}
               <Card 
                 className="group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:scale-105 border-2 border-transparent hover:border-green-500 bg-gradient-to-br from-green-50 to-white"
-                onClick={() => navigate('/list-bench-talent')}
+                onClick={() => navigate('/employer-login')}
               >
                 <CardHeader className="text-center pb-4">
                   <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-lg">
                     <UserPlus className="h-12 w-12 text-white" />
                   </div>
                   <CardTitle className="text-3xl font-bold text-neutral-900 mb-3">
-                    Register Talent
+                    List Your Talent
                   </CardTitle>
                   <CardDescription className="text-lg text-neutral-600">
                     Showcase your skills or bench resources
