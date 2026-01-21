@@ -136,16 +136,18 @@ const Login = () => {
     if (role === "candidate") {
       const success = await createCandidate(payload);
       if ("data" in success) {
+        dispatch(setUser(success.data));
         toast.success("Account created successfully!");
-        navigate("/jobs");
+        navigate("/profile");
       } else {
         toast.error("Signup failed");
       }
     } else {
       const success = await createEmployer(payload);
       if ("data" in success) {
+        dispatch(setUser(success.data));
         toast.success("Account created successfully!");
-        navigate("/job-recommendations");
+        navigate("/employer-dashboard");
       } else {
         toast.error("Signup failed");
       }
@@ -493,6 +495,7 @@ const Login = () => {
                           placeholder="John"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value)}
+                          required
                         />
                       </div>
                     </div>
@@ -512,6 +515,7 @@ const Login = () => {
                           placeholder="Doe"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value)}
+                          required
                         />
                       </div>
                     </div>
@@ -588,6 +592,7 @@ const Login = () => {
                           placeholder="New York, NY"
                           value={location}
                           onChange={(e) => setLocation(e.target.value)}
+                          required
                         />
                       </div>
                     </div>
@@ -610,6 +615,7 @@ const Login = () => {
                               placeholder="Full-time, Part-time, etc."
                               value={availability}
                               onChange={(e) => setAvailability(e.target.value)}
+                              required
                             />
                           </div>
                         </div>
@@ -632,6 +638,7 @@ const Login = () => {
                               onChange={(e) =>
                                 setYearsExperience(Number(e.target.value))
                               }
+                              required
                             />
                           </div>
                         </div>
@@ -651,6 +658,7 @@ const Login = () => {
                               placeholder="React, TypeScript, Node.js (comma separated)"
                               value={skills}
                               onChange={(e) => setSkills(e.target.value)}
+                              required
                             />
                           </div>
                         </div>
@@ -668,6 +676,7 @@ const Login = () => {
                             placeholder="Tell us about yourself..."
                             value={bio}
                             onChange={(e) => setBio(e.target.value)}
+                            required
                           />
                         </div>
                       </>
@@ -691,6 +700,7 @@ const Login = () => {
                               placeholder="Acme Corp"
                               value={companyName}
                               onChange={(e) => setCompanyName(e.target.value)}
+                              required
                             />
                           </div>
                         </div>
@@ -710,6 +720,7 @@ const Login = () => {
                               placeholder="Technology, Finance, etc."
                               value={industry}
                               onChange={(e) => setIndustry(e.target.value)}
+                              required
                             />
                           </div>
                         </div>
@@ -729,6 +740,7 @@ const Login = () => {
                               placeholder="51-200 employees"
                               value={companySize}
                               onChange={(e) => setCompanySize(e.target.value)}
+                              required
                             />
                           </div>
                         </div>
@@ -765,6 +777,7 @@ const Login = () => {
                             placeholder="Tell us about your company..."
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
+                            required
                           />
                         </div>
                       </>
