@@ -94,7 +94,7 @@ const Login = () => {
 
     if (isLogin) {
       const result = await login({ email, password, rememberMe });
-      if ('data' in result) {
+      if ("data" in result) {
         // console.log(success , 'success')
         dispatch(setUser(result.data));
         toast.success("Welcome back!");
@@ -135,7 +135,7 @@ const Login = () => {
 
     if (role === "candidate") {
       const success = await createCandidate(payload);
-      if ('data' in success) {
+      if ("data" in success) {
         toast.success("Account created successfully!");
         navigate("/jobs");
       } else {
@@ -143,7 +143,7 @@ const Login = () => {
       }
     } else {
       const success = await createEmployer(payload);
-      if ('data' in success) {
+      if ("data" in success) {
         toast.success("Account created successfully!");
         navigate("/job-recommendations");
       } else {
@@ -156,57 +156,36 @@ const Login = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
       <Header />
 
-      <main className="flex-1 pt-24 pb-12 px-4 sm:pt-32 sm:pb-20">
-        <div className="container mx-auto max-w-6xl ">
-          <Card className="shadow-2xl border-0 overflow-hidden">
-            <CardHeader className="space-y-2 text-center bg-gradient-to-br from-primary  to-primary/80 text-primary-foreground p-6 sm:p-8">
-              <CardTitle className="text-2xl sm:text-3xl font-bold">
-                {isLogin ? "Welcome Back" : "Create Your Account"}
-              </CardTitle>
-              <CardDescription className="text-primary-foreground/80 text-sm sm:text-base">
-                {isLogin
-                  ? "Sign in to continue your journey"
-                  : role === "candidate"
-                  ? "Join HIRION to find your dream job"
-                  : "Post jobs and find top talent"}
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="p-6 sm:p-8">
-              {!isLogin && (
-                <div className="flex gap-3 mb-6">
-                  <Button
-                    type="button"
-                    variant={role === "candidate" ? "default" : "outline"}
-                    onClick={() => setRole("candidate")}
-                    className="w-full py-6 text-base font-medium transition-all hover:scale-[1.02]"
-                  >
-                    <User className="mr-2 h-5 w-5" />
-                    Job Seeker
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={role === "employer" ? "default" : "outline"}
-                    onClick={() => setRole("employer")}
-                    className="w-full py-6 text-base font-medium transition-all hover:scale-[1.02]"
-                  >
-                    <Building2 className="mr-2 h-5 w-5" />
-                    Employer
-                  </Button>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Login Form */}
-                {isLogin && (
-                  // max-w-md mx-auto
-                  <div className="space-y-5 grid grid-cols-1 sm:grid-cols-2">
-                    <div className="">
-                      <img
-                        src="https://placehold.co/600x400"
-                        alt="Images"
-                        className="w-full h-full object-cover"
-                      />
+      <main className="flex-1 pt-16 pb-8 px-3 sm:pt-20 sm:pb-12 md:pt-24 md:pb-20">
+        <div className="container mx-auto w-full px-2 sm:px-4 md:max-w-7xl">
+          {isLogin ? (
+            // Login Layout - Two Column
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-stretch">
+              {/* Left Column - Login Form */}
+              <Card className="shadow-xl border-0 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border dark:border-slate-800">
+                <CardContent className="p-8 sm:p-10 flex flex-col justify-center">
+                  <div className="space-y-8">
+                    {/* Hirion Logo Section */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-8">
+                        <Building2 className="h-8 w-8 text-green-600 dark:text-green-500" />
+                        <span className="text-xl font-bold text-slate-900 dark:text-white">
+                          HIRION
+                        </span>
+                      </div>
+                      <div className="inline-block mb-4 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-full">
+                        Enterprise Grade
+                      </div>
+                      <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-3 leading-tight">
+                        Move beyond resumes.
+                        <br />
+                        Deploy verified talent.
+                      </h1>
+                      <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+                        Sign in to manage hiring, deployments, and bench
+                        monetization from a single, AI-enabled employer
+                        workspace.
+                      </p>
                     </div>
 
                     {/* Login Form */}
@@ -799,8 +778,7 @@ const Login = () => {
                         isLoadingLogin
                       }
                     >
-                      {isLoadingEmployer ||
-                      isLoadingCandidate ? (
+                      {isLoadingEmployer || isLoadingCandidate ? (
                         <Loader className="mr-2 h-4 w-4 animate-spin" />
                       ) : (
                         <>Create Account</>
