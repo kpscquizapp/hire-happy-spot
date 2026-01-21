@@ -16,6 +16,9 @@ import FindTalent from "./pages/FindTalent";
 import TalentProfile from "./pages/TalentProfile";
 import RegisterTalent from "./pages/RegisterTalent";
 import EmployerLogin from "./pages/EmployerLogin";
+import EmployerSignup from "./pages/EmployerSignup";
+import ContractorRegistration from "./pages/ContractorRegistration";
+import ProfileVisibility from "./pages/ProfileVisibility";
 import Register from "./pages/Register";
 import JobSearch from "./pages/JobSearch";
 import JobDetails from "./pages/JobDetails";
@@ -36,6 +39,7 @@ import HireFullTime from "./pages/employer/HireFullTime";
 import HireInterns from "./pages/employer/HireInterns";
 import ContractHiring from "./pages/employer/ContractHiring";
 import TalentMarketplace from "./pages/employer/TalentMarketplace";
+import PostBenchResource from "./pages/employer/PostBenchResource";
 import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
 import JobBoard from "./pages/employer/JobBoard";
@@ -90,6 +94,9 @@ const App = () => {
                     />
                     <Route path="/employer" element={<EmployerLogin />} />
                     <Route path="/employer-login" element={<EmployerLogin />} />
+                    <Route path="/employer-signup" element={<EmployerSignup />} />
+                    <Route path="/contractor-registration" element={<ContractorRegistration />} />
+                    <Route path="/profile-visibility" element={<ProfileVisibility />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/jobs" element={<JobSearch />} />
                     <Route path="/jobs/:id" element={<JobDetails />} />
@@ -130,6 +137,7 @@ const App = () => {
                       <Route path="hire-interns" element={<HireInterns />} />
                       <Route path="contract-hiring" element={<ContractHiring />} />
                       <Route path="talent-marketplace" element={<TalentMarketplace />} />
+                      <Route path="post-bench-resource" element={<PostBenchResource />} />
                       <Route path="ai-screening" element={<AIScreening />} />
                       <Route path="job/:jobId" element={<JobDetailsPage />} />
                       <Route path="job/:jobId/candidates" element={<JobCandidates />} />
