@@ -17,11 +17,11 @@ const CandidateProfile = () => {
 
   const candidateId = useId();
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-teal-50 via-white to-neutral-50">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900">
       <Header />
 
       {isLoading ? (
-        <div className="w-full h-screen text-3xl flex items-center justify-center">
+        <div className="w-full h-screen text-1xl sm:text-3xl flex items-center justify-center dark:text-white">
           Loading...
         </div>
       ) : isError ? (
@@ -29,7 +29,7 @@ const CandidateProfile = () => {
           <div className="text-red-600">Error loading profile</div>
         </div>
       ) : (
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-12 mt-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-12 mt-16 bg-white dark:bg-slate-900">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
               {/* Left Sidebar */}
@@ -62,7 +62,8 @@ const CandidateProfile = () => {
                               <span className="truncate">Hourly Rate</span>
                             </span>
                             <span className="font-semibold whitespace-nowrap dark:text-slate-200 text-right">
-                              ${profile.hourlyRateMin}-${profile.hourlyRateMax}
+                              ${profile.hourlyRateMin} - $
+                              {profile.hourlyRateMax}
                               /hr
                             </span>
                           </div>
@@ -72,8 +73,8 @@ const CandidateProfile = () => {
                           <Clock className="w-4 h-4 flex-shrink-0" />
                           <span className="truncate">Availability</span>
                         </span>
-                        <span className="font-semibold text-green-600 whitespace-nowrap text-right">
-                          {profile?.availability || "None"}
+                        <span className="font-semibold text-green-600 whitespace-nowrap text-right capitalize">
+                          {profile?.availableIn || "None"}
                         </span>
                       </div>
                       <div className="flex items-center justify-between text-xs sm:text-sm gap-2">
@@ -258,7 +259,9 @@ const CandidateProfile = () => {
                                   id={entryId}
                                   className="flex gap-3 sm:gap-4"
                                 >
-                                  <div className="w-1 bg-blue-500 rounded-full flex-shrink-0"></div>
+                                  <div
+                                    className={`w-1 ${index === 0 ? "bg-blue-500 dark:bg-blue-1" : "bg-gray-300 dark:bg-slate-600"}  rounded-full flex-shrink-0`}
+                                  ></div>
                                   <div className="flex-1 min-w-0">
                                     <h4 className="font-bold text-sm sm:text-base dark:text-slate-100 break-words">
                                       {role}

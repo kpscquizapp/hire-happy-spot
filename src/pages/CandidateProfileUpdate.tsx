@@ -2,6 +2,10 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
 import { useUpdateProfileMutation } from "@/app/queries/profileApi";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 type FormElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
@@ -375,63 +379,63 @@ const CandidateProfileUpdate = ({
       <div className="space-y-8">
         {/* Basic Information */}
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-6 text-left">
+          <h2 className="text-xl font-semibold text-gray-800 border-b dark:border-b-gray-600 pb-6 text-left dark:text-white">
             Basic Information
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left pb-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 First Name
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Last Name
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left pb-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Email
-              </label>
-              <input
+              </Label>
+              <Input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Headline
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 name="headline"
                 value={formData.headline}
                 onChange={handleInputChange}
                 placeholder="e.g., Senior Full Stack Developer"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
           </div>
@@ -439,34 +443,34 @@ const CandidateProfileUpdate = ({
 
         {/* Professional Details */}
         <div className="space-y-4 text-left">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-6 text-left">
+          <h2 className="text-xl font-semibold text-gray-800 border-b pb-6 text-left dark:border-b-gray-600 dark:text-white">
             Professional Details
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Location
-              </label>
-              <input
+              </Label>
+              <Input
                 type="text"
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
                 placeholder="e.g., Remote, New York, London"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Availability
-              </label>
+              </Label>
               <select
                 name="availability"
                 value={formData.availability}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               >
                 <option value="">Select availability</option>
                 {availabilityOptions.map((option) => (
@@ -480,28 +484,28 @@ const CandidateProfileUpdate = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Years of Experience
-              </label>
-              <input
+              </Label>
+              <Input
                 type="number"
                 name="yearsExperience"
                 value={formData.yearsExperience}
                 onChange={handleInputChange}
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Resource Type
-              </label>
+              </Label>
               <select
                 name="resourceType"
                 value={formData.resourceType}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               >
                 <option value="">Select resource type</option>
                 {resourceTypeOptions.map((option) => (
@@ -515,14 +519,14 @@ const CandidateProfileUpdate = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Available In
-              </label>
+              </Label>
               <select
                 name="availableIn"
                 value={formData.availableIn}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               >
                 <option value="">Select availability</option>
                 {availableInOptions.map((option) => (
@@ -534,14 +538,14 @@ const CandidateProfileUpdate = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 English Proficiency
-              </label>
+              </Label>
               <select
                 name="englishProficiency"
                 value={formData.englishProficiency}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               >
                 <option value="">Select proficiency</option>
                 {englishProficiencyOptions.map((option) => (
@@ -555,44 +559,44 @@ const CandidateProfileUpdate = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Hourly Rate (Min) $
-              </label>
-              <input
+              </Label>
+              <Input
                 type="number"
                 name="hourlyRateMin"
                 value={formData.hourlyRateMin}
                 onChange={handleInputChange}
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
                 Hourly Rate (Max) $
-              </label>
-              <input
+              </Label>
+              <Input
                 type="number"
                 name="hourlyRateMax"
                 value={formData.hourlyRateMax}
                 onChange={handleInputChange}
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <Label className="block text-sm font-medium text-gray-700 mb-1 dark:text-white">
               Short Bio
-            </label>
-            <textarea
+            </Label>
+            <Textarea
               name="bio"
               value={formData.bio}
               onChange={handleInputChange}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white leading-6"
               placeholder="Tell us about yourself..."
             />
           </div>
@@ -600,439 +604,430 @@ const CandidateProfileUpdate = ({
 
         {/* Skills */}
         <div className="space-y-4 text-left">
-          <h2 className="text-xl font-semibold text-gray-800 border-b pb-6">
+          <h2 className="text-xl font-semibold text-gray-800 border-b pb-6 text-left dark:border-b-gray-600 dark:text-white">
             Skills & Tech
           </h2>
 
-          {/* Skills */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">
-              Skills
-            </h2>
+          <div className="flex gap-2">
+            <Input
+              type="text"
+              value={skillInput}
+              onChange={(e) => setSkillInput(e.target.value)}
+              onKeyDown={(e) =>
+                e.key === "Enter" && (e.preventDefault(), addSkill())
+              }
+              placeholder="Add a skill (e.g., TypeScript)"
+              className="flex-1 px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+            />
+            <Button
+              type="button"
+              onClick={addSkill}
+              className="px-4 py-2 text-white rounded-md transition"
+            >
+              <Plus className="w-5 h-5" />
+            </Button>
+          </div>
 
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={skillInput}
-                onChange={(e) => setSkillInput(e.target.value)}
-                onKeyDown={(e) =>
-                  e.key === "Enter" && (e.preventDefault(), addSkill())
-                }
-                placeholder="Add a skill (e.g., TypeScript)"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
-              />
+          <div className="flex flex-wrap gap-2">
+            {formData.skills.map((name, index) => (
+              <span
+                key={`${name}-${index}`}
+                className="inline-flex items-center gap-1 px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm"
+              >
+                {name}
+                <button
+                  type="button"
+                  onClick={() => removeSkill(name)}
+                  className="hover:text-teal-900 min-w-0 min-h-0"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Work Experience */}
+      <div className="space-y-4 text-left mt-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-800 border-b dark:border-b-gray-600 dark:text-white pb-2 flex-1">
+            Work Experience
+          </h2>
+          <Button
+            type="button"
+            onClick={addWorkExperience}
+            className="flex items-center gap-2 px-4 py-2  bg-primary text-white rounded-md hover:bg-primary/90 transition text-[10px] sm:text-sm min-h-0 min-w-0"
+          >
+            <Briefcase className="w-4 h-4" />
+            Add Experience
+          </Button>
+        </div>
+
+        {formData.workExperiences.map((exp, index) => (
+          <div
+            key={index}
+            className="p-4 border dark:border-2 border-gray-200 rounded-lg space-y-3 bg-gray-50 dark:bg-slate-800 dark:border-slate-700"
+          >
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium text-gray-700 dark:text-white">
+                Experience #{index + 1}
+              </h3>
               <button
                 type="button"
-                onClick={addSkill}
-                className="px-4 py-2 bg-teal-600 text-white rounded-md hover:bg-teal-700 transition"
+                onClick={() => removeWorkExperience(index)}
+                className="text-red-600 hover:text-red-800"
               >
-                <Plus className="w-5 h-5" />
+                <Trash2 className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              {formData.skills.map((name, index) => (
-                <span
-                  key={`${name}-${index}`}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm"
-                >
-                  {name}
-                  <button
-                    type="button"
-                    onClick={() => removeSkill(name)}
-                    className="hover:text-teal-900 min-w-0 min-h-0"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </span>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Input
+                type="text"
+                placeholder="Company Name"
+                value={exp.companyName}
+                onChange={(e) =>
+                  updateWorkExperience(index, "companyName", e.target.value)
+                }
+                className="px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+              />
+              <Input
+                type="text"
+                placeholder="Role/Title"
+                value={exp.role}
+                onChange={(e) =>
+                  updateWorkExperience(index, "role", e.target.value)
+                }
+                className="px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+              />
             </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <select
+                value={exp.employmentType}
+                onChange={(e) =>
+                  updateWorkExperience(index, "employmentType", e.target.value)
+                }
+                className="px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+              >
+                <option value="">Employment Type</option>
+                {employmentTypeOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <Input
+                type="text"
+                placeholder="Location"
+                value={exp.location}
+                onChange={(e) =>
+                  updateWorkExperience(index, "location", e.target.value)
+                }
+                className="px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <Label className="block text-xs text-gray-600 mb-1 dark:text-white">
+                  Start Date
+                </Label>
+                <input
+                  type="date"
+                  value={exp.startDate}
+                  onChange={(e) =>
+                    updateWorkExperience(index, "startDate", e.target.value)
+                  }
+                  className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+                />
+              </div>
+              <div>
+                <Label className="block text-xs text-gray-600 mb-1 dark:text-white">
+                  End Date (Leave empty if current)
+                </Label>
+                <input
+                  type="date"
+                  value={exp.endDate || ""}
+                  onChange={(e) =>
+                    updateWorkExperience(index, "endDate", e.target.value)
+                  }
+                  className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+                />
+              </div>
+            </div>
+
+            <Textarea
+              placeholder="Description of your role and achievements..."
+              value={
+                Array.isArray(exp.description)
+                  ? exp.description.join("\n")
+                  : exp.description
+              }
+              onChange={(e) =>
+                updateWorkExperience(index, "description", e.target.value)
+              }
+              rows={3}
+              className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+            />
           </div>
+        ))}
+      </div>
+
+      {/* Projects */}
+      <div className="space-y-4 text-left mt-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-800 border-b dark:border-gray-600 pb-2 flex-1 dark:text-white">
+            Projects
+          </h2>
+          <Button
+            type="button"
+            onClick={addProject}
+            className="flex items-center gap-2 px-4 py-2  bg-primary text-white rounded-md hover:bg-primary/90 transition text-[10px] sm:text-sm min-h-0 min-w-0"
+          >
+            <FolderGit2 className="w-4 h-4" />
+            Add Project
+          </Button>
         </div>
 
-        {/* Work Experience */}
-        <div className="space-y-4 text-left">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex-1">
-              Work Experience
-            </h2>
-            <button
-              type="button"
-              onClick={addWorkExperience}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition text-sm"
-            >
-              <Briefcase className="w-4 h-4" />
-              Add Experience
-            </button>
+        {formData.projects.map((project, index) => (
+          <div
+            key={index}
+            className="p-4 border dark:border-2 border-gray-200 rounded-lg space-y-3 bg-gray-50 dark:bg-slate-800 dark:border-slate-700"
+          >
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium text-gray-700 dark:text-white">
+                Project #{index + 1}
+              </h3>
+              <button
+                type="button"
+                onClick={() => removeProject(index)}
+                className="text-red-600 hover:text-red-800"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </div>
+
+            <Input
+              type="text"
+              placeholder="Project Title"
+              value={project.title}
+              onChange={(e) => updateProject(index, "title", e.target.value)}
+              className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
+            />
+
+            <Textarea
+              placeholder="Project Description"
+              value={project.description}
+              onChange={(e) =>
+                updateProject(index, "description", e.target.value)
+              }
+              rows={2}
+              className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
+            />
+
+            <Input
+              type="text"
+              placeholder="Tech Stack (comma separated, e.g., Node.js, PostgreSQL)"
+              value={
+                Array.isArray(project.techStack)
+                  ? project.techStack.join(", ")
+                  : (project.techStack ?? "")
+              }
+              onChange={(e) =>
+                updateProject(index, "techStack", e.target.value)
+              }
+              onBlur={(e) =>
+                updateProject(
+                  index,
+                  "techStack",
+                  e.target.value
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean),
+                )
+              }
+              className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
+            />
+
+            <Input
+              type="url"
+              placeholder="Project URL"
+              value={project.projectUrl}
+              onChange={(e) =>
+                updateProject(index, "projectUrl", e.target.value)
+              }
+              className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
+            />
+
+            <Label className="flex items-center gap-2 dark:text-white">
+              <Input
+                type="checkbox"
+                checked={project.isFeatured}
+                onChange={(e) =>
+                  updateProject(index, "isFeatured", e.target.checked)
+                }
+                className="min-h-0 min-w-0 w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500 dark:bg-slate-800 dark:border-slate-500 bg-white accent-primary dark:accent-white"
+              />
+              <span className="text-sm text-gray-700 dark:text-white">
+                Featured Project
+              </span>
+            </Label>
           </div>
+        ))}
+      </div>
 
-          {formData.workExperiences.map((exp, index) => (
-            <div
-              key={index}
-              className="p-4 border border-gray-200 rounded-lg space-y-3 bg-gray-50"
-            >
-              <div className="flex justify-between items-start">
-                <h3 className="font-medium text-gray-700">
-                  Experience #{index + 1}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => removeWorkExperience(index)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              </div>
+      {/* Certifications */}
+      <div className="space-y-4 text-left mt-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold text-gray-800 border-b dark:border-gray-600 pb-2 flex-1 dark:text-white">
+            Certifications
+          </h2>
+          <Button
+            type="button"
+            onClick={addCertification}
+            className="flex items-center gap-2 px-4 py-2  bg-primary text-white rounded-md hover:bg-primary/90 transition text-[10px] sm:text-sm min-h-0 min-w-0"
+          >
+            <Award className="w-4 h-4" />
+            Add Certification
+          </Button>
+        </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {formData.certifications.map((cert, index) => (
+          <div
+            key={index}
+            className="p-4 border dark:border-2 border-gray-200 rounded-lg space-y-3 bg-gray-50 dark:bg-slate-800 dark:border-slate-700"
+          >
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium text-gray-700 dark:text-white">
+                Certification #{index + 1}
+              </h3>
+              <button
+                type="button"
+                onClick={() => removeCertification(index)}
+                className="text-red-600 hover:text-red-800"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Input
+                type="text"
+                placeholder="Certification Name"
+                value={cert.name}
+                onChange={(e) =>
+                  updateCertification(index, "name", e.target.value)
+                }
+                className="px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
+              />
+              <Input
+                type="text"
+                placeholder="Issued By"
+                value={cert.issuedBy}
+                onChange={(e) =>
+                  updateCertification(index, "issuedBy", e.target.value)
+                }
+                className="px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <Label className="block text-xs text-gray-600 mb-1 dark:text-white">
+                  Issue Date
+                </Label>
                 <input
-                  type="text"
-                  placeholder="Company Name"
-                  value={exp.companyName}
+                  type="date"
+                  value={cert.issueDate}
                   onChange={(e) =>
-                    updateWorkExperience(index, "companyName", e.target.value)
+                    updateCertification(index, "issueDate", e.target.value)
                   }
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input
-                  type="text"
-                  placeholder="Role/Title"
-                  value={exp.role}
-                  onChange={(e) =>
-                    updateWorkExperience(index, "role", e.target.value)
-                  }
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
                 />
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <select
-                  value={exp.employmentType}
+              <div>
+                <Label className="block text-xs text-gray-600 mb-1 dark:text-white">
+                  Expiry Date (Optional)
+                </Label>
+                <input
+                  type="date"
+                  value={cert.expiryDate ?? ""}
                   onChange={(e) =>
-                    updateWorkExperience(
+                    updateCertification(
                       index,
-                      "employmentType",
-                      e.target.value,
+                      "expiryDate",
+                      e.target.value || null,
                     )
                   }
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">Employment Type</option>
-                  {employmentTypeOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-                <input
-                  type="text"
-                  placeholder="Location"
-                  value={exp.location}
-                  onChange={(e) =>
-                    updateWorkExperience(index, "location", e.target.value)
-                  }
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
                 />
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">
-                    Start Date
-                  </label>
-                  <input
-                    type="date"
-                    value={exp.startDate}
-                    onChange={(e) =>
-                      updateWorkExperience(index, "startDate", e.target.value)
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">
-                    End Date (Leave empty if current)
-                  </label>
-                  <input
-                    type="date"
-                    value={exp.endDate || ""}
-                    onChange={(e) =>
-                      updateWorkExperience(index, "endDate", e.target.value)
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-              </div>
-
-              <textarea
-                placeholder="Description of your role and achievements..."
-                value={
-                  Array.isArray(exp.description)
-                    ? exp.description.join("\n")
-                    : exp.description
-                }
-                onChange={(e) =>
-                  updateWorkExperience(index, "description", e.target.value)
-                }
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
             </div>
-          ))}
-        </div>
 
-        {/* Projects */}
-        <div className="space-y-4 text-left">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex-1">
-              Projects
-            </h2>
-            <button
-              type="button"
-              onClick={addProject}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition text-sm"
-            >
-              <FolderGit2 className="w-4 h-4" />
-              Add Project
-            </button>
+            <Input
+              type="url"
+              placeholder="Credential URL"
+              value={cert.credentialUrl}
+              onChange={(e) =>
+                updateCertification(index, "credentialUrl", e.target.value)
+              }
+              className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-800 dark:border-slate-500 bg-white"
+            />
           </div>
-
-          {formData.projects.map((project, index) => (
-            <div
-              key={index}
-              className="p-4 border border-gray-200 rounded-lg space-y-3 bg-gray-50"
-            >
-              <div className="flex justify-between items-start">
-                <h3 className="font-medium text-gray-700">
-                  Project #{index + 1}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => removeProject(index)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              </div>
-
-              <input
-                type="text"
-                placeholder="Project Title"
-                value={project.title}
-                onChange={(e) => updateProject(index, "title", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-
-              <textarea
-                placeholder="Project Description"
-                value={project.description}
-                onChange={(e) =>
-                  updateProject(index, "description", e.target.value)
-                }
-                rows={2}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-
-              <input
-                type="text"
-                placeholder="Tech Stack (comma separated, e.g., Node.js, PostgreSQL)"
-                value={
-                  Array.isArray(project.techStack)
-                    ? project.techStack.join(", ")
-                    : (project.techStack ?? "")
-                }
-                onChange={(e) =>
-                  updateProject(index, "techStack", e.target.value)
-                }
-                onBlur={(e) =>
-                  updateProject(
-                    index,
-                    "techStack",
-                    e.target.value
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean),
-                  )
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-
-              <input
-                type="url"
-                placeholder="Project URL"
-                value={project.projectUrl}
-                onChange={(e) =>
-                  updateProject(index, "projectUrl", e.target.value)
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={project.isFeatured}
-                  onChange={(e) =>
-                    updateProject(index, "isFeatured", e.target.checked)
-                  }
-                  className="min-h-0 min-w-0 w-4 h-4 text-purple-600 rounded focus:ring-2 focus:ring-purple-500"
-                />
-                <span className="text-sm text-gray-700">Featured Project</span>
-              </label>
-            </div>
-          ))}
-        </div>
-
-        {/* Certifications */}
-        <div className="space-y-4 text-left">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-800 border-b pb-2 flex-1">
-              Certifications
-            </h2>
-            <button
-              type="button"
-              onClick={addCertification}
-              className="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition text-sm"
-            >
-              <Award className="w-4 h-4" />
-              Add Certification
-            </button>
-          </div>
-
-          {formData.certifications.map((cert, index) => (
-            <div
-              key={index}
-              className="p-4 border border-gray-200 rounded-lg space-y-3 bg-gray-50"
-            >
-              <div className="flex justify-between items-start">
-                <h3 className="font-medium text-gray-700">
-                  Certification #{index + 1}
-                </h3>
-                <button
-                  type="button"
-                  onClick={() => removeCertification(index)}
-                  className="text-red-600 hover:text-red-800"
-                >
-                  <Trash2 className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  placeholder="Certification Name"
-                  value={cert.name}
-                  onChange={(e) =>
-                    updateCertification(index, "name", e.target.value)
-                  }
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-                <input
-                  type="text"
-                  placeholder="Issued By"
-                  value={cert.issuedBy}
-                  onChange={(e) =>
-                    updateCertification(index, "issuedBy", e.target.value)
-                  }
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">
-                    Issue Date
-                  </label>
-                  <input
-                    type="date"
-                    value={cert.issueDate}
-                    onChange={(e) =>
-                      updateCertification(index, "issueDate", e.target.value)
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-600 mb-1">
-                    Expiry Date (Optional)
-                  </label>
-                  <input
-                    type="date"
-                    value={cert.expiryDate ?? ""}
-                    onChange={(e) =>
-                      updateCertification(
-                        index,
-                        "expiryDate",
-                        e.target.value || null,
-                      )
-                    }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                  />
-                </div>
-              </div>
-
-              <input
-                type="url"
-                placeholder="Credential URL"
-                value={cert.credentialUrl}
-                onChange={(e) =>
-                  updateCertification(index, "credentialUrl", e.target.value)
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex gap-4 pt-4">
-          <button
-            onClick={handleSubmit}
-            disabled={isUpdating}
-            className="flex-1 bg-primary text-white py-3 px-6 rounded-md hover:bg-primary/90 transition font-medium"
-          >
-            {isUpdating ? "Updating..." : "Update Profile"}
-          </button>
-          <button
-            onClick={() => {
-              setFormData({
-                firstName: data?.firstName || "",
-                lastName: data?.lastName || "",
-                email: data?.email || "",
-                location: data?.candidateProfile.location || "",
-                availability: data?.candidateProfile.availability || "",
-                bio: data?.candidateProfile.bio || "",
-                yearsExperience: data?.candidateProfile.yearsExperience ?? "",
-                skills: skills || [],
-                headline: data?.candidateProfile.headline || "",
-                resourceType: data?.candidateProfile.resourceType || "",
-                availableIn: data?.candidateProfile.availableIn || "",
-                englishProficiency:
-                  data?.candidateProfile.englishProficiency || "",
-                hourlyRateMin:
-                  data?.candidateProfile.hourlyRateMin == null ||
-                  data?.candidateProfile.hourlyRateMin === ""
-                    ? ""
-                    : Number(data?.candidateProfile.hourlyRateMin),
-                hourlyRateMax:
-                  data?.candidateProfile.hourlyRateMax == null ||
-                  data?.candidateProfile.hourlyRateMax === ""
-                    ? ""
-                    : Number(data?.candidateProfile.hourlyRateMax),
-                workExperiences: workExperiences || [],
-                projects: projects || [],
-                certifications: certification || [],
-              });
-            }}
-            type="button"
-            className="px-6 py-3 border border-gray-300 rounded-md hover:bg-red-600 hover:text-white transition font-medium"
-          >
-            Cancel
-          </button>
-        </div>
-        {updateError && (
-          <p className="text-red-600 text-sm mt-2">Failed to update profile</p>
-        )}
+        ))}
       </div>
+
+      {/* Submit Button */}
+      <div className="flex gap-4 pt-4 ">
+        <button
+          onClick={handleSubmit}
+          disabled={isUpdating}
+          className="flex-1 items-center gap-2 px-4 py-2  bg-primary text-white rounded-md hover:bg-primary/90 transition text-base"
+        >
+          {isUpdating ? "Updating..." : "Update Profile"}
+        </button>
+        <button
+          onClick={() => {
+            setFormData({
+              firstName: data?.firstName || "",
+              lastName: data?.lastName || "",
+              email: data?.email || "",
+              location: data?.candidateProfile.location || "",
+              availability: data?.candidateProfile.availability || "",
+              bio: data?.candidateProfile.bio || "",
+              yearsExperience: data?.candidateProfile.yearsExperience ?? "",
+              skills: skills || [],
+              headline: data?.candidateProfile.headline || "",
+              resourceType: data?.candidateProfile.resourceType || "",
+              availableIn: data?.candidateProfile.availableIn || "",
+              englishProficiency:
+                data?.candidateProfile.englishProficiency || "",
+              hourlyRateMin:
+                data?.candidateProfile.hourlyRateMin == null ||
+                data?.candidateProfile.hourlyRateMin === ""
+                  ? ""
+                  : Number(data?.candidateProfile.hourlyRateMin),
+              hourlyRateMax:
+                data?.candidateProfile.hourlyRateMax == null ||
+                data?.candidateProfile.hourlyRateMax === ""
+                  ? ""
+                  : Number(data?.candidateProfile.hourlyRateMax),
+              workExperiences: workExperiences || [],
+              projects: projects || [],
+              certifications: certification || [],
+            });
+          }}
+          type="button"
+          className="px-6 py-3 border border-gray-300 rounded-md hover:bg-red-600 hover:text-white transition font-medium dark:border-gray-600"
+        >
+          Cancel
+        </button>
+      </div>
+      {updateError && (
+        <p className="text-red-600 text-sm mt-2">Failed to update profile</p>
+      )}
     </div>
   );
 };
