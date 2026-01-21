@@ -1,4 +1,4 @@
-name: Deploy React Frontend
+name: Deploy React Frontend to EC2
 
 on:
   push:
@@ -10,43 +10,71 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: npm install
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
 
-      - name: Build React
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build React App
         run: npm run build
 
-      - name: Deploy to EC2
+      - name: Copy .htaccess (if exists)
+        run: |
+          if [ -f .htaccess ]; then
+            cp .htaccess build/
+          fi
+
+      - name: Deploy to EC2 (Atomic + Backup)
         uses: appleboy/ssh-action@v0.1.9
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
-            DEPLOY_DIR="/var/www/html/hireon-fe"
-            BACKUP_DIR="/var/www/html/backups"
-            TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+            set -e
 
-            echo "Creating backup directory if not exists"
-            sudo mkdir -p $BACKUP_DIR
+            APP_NAME="hireon-fe"
+            BASE_DIR="/var/www/html"
+            DEPLOY_DIR="$BASE_DIR/$APP_NAME"
+            RELEASE_DIR="$BASE_DIR/${APP_NAME}_release"
+            BACKUP_DIR="$BASE_DIR/backups"
+            TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+
+            echo "📁 Creating required directories"
+            sudo mkdir -p "$BACKUP_DIR"
 
             if [ -d "$DEPLOY_DIR" ]; then
-              echo "Backing up existing deployment"
-              sudo tar -czf $BACKUP_DIR/hireon-fe_$TIMESTAMP.tar.gz -C /var/www/html hireon-fe
+              echo "📦 Backing up current deployment"
+              sudo tar -czf "$BACKUP_DIR/${APP_NAME}-${TIMESTAMP}.tar.gz" -C "$BASE_DIR" "$APP_NAME"
+            else
+              echo "ℹ️ No existing deployment found"
             fi
 
-            echo "Cleaning old backups (keep last 3)"
-            sudo ls -tp $BACKUP_DIR | grep hireon-fe | tail -n +4 | xargs -r sudo rm --
+            echo "🧹 Cleaning old backups (keep last 3)"
+            sudo ls -1t "$BACKUP_DIR"/${APP_NAME}-*.tar.gz 2>/dev/null | tail -n +4 | xargs -r sudo rm -f
 
-            echo "Removing old deployment"
-            sudo rm -rf $DEPLOY_DIR
+            echo "🚀 Deploying new build"
+            sudo rm -rf "$RELEASE_DIR"
+            sudo mkdir -p "$RELEASE_DIR"
 
-            echo "Deploying new build"
-            sudo mkdir -p $DEPLOY_DIR
-            sudo cp -r ./build/* $DEPLOY_DIR/
+            sudo rsync -av --delete build/ "$RELEASE_DIR/"
 
-            echo "Restarting Apache"
-            sudo systemctl restart httpd
-            
+            echo "🔁 Switching release (atomic)"
+            sudo rm -rf "$DEPLOY_DIR"
+            sudo mv "$RELEASE_DIR" "$DEPLOY_DIR"
+
+            echo "🔐 Fixing permissions"
+            sudo chown -R www-data:www-data "$DEPLOY_DIR"
+            sudo chmod -R 755 "$DEPLOY_DIR"
+
+            echo "🔄 Restarting Apache"
+            sudo systemctl restart apache2 || sudo systemctl restart httpd
+
+            echo "✅ Deployment completed successfully"
