@@ -129,7 +129,8 @@ const App = () => {
                       path="/employer-dashboard"
                       element={<EmployerLayout />}
                     >
-                      <Route index element={<CompanyDashboard />} />
+                      <Route index element={<PostBenchResource />} />
+                      <Route path="dashboard" element={<CompanyDashboard />} />
                       <Route path="job-board" element={<JobBoard />} />
                       <Route path="create-job" element={<CreateJob />} />
                       <Route path="post-job" element={<PostJob />} />
@@ -138,6 +139,7 @@ const App = () => {
                       <Route path="contract-hiring" element={<ContractHiring />} />
                       <Route path="talent-marketplace" element={<TalentMarketplace />} />
                       <Route path="post-bench-resource" element={<PostBenchResource />} />
+                      <Route path="visibility-settings" element={<ProfileVisibility />} />
                       <Route path="ai-screening" element={<AIScreening />} />
                       <Route path="job/:jobId" element={<JobDetailsPage />} />
                       <Route path="job/:jobId/candidates" element={<JobCandidates />} />
