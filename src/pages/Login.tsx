@@ -87,18 +87,19 @@ const Login = () => {
         navigate("/employer-dashboard");
       }
     }
-  }, [userDetails]);
+  }, [userDetails, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (isLogin) {
-      const success = await login({ email, password, rememberMe });
-      if (success) {
+      const result = await login({ email, password, rememberMe });
+      if ('data' in result) {
         // console.log(success , 'success')
-        dispatch(setUser(success?.data));
+        dispatch(setUser(result.data));
         toast.success("Welcome back!");
-        navigate("/employer-dashboard");
+        const userRole = result.data?.role;
+        navigate(userRole === "candidate" ? "/jobs" : "/employer-dashboard");
       } else {
         toast.error("Invalid email or password");
       }
@@ -134,7 +135,7 @@ const Login = () => {
 
     if (role === "candidate") {
       const success = await createCandidate(payload);
-      if (success) {
+      if ('data' in success) {
         toast.success("Account created successfully!");
         navigate("/jobs");
       } else {
@@ -142,7 +143,7 @@ const Login = () => {
       }
     } else {
       const success = await createEmployer(payload);
-      if (success) {
+      if ('data' in success) {
         toast.success("Account created successfully!");
         navigate("/job-recommendations");
       } else {
@@ -778,11 +779,10 @@ const Login = () => {
                       }
                     >
                       {isLoadingEmployer ||
-                      isLoadingCandidate ||
-                      isLoadingLogin ? (
+                      isLoadingCandidate ? (
                         <Loader className="mr-2 h-4 w-4 animate-spin" />
                       ) : (
-                        <>{isLogin ? "Sign In" : "Create Account"}</>
+                        <>Create Account</>
                       )}
                     </Button>
                   </div>
