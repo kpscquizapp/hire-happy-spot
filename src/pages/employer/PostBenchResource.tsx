@@ -130,22 +130,6 @@ const PostBenchResource = () => {
               </CardContent>
             </Card>
 
-            {/* Quick Tip */}
-            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 text-white">
-              <CardContent className="p-6">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shrink-0">
-                    <Lightbulb className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold mb-2">Quick Tip</p>
-                    <p className="text-xs text-blue-100 leading-relaxed">
-                      Bench resources with verified skills and immediate availability get 3x more contract offers.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
 
           {/* Main Form */}

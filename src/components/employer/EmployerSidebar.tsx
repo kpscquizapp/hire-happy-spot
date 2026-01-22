@@ -26,7 +26,7 @@ interface EmployerSidebarProps {
 }
 
 const menuItems = [
-  { title: 'Dashboard', icon: LayoutDashboard, path: '/employer-dashboard/dashboard', isAI: false },
+  { title: 'Dashboard', icon: LayoutDashboard, path: '/employer-dashboard', isAI: false },
   { title: 'Post Bench Resource', icon: UserPlus, path: '/employer-dashboard/post-bench-resource', isAI: false },
   { title: 'Active Resources', icon: Users, path: '/employer-dashboard/active-resources', isAI: false },
   { title: 'Visibility Settings', icon: Eye, path: '/employer-dashboard/visibility-settings', isAI: false },
@@ -64,7 +64,9 @@ const EmployerSidebar = ({ collapsed, onToggle }: EmployerSidebarProps) => {
       <nav className="flex-1 py-4 overflow-y-auto">
         <ul className="space-y-1 px-3">
           {menuItems.map((item) => {
-            const isActive = currentPath === item.path || currentPath.startsWith(item.path + '/');
+            const isActive = currentPath === item.path || 
+              (item.path !== '/employer-dashboard' && currentPath.startsWith(item.path + '/')) ||
+              (item.path === '/employer-dashboard' && (currentPath === '/employer-dashboard' || currentPath === '/employer-dashboard/dashboard'));
             const Icon = item.icon;
             
             return (
