@@ -89,7 +89,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           items: [
             {
               label: "Browse Talent",
-              href: "/find-talent",
+              href: "/employer-login",
               description: "Discover professionals",
             },
             {

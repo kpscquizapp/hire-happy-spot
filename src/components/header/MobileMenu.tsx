@@ -34,7 +34,7 @@ const MobileMenu = ({ isOpen, onClose }: MobileMenuProps) => {
       id: 'marketplace',
       label: translations.talentMarketplace,
       items: [
-        { label: 'Browse Talent', href: '/find-talent' },
+        { label: 'Browse Talent', href: '/employer-login' },
         { label: 'List Your Talent', href: '/employer-login' },
         { label: 'Register as Talent', href: '/candidate-register' },
       ]
