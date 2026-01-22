@@ -41,6 +41,7 @@ import ContractHiring from "./pages/employer/ContractHiring";
 import TalentMarketplace from "./pages/employer/TalentMarketplace";
 import PostBenchResource from "./pages/employer/PostBenchResource";
 import ActiveResources from "./pages/employer/ActiveResources";
+import VisibilitySettings from "./pages/employer/VisibilitySettings";
 import JobCandidates from "./pages/employer/JobCandidates";
 import AIInterviewResults from "./pages/employer/AIInterviewResults";
 import JobBoard from "./pages/employer/JobBoard";
@@ -130,7 +131,7 @@ const App = () => {
                       path="/employer-dashboard"
                       element={<EmployerLayout />}
                     >
-                      <Route index element={<PostBenchResource />} />
+                      <Route index element={<CompanyDashboard />} />
                       <Route path="dashboard" element={<CompanyDashboard />} />
                       <Route path="job-board" element={<JobBoard />} />
                       <Route path="create-job" element={<CreateJob />} />
@@ -141,7 +142,7 @@ const App = () => {
                       <Route path="talent-marketplace" element={<TalentMarketplace />} />
                       <Route path="post-bench-resource" element={<PostBenchResource />} />
                       <Route path="active-resources" element={<ActiveResources />} />
-                      <Route path="visibility-settings" element={<ProfileVisibility />} />
+                      <Route path="visibility-settings" element={<VisibilitySettings />} />
                       <Route path="ai-screening" element={<AIScreening />} />
                       <Route path="job/:jobId" element={<JobDetailsPage />} />
                       <Route path="job/:jobId/candidates" element={<JobCandidates />} />
