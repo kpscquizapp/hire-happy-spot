@@ -38,7 +38,7 @@ export const profileApi = createApi({
             if (!draft?.candidateProfile?.skills) return;
             draft.candidateProfile.skills =
               draft.candidateProfile.skills.filter(
-                (s: any) => s.id !== skillId,
+                (s: any) => String(s.id) !== String(skillId),
               );
           }),
         );
@@ -48,6 +48,7 @@ export const profileApi = createApi({
           patch.undo();
         }
       },
+      invalidatesTags: ["Profile"],
     }),
   }),
 });
