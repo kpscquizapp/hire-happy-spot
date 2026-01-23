@@ -19,6 +19,12 @@ jobs:
           node-version: 18
           cache: 'npm'
 
+      - name: Verify API baseURL
+        run: |
+          echo "🔍 Checking baseURL in service.ts"
+          grep -R "baseURL" src/services/service.ts
+          grep -R "http://44.222.35.138/api/api/v1/" src/services/service.ts
+
       - name: Install Dependencies
         run: npm ci
 
