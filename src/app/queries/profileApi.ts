@@ -26,7 +26,19 @@ export const profileApi = createApi({
       }),
       invalidatesTags: ["Profile"],
     }),
+    removeSkill: builder.mutation({
+      query: (data) => ({
+        headers: getAuthHeaders(),
+        method: "DELETE",
+        url: `jobboard/profile/skills/${data}`,
+      }),
+      invalidatesTags: ["Profile"],
+    }),
   }),
 });
 
-export const { useGetProfileQuery, useUpdateProfileMutation } = profileApi;
+export const {
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useRemoveSkillMutation,
+} = profileApi;
