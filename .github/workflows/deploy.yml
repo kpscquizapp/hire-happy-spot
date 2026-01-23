@@ -19,109 +19,57 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      - name: Verify API baseURL
-        run: |
-          echo "🔍 Checking baseURL in service.ts"
-          grep -R "baseURL" src/services/service.ts || true
-          grep -R "http://44.222.35.138/api/api/v1/" src/services/service.ts || true
-
       - name: Install Dependencies
         run: npm ci
 
       - name: Build React App
         run: npm run build
 
-      - name: Debug Build Output
+      - name: Debug Build
         run: |
-          echo "📁 Build folder contents:"
-          ls -la build/ || ls -la dist/ || echo "No build/dist found"
-          echo "📏 Build folder size:"
-          du -sh build/ || du -sh dist/ || echo "No build output"
+          echo "📁 Build contents:"
+          ls -la build/ || ls -la dist/
+          du -sh build/ || du -sh dist/
 
       - name: Copy .htaccess (if exists)
         run: |
           if [ -f .htaccess ]; then
-            cp .htaccess build/ || cp .htaccess dist/
+            cp .htaccess build/ 2>/dev/null || cp .htaccess dist/ 2>/dev/null
             echo "✅ .htaccess copied"
-          else
-            echo "ℹ️ No .htaccess found"
           fi
 
-      ## CRITICAL: Prepare EC2 temp directory FIRST (Fixes SCP permission)
-      - name: Prepare EC2 Temp Directory
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            echo "🔧 Preparing /tmp/hireon-fe-build..."
-            sudo mkdir -p /tmp/hireon-fe-build
-            sudo chown $(whoami):$(whoami) /tmp/hireon-fe-build
-            sudo chmod 755 /tmp/hireon-fe-build
-            echo "✅ Temp dir ready: $(ls -ld /tmp/hireon-fe-build)"
-
-      ## STEP 1: Upload via SCP (Now works perfectly)
       - name: Upload Build to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ec2-user
           key: ${{ secrets.EC2_KEY }}
-          port: 22
-          source: "build/*,dist/*"  # Handles both build/dist
+          source: "build/*,dist/*"
           target: "/tmp/hireon-fe-build"
-          strip_components: 0
           rm: true
 
-      ## STEP 2: Deploy via SSH
-      - name: Deploy to EC2 (Atomic + Backup)
+      - name: Deploy Frontend (Amazon Linux)
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ec2-user
           key: ${{ secrets.EC2_KEY }}
-          port: 22
           script: |
             set -e
+            echo "📤 Verifying upload: $(ls -la /tmp/hireon-fe-build/ | head -3)"
             
-            APP_NAME="hireon-fe"
-            BASE_DIR="/var/www/html"
-            DEPLOY_DIR="$BASE_DIR/$APP_NAME"
-            BACKUP_DIR="$BASE_DIR/backups"
-            TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
-
-            echo "📁 Creating backup directory"
-            sudo mkdir -p "$BACKUP_DIR"
-
-            # Backup existing deployment
-            if [ -d "$DEPLOY_DIR" ] && [ "$(ls -A "$DEPLOY_DIR")" ]; then
-              echo "📦 Backing up current deployment"
-              sudo tar -czf "$BACKUP_DIR/${APP_NAME}-${TIMESTAMP}.tar.gz" -C "$BASE_DIR" "$APP_NAME"
-            else
-              echo "ℹ️ No existing deployment found"
-            fi
-
-            # Clean old backups (keep last 3)
-            sudo ls -1t "$BACKUP_DIR"/${APP_NAME}-*.tar.gz 2>/dev/null | tail -n +4 | xargs -r sudo rm -f
-
-            echo "🚀 Verifying uploaded files"
-            echo "📁 Uploaded contents:"
-            ls -la /tmp/hireon-fe-build/ | head -10
-
-            # Atomic deployment
-            sudo rm -rf "$DEPLOY_DIR"
-            sudo rsync -av --delete /tmp/hireon-fe-build/ "$DEPLOY_DIR/"
+            # Atomic deploy
+            sudo rsync -av --delete /tmp/hireon-fe-build/ /var/www/html/hireon-fe/
             sudo rm -rf /tmp/hireon-fe-build
-
-            echo "🔐 Fixing permissions"
-            sudo chown -R www-data:www-data "$DEPLOY_DIR"
-            sudo chmod -R 755 "$DEPLOY_DIR"
-            sudo find "$DEPLOY_DIR" -type f -exec chmod 644 {} \;
-
-            echo "🔄 Restarting Apache"
-            sudo systemctl restart apache2 || sudo systemctl restart httpd
-
-            echo "✅ Deployment completed successfully"
-            echo "📁 Final deployment:"
-            ls -la "$DEPLOY_DIR/" | head -10
+            
+            # Permissions
+            sudo chown -R apache:apache /var/www/html/hireon-fe
+            sudo chmod -R 755 /var/www/html/hireon-fe
+            sudo find /var/www/html/hireon-fe -type f -exec chmod 644 {} \;
+            
+            # Restart Apache
+            sudo systemctl restart httpd
+            
+            echo "✅ Frontend deployed!"
+            echo "📁 Deployed files:"
+            ls -la /var/www/html/hireon-fe/ | head -5
