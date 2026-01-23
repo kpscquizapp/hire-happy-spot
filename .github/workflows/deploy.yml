@@ -18,6 +18,17 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+      - name: Test SSH Connection
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            echo "✅ SSH works! Whoami: $(whoami)"
+            pwd
+            ls -la /tmp/
+
 
       - name: Verify API baseURL
         run: |
@@ -46,6 +57,7 @@ jobs:
           else
             echo "ℹ️ No .htaccess found"
           fi
+        
 
       ## STEP 1: Upload build folder via SCP (Fixes permission issue)
       - name: Upload Build to EC2
