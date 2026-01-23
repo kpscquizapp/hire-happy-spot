@@ -251,12 +251,18 @@ const CandidateProfileUpdate = ({
 
     // Find the skill to remove
     const filteredSkill = data?.candidateProfile?.skills?.find(
-      (skill) => skill.name === skillToRemove,
+      (skill) => skill.name.toLowerCase() === skillToRemove.toLowerCase(),
     );
 
     // Guard clause: skill not found
     if (filteredSkill == null || filteredSkill.id == null) {
-      toast.error("Please update the skill to be removed");
+      // Not persisted yet — remove locally
+      setFormData((prev) => ({
+        ...prev,
+        skills: prev.skills.filter(
+          (s) => s.toLowerCase() !== skillToRemove.toLowerCase(),
+        ),
+      }));
       return;
     }
 

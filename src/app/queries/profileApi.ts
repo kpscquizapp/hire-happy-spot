@@ -26,13 +26,28 @@ export const profileApi = createApi({
       }),
       invalidatesTags: ["Profile"],
     }),
-    removeSkill: builder.mutation({
-      query: (data) => ({
+    removeSkill: builder.mutation<void, number>({
+      query: (skillId) => ({
         headers: getAuthHeaders(),
         method: "DELETE",
-        url: `jobboard/profile/skills/${data}`,
+        url: `jobboard/profile/skills/${skillId}`,
       }),
-      invalidatesTags: ["Profile"],
+      async onQueryStarted(skillId, { dispatch, queryFulfilled }) {
+        const patch = dispatch(
+          profileApi.util.updateQueryData("getProfile", undefined, (draft) => {
+            if (!draft?.candidateProfile?.skills) return;
+            draft.candidateProfile.skills =
+              draft.candidateProfile.skills.filter(
+                (s: any) => s.id !== skillId,
+              );
+          }),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patch.undo();
+        }
+      },
     }),
   }),
 });
