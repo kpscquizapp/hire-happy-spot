@@ -34,15 +34,15 @@ jobs:
       - name: Debug Build Output
         run: |
           echo "📁 Build folder contents:"
-          ls -la build/
+          ls -la dist/
           echo "📏 Build folder size:"
-          du -sh build/
+          du -sh dist/
 
       - name: Copy .htaccess (if exists)
         run: |
           if [ -f .htaccess ]; then
-            cp .htaccess build/
-            echo "✅ .htaccess copied to build/"
+            cp .htaccess dist/
+            echo "✅ .htaccess copied to dist/"
           else
             echo "ℹ️ No .htaccess found"
           fi
@@ -55,7 +55,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           port: 22
-          source: "build/*"
+          source: "dist/*"
           target: "/tmp/hireon-fe-build"
           strip_components: 0
           rm: true  # Remove existing target before upload
