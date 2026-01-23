@@ -1,6 +1,9 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
-import { useUpdateProfileMutation } from "@/app/queries/profileApi";
+import {
+  useRemoveSkillMutation,
+  useUpdateProfileMutation,
+} from "@/app/queries/profileApi";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 type FormElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+type Skill = {
+  id: number;
+  name: string;
+};
 
 interface CandidateProfileUpdateProps {
   data: {
@@ -19,7 +27,7 @@ interface CandidateProfileUpdateProps {
       availability?: string;
       bio?: string;
       yearsExperience?: string | number;
-      skills?: Array<{ name: string; id?: string } | string>;
+      skills?: Skill[];
       headline?: string;
       resourceType?: string;
       availableIn?: string;
@@ -168,6 +176,8 @@ const CandidateProfileUpdate = ({
   const [updateProfile, { isLoading: isUpdating, isError: updateError }] =
     useUpdateProfileMutation();
 
+  const [removeSkill] = useRemoveSkillMutation();
+
   const availabilityOptions = [
     "freelance",
     "full-time",
@@ -175,9 +185,9 @@ const CandidateProfileUpdate = ({
     "contract",
   ];
   const resourceTypeOptions = [
-    "BENCH RESOURCE",
-    "ACTIVE RESOURCE",
-    "AVAILABLE",
+    "Bench Resource",
+    "Active Resource",
+    "Available",
   ];
   const availableInOptions = ["Immediate", "15 Days", "30 Days"];
   const englishProficiencyOptions = [
@@ -232,11 +242,45 @@ const CandidateProfileUpdate = ({
     }
   };
 
-  const removeSkill = (skillToRemove: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      skills: prev.skills.filter((name) => name !== skillToRemove),
-    }));
+  const removeSkills = async (skillToRemove: string) => {
+    // Guard clause: prevent removing the last skill
+    if (formData.skills.length <= 1) {
+      toast.warning("You must have at least one skill");
+      return;
+    }
+
+    // Find the skill to remove
+    const filteredSkill = data?.candidateProfile?.skills?.find(
+      (skill) => skill.name.toLowerCase() === skillToRemove.toLowerCase(),
+    );
+
+    // Guard clause: skill not found
+    if (filteredSkill == null || filteredSkill.id == null) {
+      // Not persisted yet — remove locally
+      setFormData((prev) => ({
+        ...prev,
+        skills: prev.skills.filter(
+          (s) => s.toLowerCase() !== skillToRemove.toLowerCase(),
+        ),
+      }));
+      return;
+    }
+
+    try {
+      await removeSkill(Number(filteredSkill.id)).unwrap();
+      toast.success("Skill removed successfully!");
+
+      setFormData((prev) => ({
+        ...prev,
+        skills: prev.skills.filter(
+          (s) => s.toLowerCase() !== skillToRemove.toLowerCase(),
+        ),
+      }));
+    } catch (err) {
+      const errorMessage =
+        err?.data?.message || err?.message || "Failed to remove skill";
+      toast.error(errorMessage);
+    }
   };
 
   const addWorkExperience = () => {
@@ -393,6 +437,7 @@ const CandidateProfileUpdate = ({
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleInputChange}
+                required
                 className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
@@ -406,6 +451,7 @@ const CandidateProfileUpdate = ({
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleInputChange}
+                required
                 className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
@@ -421,6 +467,7 @@ const CandidateProfileUpdate = ({
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
+                required
                 className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               />
             </div>
@@ -470,7 +517,7 @@ const CandidateProfileUpdate = ({
                 name="availability"
                 value={formData.availability}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+                className="w-full px-3 py-2 border capitalize dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
               >
                 <option value="">Select availability</option>
                 {availabilityOptions.map((option) => (
@@ -505,7 +552,7 @@ const CandidateProfileUpdate = ({
                 name="resourceType"
                 value={formData.resourceType}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white capitalize"
               >
                 <option value="">Select resource type</option>
                 {resourceTypeOptions.map((option) => (
@@ -526,7 +573,7 @@ const CandidateProfileUpdate = ({
                 name="availableIn"
                 value={formData.availableIn}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white capitalize"
               >
                 <option value="">Select availability</option>
                 {availableInOptions.map((option) => (
@@ -545,7 +592,7 @@ const CandidateProfileUpdate = ({
                 name="englishProficiency"
                 value={formData.englishProficiency}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
+                className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white capitalize"
               >
                 <option value="">Select proficiency</option>
                 {englishProficiencyOptions.map((option) => (
@@ -637,7 +684,7 @@ const CandidateProfileUpdate = ({
                 {name}
                 <button
                   type="button"
-                  onClick={() => removeSkill(name)}
+                  onClick={() => removeSkills(name)}
                   className="hover:text-teal-900 min-w-0 min-h-0"
                 >
                   <X className="w-4 h-4" />
