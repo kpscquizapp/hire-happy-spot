@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
 import {
   useRemoveSkillMutation,
+  useRemoveWorkExperienceMutation,
   useUpdateProfileMutation,
 } from "@/app/queries/profileApi";
 import { toast } from "sonner";
@@ -35,6 +36,7 @@ interface CandidateProfileUpdateProps {
       hourlyRateMin?: number | string;
       hourlyRateMax?: number | string;
       workExperiences?: Array<{
+        id: number | null;
         companyName: string;
         role: string;
         employmentType: string;
@@ -64,6 +66,12 @@ interface CandidateProfileUpdateProps {
 const CandidateProfileUpdate = ({
   data,
 }: CandidateProfileUpdateProps): JSX.Element => {
+  // api calls
+  const [updateProfile, { isLoading: isUpdating, isError: updateError }] =
+    useUpdateProfileMutation();
+  const [removeSkill] = useRemoveSkillMutation();
+  const [removeWorkExperience] = useRemoveWorkExperienceMutation();
+
   const [skillInput, setSkillInput] = useState("");
 
   const skills =
@@ -74,6 +82,7 @@ const CandidateProfileUpdate = ({
   const workExperiences =
     data?.candidateProfile?.workExperiences?.map(
       ({
+        id,
         companyName,
         role,
         employmentType,
@@ -82,6 +91,7 @@ const CandidateProfileUpdate = ({
         description,
         location,
       }) => ({
+        id,
         companyName,
         role,
         employmentType,
@@ -172,11 +182,6 @@ const CandidateProfileUpdate = ({
       certifications: certification || [],
     });
   }, [data]);
-
-  const [updateProfile, { isLoading: isUpdating, isError: updateError }] =
-    useUpdateProfileMutation();
-
-  const [removeSkill] = useRemoveSkillMutation();
 
   const availabilityOptions = [
     "freelance",
@@ -289,6 +294,7 @@ const CandidateProfileUpdate = ({
       workExperiences: [
         ...prev.workExperiences,
         {
+          id: null,
           companyName: "",
           role: "",
           employmentType: "",
@@ -310,11 +316,31 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeWorkExperience = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      workExperiences: prev.workExperiences.filter((_, i) => i !== index),
-    }));
+  const removeWorkExperiences = async (id: number | null, index?: number) => {
+    if (id == null) {
+      if (index == null) return;
+      setFormData((prev) => ({
+        ...prev,
+        workExperiences: prev.workExperiences.filter((_, i) => i !== index),
+      }));
+      return;
+    }
+
+    try {
+      await removeWorkExperience(id).unwrap();
+      toast.success("Work experience removed successfully!");
+
+      setFormData((prev) => ({
+        ...prev,
+        workExperiences: prev.workExperiences.filter((exp) => exp.id !== id),
+      }));
+    } catch (err) {
+      const errorMessage =
+        err?.data?.message ||
+        err?.message ||
+        "Failed to remove work experience";
+      toast.error(errorMessage);
+    }
   };
 
   const addProject = () => {
@@ -386,6 +412,7 @@ const CandidateProfileUpdate = ({
       if (!date || date.trim() === "") return null;
       return date;
     };
+
     const payload = {
       ...formData,
       certifications: formData.certifications.map((cert) => ({
@@ -722,7 +749,7 @@ const CandidateProfileUpdate = ({
               </h3>
               <button
                 type="button"
-                onClick={() => removeWorkExperience(index)}
+                onClick={() => removeWorkExperiences(exp.id, index)}
                 className="text-red-600 hover:text-red-800"
               >
                 <Trash2 className="w-5 h-5" />
@@ -796,9 +823,13 @@ const CandidateProfileUpdate = ({
                 </Label>
                 <input
                   type="date"
-                  value={exp.endDate || ""}
+                  value={exp.endDate ?? ""}
                   onChange={(e) =>
-                    updateWorkExperience(index, "endDate", e.target.value)
+                    updateWorkExperience(
+                      index,
+                      "endDate",
+                      e.target.value === "" ? null : e.target.value,
+                    )
                   }
                   className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
                 />
