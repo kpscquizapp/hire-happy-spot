@@ -316,11 +316,12 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeWorkExperiences = async (id: number | null) => {
+  const removeWorkExperiences = async (id: number | null, index?: number) => {
     if (id == null) {
+      if (index == null) return;
       setFormData((prev) => ({
         ...prev,
-        workExperiences: prev.workExperiences.filter((exp) => exp.id !== id),
+        workExperiences: prev.workExperiences.filter((_, i) => i !== index),
       }));
       return;
     }
@@ -748,7 +749,7 @@ const CandidateProfileUpdate = ({
               </h3>
               <button
                 type="button"
-                onClick={() => removeWorkExperiences(exp.id)}
+                onClick={() => removeWorkExperiences(exp.id, index)}
                 className="text-red-600 hover:text-red-800"
               >
                 <Trash2 className="w-5 h-5" />
