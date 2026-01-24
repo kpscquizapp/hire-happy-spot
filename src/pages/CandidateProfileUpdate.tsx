@@ -388,7 +388,7 @@ const CandidateProfileUpdate = ({
 
       setFormData((prev) => ({
         ...prev,
-        projects: prev.projects.filter((_, i) => i !== index),
+        projects: prev.projects.filter((proj) => proj.id !== id),
       }));
     } catch (err) {
       const errorMessage =
