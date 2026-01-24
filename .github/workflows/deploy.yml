@@ -25,56 +25,51 @@ jobs:
       - name: Build React App
         run: npm run build
 
+      - name: Debug Build
+        run: |
+          echo "📁 Build contents:"
+          ls -la build/ || ls -la dist/
+          du -sh build/ || du -sh dist/
+
       - name: Copy .htaccess (if exists)
         run: |
           if [ -f .htaccess ]; then
-            cp .htaccess build/
+            cp .htaccess build/ 2>/dev/null || cp .htaccess dist/ 2>/dev/null
+            echo "✅ .htaccess copied"
           fi
 
-      - name: Deploy to EC2 (Atomic + Backup)
-        uses: appleboy/ssh-action@v0.1.9
+      - name: Upload Build to EC2
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          source: "build/*,dist/*"
+          target: "/tmp/hireon-fe-build"
+          rm: true
+
+      - name: Deploy Frontend (Amazon Linux)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
           key: ${{ secrets.EC2_KEY }}
           script: |
             set -e
-
-            APP_NAME="hireon-fe"
-            BASE_DIR="/var/www/html"
-            DEPLOY_DIR="$BASE_DIR/$APP_NAME"
-            RELEASE_DIR="$BASE_DIR/${APP_NAME}_release"
-            BACKUP_DIR="$BASE_DIR/backups"
-            TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
-
-            echo "📁 Creating required directories"
-            sudo mkdir -p "$BACKUP_DIR"
-
-            if [ -d "$DEPLOY_DIR" ]; then
-              echo "📦 Backing up current deployment"
-              sudo tar -czf "$BACKUP_DIR/${APP_NAME}-${TIMESTAMP}.tar.gz" -C "$BASE_DIR" "$APP_NAME"
-            else
-              echo "ℹ️ No existing deployment found"
-            fi
-
-            echo "🧹 Cleaning old backups (keep last 3)"
-            sudo ls -1t "$BACKUP_DIR"/${APP_NAME}-*.tar.gz 2>/dev/null | tail -n +4 | xargs -r sudo rm -f
-
-            echo "🚀 Deploying new build"
-            sudo rm -rf "$RELEASE_DIR"
-            sudo mkdir -p "$RELEASE_DIR"
-
-            sudo rsync -av --delete build/ "$RELEASE_DIR/"
-
-            echo "🔁 Switching release (atomic)"
-            sudo rm -rf "$DEPLOY_DIR"
-            sudo mv "$RELEASE_DIR" "$DEPLOY_DIR"
-
-            echo "🔐 Fixing permissions"
-            sudo chown -R www-data:www-data "$DEPLOY_DIR"
-            sudo chmod -R 755 "$DEPLOY_DIR"
-
-            echo "🔄 Restarting Apache"
-            sudo systemctl restart apache2 || sudo systemctl restart httpd
-
-            echo "✅ Deployment completed successfully"
+            echo "📤 Verifying upload: $(ls -la /tmp/hireon-fe-build/ | head -3)"
+            
+            # Atomic deploy
+            sudo rsync -av --delete /tmp/hireon-fe-build/ /var/www/html/hireon-fe/
+            sudo rm -rf /tmp/hireon-fe-build
+            
+            # Permissions
+            sudo chown -R apache:apache /var/www/html/hireon-fe
+            sudo chmod -R 755 /var/www/html/hireon-fe
+            sudo find /var/www/html/hireon-fe -type f -exec chmod 644 {} \;
+            
+            # Restart Apache
+            sudo systemctl restart httpd
+            
+            echo "✅ Frontend deployed!"
+            echo "📁 Deployed files:"
+            ls -la /var/www/html/hireon-fe/ | head -5
