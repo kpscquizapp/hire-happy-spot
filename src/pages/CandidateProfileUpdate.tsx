@@ -316,11 +316,11 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeWorkExperiences = async (id: number | null, index: number) => {
+  const removeWorkExperiences = async (id: number | null) => {
     if (id == null) {
       setFormData((prev) => ({
         ...prev,
-        workExperiences: prev.workExperiences.filter((_, i) => i !== index),
+        workExperiences: prev.workExperiences.filter((exp) => exp.id !== id),
       }));
       return;
     }
@@ -331,7 +331,7 @@ const CandidateProfileUpdate = ({
 
       setFormData((prev) => ({
         ...prev,
-        workExperiences: prev.workExperiences.filter((_, i) => i !== index),
+        workExperiences: prev.workExperiences.filter((exp) => exp.id !== id),
       }));
     } catch (err) {
       const errorMessage =
@@ -748,7 +748,7 @@ const CandidateProfileUpdate = ({
               </h3>
               <button
                 type="button"
-                onClick={() => removeWorkExperiences(exp.id, index)}
+                onClick={() => removeWorkExperiences(exp.id)}
                 className="text-red-600 hover:text-red-800"
               >
                 <Trash2 className="w-5 h-5" />
