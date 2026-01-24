@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
 import {
+  useRemoveProjectMutation,
   useRemoveSkillMutation,
   useRemoveWorkExperienceMutation,
   useUpdateProfileMutation,
@@ -46,6 +47,7 @@ interface CandidateProfileUpdateProps {
         location: string;
       }>;
       projects?: Array<{
+        id: number | null;
         title: string;
         description: string;
         techStack: string[];
@@ -71,6 +73,7 @@ const CandidateProfileUpdate = ({
     useUpdateProfileMutation();
   const [removeSkill] = useRemoveSkillMutation();
   const [removeWorkExperience] = useRemoveWorkExperienceMutation();
+  const [removeProject] = useRemoveProjectMutation();
 
   const [skillInput, setSkillInput] = useState("");
 
@@ -104,7 +107,8 @@ const CandidateProfileUpdate = ({
 
   const projects =
     data?.candidateProfile?.projects?.map(
-      ({ title, description, techStack, projectUrl, isFeatured }) => ({
+      ({ id, title, description, techStack, projectUrl, isFeatured }) => ({
+        id,
         title,
         description,
         techStack,
@@ -206,7 +210,6 @@ const CandidateProfileUpdate = ({
     "Part-time",
     "Contract",
     "Freelance",
-    "Internship",
   ];
 
   const handleInputChange = (e: ChangeEvent<FormElement>) => {
@@ -349,6 +352,7 @@ const CandidateProfileUpdate = ({
       projects: [
         ...prev.projects,
         {
+          id: null,
           title: "",
           description: "",
           techStack: [],
@@ -368,11 +372,29 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeProject = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      projects: prev.projects.filter((_, i) => i !== index),
-    }));
+  const removeProjects = async (id: number | null, index?: number) => {
+    if (id == null) {
+      if (index == null) return;
+      setFormData((prev) => ({
+        ...prev,
+        projects: prev.projects.filter((_, i) => i !== index),
+      }));
+      return;
+    }
+
+    try {
+      await removeProject(id).unwrap();
+      toast.success("Project removed successfully!");
+
+      setFormData((prev) => ({
+        ...prev,
+        projects: prev.projects.filter((proj) => proj.id !== id),
+      }));
+    } catch (err) {
+      const errorMessage =
+        err?.data?.message || err?.message || "Failed to remove project";
+      toast.error(errorMessage);
+    }
   };
 
   const addCertification = () => {
@@ -880,7 +902,7 @@ const CandidateProfileUpdate = ({
               </h3>
               <button
                 type="button"
-                onClick={() => removeProject(index)}
+                onClick={() => removeProjects(project.id, index)}
                 className="text-red-600 hover:text-red-800"
               >
                 <Trash2 className="w-5 h-5" />

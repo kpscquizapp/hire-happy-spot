@@ -58,6 +58,14 @@ export const profileApi = createApi({
       }),
       invalidatesTags: ["Profile"],
     }),
+    removeProject: builder.mutation<void, number>({
+      query: (projectId) => ({
+        headers: getAuthHeaders(),
+        method: "DELETE",
+        url: `jobboard/profile/projects/${projectId}`,
+      }),
+      invalidatesTags: ["Profile"],
+    }),
   }),
 });
 
@@ -66,4 +74,5 @@ export const {
   useUpdateProfileMutation,
   useRemoveSkillMutation,
   useRemoveWorkExperienceMutation,
+  useRemoveProjectMutation,
 } = profileApi;
