@@ -36,7 +36,7 @@ interface CandidateProfileUpdateProps {
       hourlyRateMin?: number | string;
       hourlyRateMax?: number | string;
       workExperiences?: Array<{
-        id: number;
+        id: number | null;
         companyName: string;
         role: string;
         employmentType: string;
@@ -316,14 +316,17 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeWorkExperiences = async (id: number, index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      workExperiences: prev.workExperiences.filter((_, i) => i !== index),
-    }));
+  const removeWorkExperiences = async (id: number | null, index: number) => {
+    if (id == null) {
+      setFormData((prev) => ({
+        ...prev,
+        workExperiences: prev.workExperiences.filter((_, i) => i !== index),
+      }));
+      return;
+    }
 
     try {
-      await removeWorkExperience(Number(id)).unwrap();
+      await removeWorkExperience(id).unwrap();
       toast.success("Work experience removed successfully!");
 
       setFormData((prev) => ({
@@ -408,7 +411,7 @@ const CandidateProfileUpdate = ({
       if (!date || date.trim() === "") return null;
       return date;
     };
-    console.log(formData);
+
     const payload = {
       ...formData,
       certifications: formData.certifications.map((cert) => ({
