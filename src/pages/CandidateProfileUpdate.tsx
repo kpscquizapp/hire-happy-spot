@@ -386,6 +386,7 @@ const CandidateProfileUpdate = ({
       if (!date || date.trim() === "") return null;
       return date;
     };
+    console.log(formData);
     const payload = {
       ...formData,
       certifications: formData.certifications.map((cert) => ({
@@ -796,9 +797,13 @@ const CandidateProfileUpdate = ({
                 </Label>
                 <input
                   type="date"
-                  value={exp.endDate || ""}
+                  value={exp.endDate ?? ""}
                   onChange={(e) =>
-                    updateWorkExperience(index, "endDate", e.target.value)
+                    updateWorkExperience(
+                      index,
+                      "endDate",
+                      e.target.value === "" ? null : e.target.value,
+                    )
                   }
                   className="w-full px-3 py-2 border dark:border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary dark:bg-slate-800 dark:border-slate-500 bg-white"
                 />

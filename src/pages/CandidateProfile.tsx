@@ -48,7 +48,7 @@ const CandidateProfile = () => {
                       {data?.firstName} {data?.lastName}
                     </h2>
                     <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-3 font-semibold break-words">
-                      {data?.title}
+                      {profile?.headline}
                     </p>
 
                     {/* Details Card */}
