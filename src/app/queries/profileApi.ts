@@ -50,6 +50,14 @@ export const profileApi = createApi({
       },
       invalidatesTags: ["Profile"],
     }),
+    removeWorkExperience: builder.mutation<void, number>({
+      query: (workExperienceId) => ({
+        headers: getAuthHeaders(),
+        method: "DELETE",
+        url: `jobboard/profile/work-experience/${workExperienceId}`,
+      }),
+      invalidatesTags: ["Profile"],
+    }),
   }),
 });
 
@@ -57,4 +65,5 @@ export const {
   useGetProfileQuery,
   useUpdateProfileMutation,
   useRemoveSkillMutation,
+  useRemoveWorkExperienceMutation,
 } = profileApi;
