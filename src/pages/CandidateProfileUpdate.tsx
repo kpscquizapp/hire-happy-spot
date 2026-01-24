@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
 import {
+  useRemoveCertificateMutation,
   useRemoveProjectMutation,
   useRemoveSkillMutation,
   useRemoveWorkExperienceMutation,
@@ -55,6 +56,7 @@ interface CandidateProfileUpdateProps {
         isFeatured: boolean;
       }>;
       certifications?: Array<{
+        id: number | null;
         name: string;
         issuedBy: string;
         issueDate: string;
@@ -74,6 +76,7 @@ const CandidateProfileUpdate = ({
   const [removeSkill] = useRemoveSkillMutation();
   const [removeWorkExperience] = useRemoveWorkExperienceMutation();
   const [removeProject] = useRemoveProjectMutation();
+  const [removeCertificate] = useRemoveCertificateMutation();
 
   const [skillInput, setSkillInput] = useState("");
 
@@ -119,7 +122,8 @@ const CandidateProfileUpdate = ({
 
   const certification =
     data?.candidateProfile?.certifications?.map(
-      ({ name, issueDate, issuedBy, expiryDate, credentialUrl }) => ({
+      ({ id, name, issueDate, issuedBy, expiryDate, credentialUrl }) => ({
+        id,
         name,
         issueDate,
         issuedBy,
@@ -403,6 +407,7 @@ const CandidateProfileUpdate = ({
       certifications: [
         ...prev.certifications,
         {
+          id: null,
           name: "",
           issuedBy: "",
           issueDate: "",
@@ -422,11 +427,29 @@ const CandidateProfileUpdate = ({
     }));
   };
 
-  const removeCertification = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      certifications: prev.certifications.filter((_, i) => i !== index),
-    }));
+  const removeCertification = async (id: number | null, index?: number) => {
+    if (id == null) {
+      if (index == null) return;
+      setFormData((prev) => ({
+        ...prev,
+        certifications: prev.certifications.filter((_, i) => i !== index),
+      }));
+      return;
+    }
+
+    try {
+      await removeCertificate(id).unwrap();
+      toast.success("Certificate removed successfully!");
+
+      setFormData((prev) => ({
+        ...prev,
+        certifications: prev.certifications.filter((cert) => cert.id !== id),
+      }));
+    } catch (err) {
+      const errorMessage =
+        err?.data?.message || err?.message || "Failed to remove certificate";
+      toast.error(errorMessage);
+    }
   };
 
   const handleSubmit = () => {
@@ -1005,7 +1028,7 @@ const CandidateProfileUpdate = ({
               </h3>
               <button
                 type="button"
-                onClick={() => removeCertification(index)}
+                onClick={() => removeCertification(cert.id, index)}
                 className="text-red-600 hover:text-red-800"
               >
                 <Trash2 className="w-5 h-5" />
