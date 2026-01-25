@@ -32,24 +32,6 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   const latestRequestIdRef = useRef<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Close modal on Escape key
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isModalOpen) {
-        setIsModalOpen(false);
-        setSelectedResume(null);
-        setPreviewUrl((prev) => {
-          revokePreviewUrl(prev);
-          return null;
-        });
-        latestRequestIdRef.current = null;
-        clearPreview();
-      }
-    };
-    window.addEventListener("keydown", handleEscape);
-    return () => window.removeEventListener("keydown", handleEscape);
-  }, [isModalOpen]);
-
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (isModalOpen) {
@@ -165,7 +147,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
           <div className="relative border-2 border-dashed border-slate-300 rounded-lg p-8 md:p-12 mb-6 bg-white transition-all duration-200 dark:bg-slate-800">
             <div className="flex flex-col items-center text-center">
               <div className="rounded-full p-4 mb-4">
-                <Upload className="w-6 h-6 md:w-8 md:h-8 text-slate-600" />
+                <Upload className="w-6 h-6 md:w-8 md:h-8 text-slate-600 dark:text-slate-300" />
               </div>
               <h3 className="text-base md:text-lg font-semibold text-slate-800 mb-2 dark:text-white">
                 Upload Your Resume
@@ -307,7 +289,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                     <a
                       href={previewUrl}
                       download={selectedResume?.originalName}
-                      className="text-blue-600 hover:underline text-sm md:text-base inline-block"
+                      className="text-blue-600 dark:text-blue-400 hover:underline text-sm md:text-base inline-block"
                     >
                       Download to view
                     </a>
