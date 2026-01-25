@@ -80,11 +80,12 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   }, [previewUrl]);
 
   const handleDelete = async (resumeId: number) => {
-    if (selectedResume?.id === resumeId) {
-      clearPreview();
-    }
+    const wasSelected = selectedResume?.id === resumeId;
     try {
       await removeResume(resumeId).unwrap();
+      if (wasSelected) {
+        clearPreview();
+      }
       toast.success("Resume deleted successfully!");
     } catch (error) {
       console.error("Error deleting resume:", error);
@@ -230,6 +231,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                 <Button
                   variant="ghost"
                   size="sm"
+                  aria-label="Close preview"
                   onClick={() => clearPreview()}
                 >
                   <X className="w-4 h-4" />
