@@ -15,8 +15,8 @@ const CandidateProfile = () => {
   const { data: response, isLoading, isError } = useGetProfileQuery();
   const data = response?.data;
   const profile = data?.candidateProfile;
-
   const candidateId = useId();
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900">
       <Header />
@@ -382,7 +382,11 @@ const CandidateProfile = () => {
                   <TabsContent value="resume" className="space-y-4">
                     <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
                       <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
-                        <ResumeManager resumes={profile.resumes} />
+                        <ResumeManager
+                          resumes={
+                            profile && profile.resumes ? profile.resumes : []
+                          }
+                        />
                       </CardContent>
                     </Card>
                   </TabsContent>

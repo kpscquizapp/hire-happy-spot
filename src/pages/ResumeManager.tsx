@@ -1,13 +1,5 @@
-import React, { useState } from "react";
-import {
-  Upload,
-  Eye,
-  Download,
-  Trash2,
-  FileText,
-  X,
-  Maximize2,
-} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Upload, Eye, Trash2, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -16,8 +8,6 @@ import {
   useUploadResumeMutation,
 } from "@/app/queries/profileApi";
 import { toast } from "sonner";
-import { config } from "../services/service";
-import { getAuthHeaders } from "@/lib/helpers";
 
 type Resume = {
   id: number;
@@ -40,14 +30,22 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+  const revokePreviewUrl = (url?: string | null) => {
+    if (url?.startsWith("blob:")) URL.revokeObjectURL(url);
+  };
+
+  const clearPreview = () => {
+    revokePreviewUrl(previewUrl);
+    setPreviewUrl(null);
+    setSelectedResume(null);
+  };
+
   const handleView = async (resume: Resume) => {
     setSelectedResume(resume);
 
     // Clean up previous blob URL
-    if (previewUrl?.startsWith("blob:")) {
-      URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(null);
-    }
+    revokePreviewUrl(previewUrl);
+    setPreviewUrl(null);
 
     try {
       const { data, error } = await viewResume({ resumeId: resume.id });
@@ -67,17 +65,13 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   };
 
   // Cleanup blob URLs
-  React.useEffect(() => {
-    return () => {
-      if (previewUrl && previewUrl.startsWith("blob:")) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
+  useEffect(() => {
+    return () => revokePreviewUrl(previewUrl);
   }, [previewUrl]);
 
   const handleDelete = async (resumeId: number) => {
     if (selectedResume?.id === resumeId) {
-      setSelectedResume(null);
+      clearPreview();
     }
     try {
       await removeResume(resumeId).unwrap();
@@ -88,9 +82,19 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
     }
   };
 
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const maxBytes = 5 * 1024 * 1024;
+    const allowedTypes = [
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    if (file.size > maxBytes || !allowedTypes.includes(file.type)) {
+      toast.error("Please upload a PDF or DOCX file up to 5MB.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("resume", file);
@@ -105,7 +109,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   };
 
   return (
-    <div className="flex gap-y-4 md:gap-x-4 md:flex-row flex-col h-screen bg-slate-50">
+    <div className="flex gap-y-4 md:gap-x-4 md:flex-row flex-col-reverse h-screen bg-slate-50">
       {/* Left Panel */}
       <div className="w-full md:w-96  overflow-y-auto">
         {/* Upload Area */}
@@ -120,9 +124,6 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
             <h3 className="text-lg font-semibold text-slate-800 mb-2">
               Upload Your Resume
             </h3>
-            <p className="text-sm text-slate-600 mb-1">
-              Drag and drop your file here, or click to browse
-            </p>
             <p className="text-xs text-slate-500 mb-6">
               Supported formats: PDF, DOCX <br /> Maximum size: 5MB
             </p>
@@ -145,7 +146,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
         {/* Resume List */}
         <div>
           <h2 className="text-lg font-semibold text-slate-800 mb-4">
-            Your Resumes ({resumes.length})
+            Your Resumes {resumes.length}
           </h2>
 
           <div className="space-y-3">
@@ -200,9 +201,9 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
       </div>
 
       {/* Right Panel - PDF Preview */}
-      <div className="flex-1 bg-slate-100">
+      <div className="flex-1">
         {selectedResume ? (
-          <div className="h-full flex flex-col">
+          <div className="h-96 md:h-full flex flex-col">
             {/* Header */}
             <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -212,13 +213,10 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                 </span>
               </div>
               <div className="flex gap-2">
-                <Button variant="ghost" size="sm">
-                  <Maximize2 className="w-4 h-4" />
-                </Button>
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setSelectedResume(null)}
+                  onClick={() => clearPreview()}
                 >
                   <X className="w-4 h-4" />
                 </Button>

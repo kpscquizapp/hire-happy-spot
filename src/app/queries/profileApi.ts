@@ -1,22 +1,16 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { config } from "../../services/service";
 import { getAuthHeaders } from "@/lib/helpers";
-import Cookies from "js-cookie";
 
 export const profileApi = createApi({
   reducerPath: "profileApi",
   baseQuery: fetchBaseQuery({
     baseUrl: config.baseURL,
     prepareHeaders: (headers) => {
-      const userInfo = Cookies.get("userInfo");
-
-      if (userInfo) {
-        const { token } = JSON.parse(userInfo);
-        if (token) {
-          headers.set("Authorization", `Bearer ${token}`);
-        }
+      const { Authorization } = getAuthHeaders();
+      if (Authorization) {
+        headers.set("Authorization", Authorization);
       }
-
       return headers;
     },
   }),
