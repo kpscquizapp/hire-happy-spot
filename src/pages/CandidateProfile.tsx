@@ -9,6 +9,7 @@ import { Clock, DollarSign, Globe, MapPin, Briefcase } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetProfileQuery } from "@/app/queries/profileApi";
 import CandidateProfileUpdate from "./CandidateProfileUpdate";
+import ResumeManager from "./ResumeManager";
 
 const CandidateProfile = () => {
   const { data: response, isLoading, isError } = useGetProfileQuery();
@@ -50,6 +51,13 @@ const CandidateProfile = () => {
                     <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-3 font-semibold break-words">
                       {profile?.headline ?? data?.title ?? "—"}
                     </p>
+                    <div className="flex flex-wrap gap-2 justify-center mb-4">
+                      <Badge className="bg-green-100 text-green-700 hover:bg-green-100 font-bold text-xs">
+                        {profile?.profileType === "bench"
+                          ? "BENCH RESOURCE"
+                          : "CONTRACT RESOURCE"}
+                      </Badge>
+                    </div>
 
                     {/* Details Card */}
                     <div className="border-t-2 border-t-gray-200 dark:border-t-slate-700 mt-6 sm:mt-8" />
@@ -374,7 +382,7 @@ const CandidateProfile = () => {
                   <TabsContent value="resume" className="space-y-4">
                     <Card className="dark:bg-slate-800 dark:border-slate-700 w-full">
                       <CardContent className="p-6 text-center text-gray-500 dark:text-slate-400">
-                        Resume viewer coming soon...
+                        <ResumeManager resumes={profile.resumes} />
                       </CardContent>
                     </Card>
                   </TabsContent>
