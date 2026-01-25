@@ -59,6 +59,9 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
 
       if (data && latestRequestIdRef.current === resume.id) {
         setPreviewUrl(data); // data is already a blob URL string
+      } else if (data) {
+        // Stale response - revoke the unused blob URL
+        revokePreviewUrl(data);
       }
     } catch (error) {
       console.error("Error loading resume:", error);
@@ -175,7 +178,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                       </p>
                     </div>
                     <p className="text-sm text-slate-500 text-left">
-                      {(resume.fileSize / (1024 * 1024)).toFixed(1)}Mb •
+                      {(resume.fileSize / (1024 * 1024)).toFixed(1)} MB •
                       Uploaded {resume.uploadedAt}
                     </p>
                   </div>
@@ -242,12 +245,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="text-center">
                     <FileText className="w-24 h-24 text-slate-400 mx-auto mb-4" />
-                    <p className="text-white text-lg">
-                      PDF Preview Not Available
-                    </p>
-                    <p className="text-slate-400 text-sm mt-2">
-                      This is a sample resume. Upload a new PDF to preview it.
-                    </p>
+                    <p>Loading...</p>
                   </div>
                 </div>
               )}

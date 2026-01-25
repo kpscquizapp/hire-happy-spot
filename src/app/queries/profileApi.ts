@@ -20,7 +20,6 @@ export const profileApi = createApi({
   endpoints: (builder) => ({
     getProfile: builder.query<any, void>({
       query: (data) => ({
-        headers: getAuthHeaders(),
         method: "GET",
         url: "jobboard/profile",
       }),
@@ -34,7 +33,7 @@ export const profileApi = createApi({
       transformResponse: (blob: Blob) => URL.createObjectURL(blob),
       keepUnusedDataFor: 0, // Don't cache - immediately remove from store
     }),
-    uploadResume: builder.mutation({
+    uploadResume: builder.mutation<void, FormData>({
       query: (formData) => ({
         url: "jobboard/profile/resume",
         method: "POST",
@@ -44,7 +43,6 @@ export const profileApi = createApi({
     }),
     updateProfile: builder.mutation({
       query: (data) => ({
-        headers: getAuthHeaders(),
         method: "PUT",
         url: "jobboard/profile",
         body: data,
@@ -53,7 +51,6 @@ export const profileApi = createApi({
     }),
     removeSkill: builder.mutation<void, number>({
       query: (skillId) => ({
-        headers: getAuthHeaders(),
         method: "DELETE",
         url: `jobboard/profile/skills/${skillId}`,
       }),
@@ -77,7 +74,6 @@ export const profileApi = createApi({
     }),
     removeWorkExperience: builder.mutation<void, number>({
       query: (workExperienceId) => ({
-        headers: getAuthHeaders(),
         method: "DELETE",
         url: `jobboard/profile/work-experience/${workExperienceId}`,
       }),
@@ -85,7 +81,6 @@ export const profileApi = createApi({
     }),
     removeProject: builder.mutation<void, number>({
       query: (projectId) => ({
-        headers: getAuthHeaders(),
         method: "DELETE",
         url: `jobboard/profile/projects/${projectId}`,
       }),
@@ -93,7 +88,6 @@ export const profileApi = createApi({
     }),
     removeCertificate: builder.mutation<void, number>({
       query: (certificateId) => ({
-        headers: getAuthHeaders(),
         method: "DELETE",
         url: `jobboard/profile/certifications/${certificateId}`,
       }),
@@ -101,7 +95,6 @@ export const profileApi = createApi({
     }),
     removeResume: builder.mutation<void, number>({
       query: (resumeId) => ({
-        headers: getAuthHeaders(),
         method: "DELETE",
         url: `jobboard/profile/resume/${resumeId}`,
       }),
