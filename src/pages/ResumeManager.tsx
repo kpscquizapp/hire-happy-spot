@@ -8,6 +8,7 @@ import {
   useUploadResumeMutation,
 } from "@/app/queries/profileApi";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Resume = {
   id: number;
@@ -31,6 +32,8 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const latestRequestIdRef = useRef<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const isMobile = useIsMobile();
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -56,40 +59,74 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
     setIsModalOpen(false);
   };
 
+  // const handleView = async (resume: Resume) => {
+  //   const requestId = resume.id;
+  //   latestRequestIdRef.current = requestId;
+  //   setSelectedResume(resume);
+  //   setIsModalOpen(true);
+
+  //   // Clean up previous blob URL
+  //   revokePreviewUrl(previewUrl);
+  //   setPreviewUrl(null);
+
+  //   try {
+  //     const { data, error } = await viewResume({ resumeId: resume.id });
+
+  //     if (error) {
+  //       throw new Error("Failed to fetch resume");
+  //     }
+
+  //     if (data && latestRequestIdRef.current === requestId) {
+  //       setPreviewUrl(data); // data is already a blob URL string
+  //     } else if (data) {
+  //       // Stale response - revoke the unused blob URL
+  //       revokePreviewUrl(data);
+  //     }
+  //   } catch (error) {
+  //     if (latestRequestIdRef.current !== requestId) {
+  //       return; // stale error, ignore
+  //     }
+  //     console.error("Error loading resume:", error);
+  //     toast.error("Failed to load resume preview");
+  //     setSelectedResume(null);
+  //     setIsModalOpen(false);
+  //   }
+  // };
+
+
   const handleView = async (resume: Resume) => {
-    const requestId = resume.id;
-    latestRequestIdRef.current = requestId;
+  try {
+    const { data, error } = await viewResume({ resumeId: resume.id });
+
+    if (error || !data) {
+      throw new Error("Failed to fetch resume");
+    }
+
+    const isPdf =
+      resume.mimeType === "application/pdf" ||
+      resume.originalName.toLowerCase().endsWith(".pdf");
+
+    // Mobile → open PDF in new tab
+    if (isMobile && isPdf) {
+      window.open(data, "_blank");
+      return;
+    }
+
+    // Desktop → modal preview
+    latestRequestIdRef.current = resume.id;
     setSelectedResume(resume);
     setIsModalOpen(true);
 
-    // Clean up previous blob URL
     revokePreviewUrl(previewUrl);
-    setPreviewUrl(null);
-
-    try {
-      const { data, error } = await viewResume({ resumeId: resume.id });
-
-      if (error) {
-        throw new Error("Failed to fetch resume");
-      }
-
-      if (data && latestRequestIdRef.current === requestId) {
-        setPreviewUrl(data); // data is already a blob URL string
-      } else if (data) {
-        // Stale response - revoke the unused blob URL
-        revokePreviewUrl(data);
-      }
-    } catch (error) {
-      if (latestRequestIdRef.current !== requestId) {
-        return; // stale error, ignore
-      }
-      console.error("Error loading resume:", error);
-      toast.error("Failed to load resume preview");
-      setSelectedResume(null);
-      setIsModalOpen(false);
-    }
-  };
-
+    setPreviewUrl(data);
+  } catch (err) {
+    console.error("Error loading resume:", err);
+    toast.error("Failed to open resume");
+  }
+};
+useEffect(() => {
+  if (isMobile && isModalOpen) clearPreview();
+}, [isMobile]);
   const handleOpenInTab = async (resume: Resume) => {
     try {
       const { data, error } = await viewResume({ resumeId: resume.id });
