@@ -165,6 +165,11 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
           </h2>
 
           <div className="space-y-3">
+            {resumes.length === 0 && (
+              <p className="text-sm text-slate-500 text-center py-4">
+                No resumes uploaded yet. Upload your first resume above.
+              </p>
+            )}
             {resumes.map((resume) => (
               <Card
                 key={resume.id}
@@ -241,12 +246,26 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
 
             {/* PDF Preview Area */}
             <div className="flex-1 bg-slate-700">
-              {previewUrl ? (
+              {previewUrl && selectedResume.mimeType === "application/pdf" ? (
                 <iframe
                   src={previewUrl}
                   className="w-full h-full rounded border-2 border-slate-600"
                   title={selectedResume.originalName}
                 />
+              ) : previewUrl ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="text-center text-slate-300">
+                    <FileText className="w-24 h-24 mx-auto mb-4" />
+                    <p>Preview not available for this file type</p>
+                    <a
+                      href={previewUrl}
+                      download={selectedResume.originalName}
+                      className="text-blue-400 hover:underline mt-2 inline-block"
+                    >
+                      Download to view
+                    </a>
+                  </div>
+                </div>
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="text-center">
