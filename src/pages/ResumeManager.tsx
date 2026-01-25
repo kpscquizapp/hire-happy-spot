@@ -90,6 +90,19 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
     }
   };
 
+  const handleOpenInTab = async (resume: Resume) => {
+    try {
+      const { data, error } = await viewResume({ resumeId: resume.id });
+      if (error) throw new Error("Failed to fetch resume");
+      if (data) {
+        window.open(data, "_blank");
+      }
+    } catch (error) {
+      console.error("Error opening resume in tab:", error);
+      toast.error("Failed to open resume");
+    }
+  };
+
   // Cleanup blob URLs
   useEffect(() => {
     return () => revokePreviewUrl(previewUrl);
@@ -218,6 +231,18 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                       <Eye className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                       View
                     </Button>
+                    {(resume.mimeType === "application/pdf" ||
+                      resume.originalName.toLowerCase().endsWith(".pdf")) && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleOpenInTab(resume)}
+                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 text-xs md:text-sm"
+                      >
+                        <Eye className="w-3 h-3 md:w-4 md:h-4 mr-1" />
+                        Tab
+                      </Button>
+                    )}
                     <Button
                       variant="outline"
                       size="sm"
@@ -273,7 +298,11 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
 
             {/* Modal Body - PDF Preview */}
             <div className="flex-1 bg-slate-100 dark:bg-slate-800 overflow-hidden">
-              {previewUrl && selectedResume?.mimeType === "application/pdf" ? (
+              {previewUrl &&
+              (selectedResume?.mimeType === "application/pdf" ||
+                selectedResume?.originalName
+                  .toLowerCase()
+                  .endsWith(".pdf")) ? (
                 <iframe
                   src={previewUrl}
                   className="w-full h-full border-0"
@@ -299,9 +328,18 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="text-center">
                     <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm md:text-base mb-2">
                       Loading preview...
                     </p>
+                    {previewUrl && (
+                      <a
+                        href={previewUrl}
+                        download={selectedResume?.originalName}
+                        className="text-blue-600 dark:text-blue-400 hover:underline text-sm md:text-base"
+                      >
+                        Download PDF directly
+                      </a>
+                    )}
                   </div>
                 </div>
               )}
