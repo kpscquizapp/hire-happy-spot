@@ -43,7 +43,8 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   };
 
   const handleView = async (resume: Resume) => {
-    latestRequestIdRef.current = resume.id;
+    const requestId = resume.id;
+    latestRequestIdRef.current = requestId;
     setSelectedResume(resume);
 
     // Clean up previous blob URL
@@ -57,13 +58,16 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
         throw new Error("Failed to fetch resume");
       }
 
-      if (data && latestRequestIdRef.current === resume.id) {
+      if (data && latestRequestIdRef.current === requestId) {
         setPreviewUrl(data); // data is already a blob URL string
       } else if (data) {
         // Stale response - revoke the unused blob URL
         revokePreviewUrl(data);
       }
     } catch (error) {
+      if (latestRequestIdRef.current !== requestId) {
+        return; // stale error, ignore
+      }
       console.error("Error loading resume:", error);
       toast.error("Failed to load resume preview");
       setSelectedResume(null);
