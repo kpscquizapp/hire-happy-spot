@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useGetJobsByIdQuery } from "@/app/queries/jobApi";
+import BarLoader from "@/components/Loader/BarLoader";
 
 const employmentTypeMap: Record<string, string> = {
   "full-time": "Permanent",
@@ -46,7 +47,9 @@ const JobDetailsPage = () => {
   }
   const apiJob = data?.data?.[0];
 
-  if (isLoading) return <div className="p-6">Loading...</div>;
+  // if (isLoading) return <div className="p-6">Loading...</div>;
+  if (isLoading) return <BarLoader />;
+
   if (isError || !apiJob) return <div className="p-6">Job not found</div>;
 
   const statusMap: Record<string, string> = {

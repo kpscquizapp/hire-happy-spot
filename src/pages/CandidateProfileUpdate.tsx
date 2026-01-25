@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { X, Plus, Trash2, Briefcase, Award, FolderGit2 } from "lucide-react";
+import { X, Plus, Trash2, Briefcase, Award, FolderGit2, LoaderCircle } from "lucide-react";
 import {
   useRemoveCertificateMutation,
   useRemoveProjectMutation,
@@ -77,6 +77,11 @@ const CandidateProfileUpdate = ({
   const [removeWorkExperience] = useRemoveWorkExperienceMutation();
   const [removeProject] = useRemoveProjectMutation();
   const [removeCertificate] = useRemoveCertificateMutation();
+  
+  const [loadingSkillId, setLoadingSkillId] = useState<number | null>(null);
+  const [loadingExpId, setLoadingExpId] = useState<number | null>(null);
+  const [loadingProjectId, setLoadingProjectId] = useState<number | null>(null);
+  const [loadingCertId, setLoadingCertId] = useState<number | null>(null);
 
   const [skillInput, setSkillInput] = useState("");
 
@@ -279,6 +284,7 @@ const CandidateProfileUpdate = ({
     }
 
     try {
+      setLoadingSkillId(Number(filteredSkill.id));
       await removeSkill(Number(filteredSkill.id)).unwrap();
       toast.success("Skill removed successfully!");
 
@@ -292,6 +298,8 @@ const CandidateProfileUpdate = ({
       const errorMessage =
         err?.data?.message || err?.message || "Failed to remove skill";
       toast.error(errorMessage);
+    } finally {
+      setLoadingSkillId(null);
     }
   };
 
@@ -334,6 +342,7 @@ const CandidateProfileUpdate = ({
     }
 
     try {
+      setLoadingExpId(id);
       await removeWorkExperience(id).unwrap();
       toast.success("Work experience removed successfully!");
 
@@ -347,6 +356,8 @@ const CandidateProfileUpdate = ({
         err?.message ||
         "Failed to remove work experience";
       toast.error(errorMessage);
+    } finally {
+      setLoadingExpId(null);
     }
   };
 
@@ -387,6 +398,7 @@ const CandidateProfileUpdate = ({
     }
 
     try {
+      setLoadingProjectId(id);
       await removeProject(id).unwrap();
       toast.success("Project removed successfully!");
 
@@ -398,6 +410,8 @@ const CandidateProfileUpdate = ({
       const errorMessage =
         err?.data?.message || err?.message || "Failed to remove project";
       toast.error(errorMessage);
+    } finally {
+      setLoadingProjectId(null);
     }
   };
 
@@ -438,6 +452,7 @@ const CandidateProfileUpdate = ({
     }
 
     try {
+      setLoadingCertId(id);
       await removeCertificate(id).unwrap();
       toast.success("Certificate removed successfully!");
 
@@ -449,6 +464,8 @@ const CandidateProfileUpdate = ({
       const errorMessage =
         err?.data?.message || err?.message || "Failed to remove certificate";
       toast.error(errorMessage);
+    } finally {
+      setLoadingCertId(null);
     }
   };
 
@@ -756,10 +773,18 @@ const CandidateProfileUpdate = ({
                 {name}
                 <button
                   type="button"
+                  disabled={loadingSkillId !== null}
                   onClick={() => removeSkills(name)}
-                  className="hover:text-teal-900 min-w-0 min-h-0"
+                  className="hover:text-teal-900 min-w-0 min-h-0 flex items-center justify-center"
                 >
-                  <X className="w-4 h-4" />
+                  {loadingSkillId ===
+                  (data?.candidateProfile?.skills?.find(
+                    (s) => s.name.toLowerCase() === name.toLowerCase(),
+                  )?.id || -1) ? (
+                    <LoaderCircle className="w-3 h-3 animate-spin" />
+                  ) : (
+                    <X className="w-4 h-4" />
+                  )}
                 </button>
               </span>
             ))}
@@ -794,10 +819,15 @@ const CandidateProfileUpdate = ({
               </h3>
               <button
                 type="button"
+                disabled={loadingExpId === exp.id && exp.id !== null}
                 onClick={() => removeWorkExperiences(exp.id, index)}
-                className="text-red-600 hover:text-red-800"
+                className="text-red-600 hover:text-red-800 disabled:opacity-50"
               >
-                <Trash2 className="w-5 h-5" />
+                {loadingExpId === exp.id && exp.id !== null ? (
+                  <LoaderCircle className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Trash2 className="w-5 h-5" />
+                )}
               </button>
             </div>
 
@@ -925,10 +955,15 @@ const CandidateProfileUpdate = ({
               </h3>
               <button
                 type="button"
+                disabled={loadingProjectId === project.id && project.id !== null}
                 onClick={() => removeProjects(project.id, index)}
-                className="text-red-600 hover:text-red-800"
+                className="text-red-600 hover:text-red-800 disabled:opacity-50"
               >
-                <Trash2 className="w-5 h-5" />
+                {loadingProjectId === project.id && project.id !== null ? (
+                  <LoaderCircle className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Trash2 className="w-5 h-5" />
+                )}
               </button>
             </div>
 
@@ -1028,10 +1063,15 @@ const CandidateProfileUpdate = ({
               </h3>
               <button
                 type="button"
+                disabled={loadingCertId === cert.id && cert.id !== null}
                 onClick={() => removeCertification(cert.id, index)}
-                className="text-red-600 hover:text-red-800"
+                className="text-red-600 hover:text-red-800 disabled:opacity-50"
               >
-                <Trash2 className="w-5 h-5" />
+                {loadingCertId === cert.id && cert.id !== null ? (
+                  <LoaderCircle className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Trash2 className="w-5 h-5" />
+                )}
               </button>
             </div>
 
@@ -1107,9 +1147,16 @@ const CandidateProfileUpdate = ({
         <button
           onClick={handleSubmit}
           disabled={isUpdating}
-          className="flex-1 items-center gap-2 px-4 py-2  bg-primary text-white rounded-md hover:bg-primary/90 transition text-base"
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition text-base disabled:opacity-70"
         >
-          {isUpdating ? "Updating..." : "Update Profile"}
+          {isUpdating ? (
+            <>
+              <LoaderCircle className="w-5 h-5 animate-spin" />
+              <span>Updating...</span>
+            </>
+          ) : (
+            "Update Profile"
+          )}
         </button>
         <button
           onClick={() => {

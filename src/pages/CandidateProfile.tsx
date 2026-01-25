@@ -10,9 +10,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useGetProfileQuery } from "@/app/queries/profileApi";
 import CandidateProfileUpdate from "./CandidateProfileUpdate";
 import ResumeManager from "./ResumeManager";
+import BarLoader from "@/components/Loader/BarLoader";
 
 const CandidateProfile = () => {
-  const { data: response, isLoading, isError } = useGetProfileQuery();
+  const { data: response, isLoading: isLoadingResumeList, isError } = useGetProfileQuery();
   const data = response?.data;
   const profile = data?.candidateProfile;
   const candidateId = useId();
@@ -21,10 +22,8 @@ const CandidateProfile = () => {
     <div className="min-h-screen flex flex-col bg-white dark:bg-slate-900">
       <Header />
 
-      {isLoading ? (
-        <div className="w-full h-screen text-1xl sm:text-3xl flex items-center justify-center dark:text-white">
-          Loading...
-        </div>
+      {isLoadingResumeList ? (
+        <BarLoader />
       ) : isError ? (
         <div className="w-full h-screen flex items-center justify-center">
           <div className="text-red-600">Error loading profile</div>
@@ -386,6 +385,7 @@ const CandidateProfile = () => {
                           resumes={
                             profile && profile.resumes ? profile.resumes : []
                           }
+                          isLoadingResumeList={isLoadingResumeList}
                         />
                       </CardContent>
                     </Card>
