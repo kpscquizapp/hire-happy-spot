@@ -36,6 +36,13 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isModalOpen) {
+        setIsModalOpen(false);
+        setSelectedResume(null);
+        setPreviewUrl((prev) => {
+          revokePreviewUrl(prev);
+          return null;
+        });
+        latestRequestIdRef.current = null;
         clearPreview();
       }
     };
@@ -209,6 +216,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                         {(resume.fileSize / (1024 * 1024)).toFixed(1)} MB •
                         Uploaded{" "}
                         {new Intl.DateTimeFormat("default", {
+                          day: "numeric",
                           month: "short",
                           year: "numeric",
                           hour: "2-digit",
@@ -250,17 +258,23 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 md:p-4"
           onClick={clearPreview}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-title"
         >
           {/* Modal Content */}
           <div
-            className="bg-white rounded-lg shadow-2xl w-[95vw] h-[95vh] md:w-[90vw] md:h-[90vh] flex flex-col overflow-hidden"
+            className="bg-white dark:bg-slate-900 rounded-lg shadow-2xl w-[95vw] h-[95vh] md:w-[90vw] md:h-[90vh] flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
             <div className="bg-white dark:bg-slate-800 border-b border-slate-200 px-3 md:px-6 py-3 md:py-4 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
                 <FileText className="w-4 h-4 md:w-5 md:h-5 text-slate-600 flex-shrink-0 dark:text-slate-400" />
-                <span className="font-medium text-slate-800 truncate text-sm md:text-base dark:text-white">
+                <span
+                  className="font-medium text-slate-800 truncate text-sm md:text-base dark:text-white"
+                  id="modal-title"
+                >
                   {selectedResume?.originalName}
                 </span>
               </div>
@@ -276,7 +290,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
             </div>
 
             {/* Modal Body - PDF Preview */}
-            <div className="flex-1 bg-slate-100 overflow-hidden">
+            <div className="flex-1 bg-slate-100 dark:bg-slate-800 overflow-hidden">
               {previewUrl && selectedResume?.mimeType === "application/pdf" ? (
                 <iframe
                   src={previewUrl}
@@ -285,8 +299,8 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                 />
               ) : previewUrl ? (
                 <div className="w-full h-full flex items-center justify-center p-4">
-                  <div className="text-center text-slate-600">
-                    <FileText className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 text-slate-400" />
+                  <div className="text-center text-slate-600 dark:text-slate-300">
+                    <FileText className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 text-slate-400 dark:text-slate-500" />
                     <p className="text-sm md:text-base mb-2">
                       Preview not available for this file type
                     </p>
@@ -303,7 +317,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
                 <div className="w-full h-full flex items-center justify-center">
                   <div className="text-center">
                     <div className="w-12 h-12 md:w-16 md:h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-slate-600 text-sm md:text-base">
+                    <p className="text-slate-600 dark:text-slate-300 text-sm md:text-base">
                       Loading preview...
                     </p>
                   </div>
