@@ -2,6 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { config } from "../../services/service";
 import { getAuthHeaders } from "@/lib/helpers";
 
+const blobResponseHandler = (response: Response) => response.blob();
+
 export const profileApi = createApi({
   reducerPath: "profileApi",
   baseQuery: fetchBaseQuery({
@@ -27,12 +29,9 @@ export const profileApi = createApi({
     viewResume: builder.query<string, { resumeId: number }>({
       query: ({ resumeId }) => ({
         url: `/jobboard/profile/resume/${resumeId}?view=inline`,
-        responseHandler: async (response) => {
-          const blob = await response.blob();
-          // Convert blob to URL immediately - returns serializable string
-          return URL.createObjectURL(blob);
-        },
+        responseHandler: blobResponseHandler,
       }),
+      transformResponse: (blob: Blob) => URL.createObjectURL(blob),
       keepUnusedDataFor: 0, // Don't cache - immediately remove from store
     }),
     uploadResume: builder.mutation({

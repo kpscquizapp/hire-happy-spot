@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Upload, Eye, Trash2, FileText, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -29,18 +29,21 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
 
   const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const latestRequestIdRef = useRef<number | null>(null);
 
   const revokePreviewUrl = (url?: string | null) => {
     if (url?.startsWith("blob:")) URL.revokeObjectURL(url);
   };
 
   const clearPreview = () => {
+    latestRequestIdRef.current = null;
     revokePreviewUrl(previewUrl);
     setPreviewUrl(null);
     setSelectedResume(null);
   };
 
   const handleView = async (resume: Resume) => {
+    latestRequestIdRef.current = resume.id;
     setSelectedResume(resume);
 
     // Clean up previous blob URL
@@ -54,7 +57,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
         throw new Error("Failed to fetch resume");
       }
 
-      if (data) {
+      if (data && latestRequestIdRef.current === resume.id) {
         setPreviewUrl(data); // data is already a blob URL string
       }
     } catch (error) {
@@ -83,7 +86,8 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const input = e.currentTarget;
+    const file = input.files?.[0];
     if (!file) return;
 
     const maxBytes = 5 * 1024 * 1024;
@@ -93,6 +97,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
     ];
     if (file.size > maxBytes || !allowedTypes.includes(file.type)) {
       toast.error("Please upload a PDF or DOCX file up to 5MB.");
+      input.value = "";
       return;
     }
 
@@ -105,6 +110,8 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes }) => {
     } catch (error) {
       console.error("Error uploading resume:", error);
       toast.error("Failed to upload resume.");
+    } finally {
+      input.value = "";
     }
   };
 
