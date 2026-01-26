@@ -9,6 +9,7 @@ import {
 } from "@/app/queries/profileApi";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import SpinnerLoader from "@/components/Loader/SpinnerLoader";
 
 type Resume = {
   id: number;
@@ -279,6 +280,7 @@ useEffect(() => {
                         >
                           {loadingDeleteId === resume.id ? (
                             <LoaderCircle className="animate-spin w-4 h-4 md:w-5 md:h-5" />
+                          
                           ) : (
                             <>
                               <Trash2 className="w-3 h-3 md:w-4 md:h-4 mr-1" />
