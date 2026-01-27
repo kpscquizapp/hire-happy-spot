@@ -15,16 +15,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
-type UserType = "user" | "candidate" | "employer";
+type UserType = "candidate" | "employer";
 type CandidateStep = 1 | 2 | 3 | 4;
 type EmployerStep = 1 | 2 | 3;
-
-interface UserFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
 
 interface CandidateFormData {
   email: string;
@@ -59,48 +52,41 @@ interface EmployerFormData {
 }
 
 const HirionRegistration = () => {
-  const [selectedType, setSelectedType] = useState<UserType>("user");
+  const [selectedType, setSelectedType] = useState<UserType>("candidate");
   const [candidateStep, setCandidateStep] = useState<CandidateStep>(1);
   const [employerStep, setEmployerStep] = useState<EmployerStep>(1);
   const [showPassword, setShowPassword] = useState(false);
 
-  const [userForm, setUserForm] = useState<UserFormData>({
-    firstName: "John",
-    lastName: "Doe",
-    email: "name@example.com",
-    password: "••••••••",
-  });
-
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>({
-    email: "candidate@example.com",
-    password: "Password123!",
-    confirmPassword: "Password123!",
-    firstName: "Jane",
-    lastName: "Doe",
-    mobileNumber: "+1234567890",
-    candidateType: "Full-Time Job Seeker",
-    primaryJobRole: "Software Engineer",
-    yearsExperience: 5,
-    primarySkills: ["React", "Node.js", "TypeScript"],
-    preferredWorkType: ["remote", "hybrid"],
-    expectedSalaryMin: 800000,
-    expectedSalaryMax: 1200000,
-    availableToJoin: "Immediate",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    firstName: "",
+    lastName: "",
+    mobileNumber: "",
+    candidateType: "",
+    primaryJobRole: "",
+    yearsExperience: null,
+    primarySkills: [],
+    preferredWorkType: [],
+    expectedSalaryMin: null,
+    expectedSalaryMax: null,
+    availableToJoin: "",
     acceptedTerms: true,
     acceptedPrivacyPolicy: true,
   });
 
   const [employerForm, setEmployerForm] = useState<EmployerFormData>({
-    email: "employer@company.com",
-    password: "Password123",
-    firstName: "Boss",
-    lastName: "Man",
-    companyName: "Tech Corp",
-    industry: "Software",
-    location: "San Francisco, CA",
-    companySize: "51-200",
-    website: "https://techcorp.com",
-    description: "Leading tech company...",
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    companyName: "",
+    industry: "",
+    location: "",
+    companySize: "",
+    website: "",
+    description: "",
   });
 
   const handleNext = () => {
@@ -142,6 +128,7 @@ const HirionRegistration = () => {
                       firstName: e.target.value,
                     })
                   }
+                  placeholder="Enter your first name"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -163,6 +150,7 @@ const HirionRegistration = () => {
                       lastName: e.target.value,
                     })
                   }
+                  placeholder="Enter your last name"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -184,6 +172,7 @@ const HirionRegistration = () => {
                 }
                 autoComplete="true"
                 required
+                placeholder="Enter your email address"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -202,6 +191,7 @@ const HirionRegistration = () => {
                   setEmployerForm({ ...employerForm, password: e.target.value })
                 }
                 required
+                placeholder="Enter your password"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
               <button
@@ -240,6 +230,7 @@ const HirionRegistration = () => {
                     companyName: e.target.value,
                   })
                 }
+                placeholder="Enter your company name"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -258,6 +249,7 @@ const HirionRegistration = () => {
                 onChange={(e) =>
                   setEmployerForm({ ...employerForm, industry: e.target.value })
                 }
+                placeholder="Enter your industry"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -268,13 +260,14 @@ const HirionRegistration = () => {
               >
                 Location
               </Label>
-              <input
+              <Input
                 type="text"
                 id="location"
                 value={employerForm.location}
                 onChange={(e) =>
                   setEmployerForm({ ...employerForm, location: e.target.value })
                 }
+                placeholder="Enter your location"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
@@ -296,6 +289,7 @@ const HirionRegistration = () => {
                 }
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
+                <option hidden>Select Company Size</option>
                 <option>1-10</option>
                 <option>11-50</option>
                 <option>51-200</option>
@@ -322,6 +316,7 @@ const HirionRegistration = () => {
                 onChange={(e) =>
                   setEmployerForm({ ...employerForm, website: e.target.value })
                 }
+                placeholder="Enter your website"
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
@@ -341,6 +336,7 @@ const HirionRegistration = () => {
                     description: e.target.value,
                   })
                 }
+                placeholder="Enter your description"
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -373,6 +369,7 @@ const HirionRegistration = () => {
                       firstName: e.target.value,
                     })
                   }
+                  placeholder="Enter your first name"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -394,6 +391,7 @@ const HirionRegistration = () => {
                       lastName: e.target.value,
                     })
                   }
+                  placeholder="Enter your last name"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -413,6 +411,7 @@ const HirionRegistration = () => {
                 onChange={(e) =>
                   setCandidateForm({ ...candidateForm, email: e.target.value })
                 }
+                placeholder="Enter your email"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -434,6 +433,7 @@ const HirionRegistration = () => {
                     password: e.target.value,
                   })
                 }
+                placeholder="Enter your password"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -473,6 +473,7 @@ const HirionRegistration = () => {
                     confirmPassword: e.target.value,
                   })
                 }
+                placeholder="Confirm your password"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -507,6 +508,7 @@ const HirionRegistration = () => {
                     mobileNumber: e.target.value,
                   })
                 }
+                placeholder="Enter your mobile number"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -530,6 +532,7 @@ const HirionRegistration = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
+                <option hidden>Select Candidate Type</option>
                 <option>Full-Time Job Seeker</option>
                 <option>Part-Time Job Seeker</option>
                 <option>Contract Worker</option>
@@ -553,6 +556,7 @@ const HirionRegistration = () => {
                     primaryJobRole: e.target.value,
                   })
                 }
+                placeholder="Enter your primary job role"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -581,6 +585,7 @@ const HirionRegistration = () => {
                     yearsExperience: parseInt(e.target.value),
                   })
                 }
+                placeholder="Enter your years of experience"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -604,6 +609,7 @@ const HirionRegistration = () => {
                       .map((s) => s.trim()),
                   })
                 }
+                placeholder="Enter your primary skills"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -665,6 +671,7 @@ const HirionRegistration = () => {
                       expectedSalaryMin: parseInt(e.target.value),
                     })
                   }
+                  placeholder="Enter your expected min salary"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -686,6 +693,7 @@ const HirionRegistration = () => {
                       expectedSalaryMax: parseInt(e.target.value),
                     })
                   }
+                  placeholder="Enter your expected max salary"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -781,7 +789,7 @@ const HirionRegistration = () => {
             </h2>
 
             <p className="text-gray-600 dark:text-gray-400 mb-6 mt-6">
-              Register as a user, candidate, or employer and manage hiring, job
+              Register as a candidate, or employer and manage hiring, job
               search, and bench deployment in one place.
             </p>
 
@@ -807,7 +815,7 @@ const HirionRegistration = () => {
               <div className="flex items-start gap-3">
                 <User className="w-5 h-5 text-primary dark:text-primary/90 mt-0.5 flex-shrink-0" />
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Unified experience for users, candidates & employers
+                  Unified experience for candidates & employers
                 </p>
               </div>
               <div className="flex items-start gap-3">
@@ -830,28 +838,7 @@ const HirionRegistration = () => {
               Select how you want to use Hirion and create your account.
             </p>
 
-            <div className="grid grid-cols-3 gap-3 mb-6">
-              <button
-                onClick={() => setSelectedType("user")}
-                className={`p-4 rounded-lg border-2 text-center transition-all ${
-                  selectedType === "user"
-                    ? "border-green-600 bg-green-50 dark:bg-green-900/50"
-                    : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
-                }`}
-              >
-                <User
-                  className={`w-6 h-6 mx-auto mb-2 ${selectedType === "user" ? "text-green-600" : "text-gray-500 dark:text-gray-400"}`}
-                />
-                <div
-                  className={`font-semibold text-sm ${selectedType === "user" ? "text-green-600" : "text-gray-900 dark:text-gray-200"}`}
-                >
-                  User
-                </div>
-                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  General access
-                </div>
-              </button>
-
+            <div className="grid grid-cols-2 gap-3 mb-6">
               <button
                 onClick={() => {
                   setSelectedType("candidate");
@@ -935,103 +922,6 @@ const HirionRegistration = () => {
             )}
 
             <div className="space-y-4">
-              {selectedType === "user" && (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label
-                        htmlFor="firstName"
-                        className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
-                      >
-                        First Name
-                      </Label>
-                      <Input
-                        id="firstName"
-                        type="text"
-                        value={userForm.firstName}
-                        onChange={(e) =>
-                          setUserForm({
-                            ...userForm,
-                            firstName: e.target.value,
-                          })
-                        }
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor="lastName"
-                        className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
-                      >
-                        Last Name
-                      </Label>
-                      <input
-                        id="lastName"
-                        type="text"
-                        value={userForm.lastName}
-                        onChange={(e) =>
-                          setUserForm({ ...userForm, lastName: e.target.value })
-                        }
-                        required
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="email"
-                      className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
-                    >
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={userForm.email}
-                      onChange={(e) =>
-                        setUserForm({ ...userForm, email: e.target.value })
-                      }
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-                    />
-                  </div>
-                  <div className="relative">
-                    <Label
-                      htmlFor="password"
-                      className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
-                    >
-                      Password
-                    </Label>
-                    <input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      value={userForm.password}
-                      onChange={(e) =>
-                        setUserForm({ ...userForm, password: e.target.value })
-                      }
-                      required
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-4 top-10 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors min-h-0 min-w-0"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={
-                        showPassword ? "Hide password" : "Show password"
-                      }
-                      aria-pressed={showPassword}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-5 w-5" />
-                      ) : (
-                        <Eye className="h-5 w-5" />
-                      )}
-                    </button>
-                  </div>
-                </>
-              )}
-
               {selectedType === "candidate" && renderCandidateStep()}
 
               {selectedType === "employer" && renderEmployerStep()}
@@ -1059,8 +949,7 @@ const HirionRegistration = () => {
                 </div>
               )}
 
-              {(selectedType === "user" ||
-                (selectedType === "candidate" && candidateStep === 4) ||
+              {((selectedType === "candidate" && candidateStep === 4) ||
                 (selectedType === "employer" && employerStep === 3)) && (
                 <button className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold">
                   Register & Continue

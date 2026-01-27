@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import UserMenu from "./UserMenu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
@@ -17,10 +16,6 @@ const AuthButtons = ({
   // const { user } = useAuth();
 
   const user = useSelector((state: any) => state.user.userDetails);
-
-  if (user) {
-    return <UserMenu />;
-  }
 
   if (isMobile) {
     return (
@@ -57,7 +52,7 @@ const AuthButtons = ({
           "rounded-lg font-medium text-sm h-9 px-4",
           isDark
             ? "text-white/80 hover:text-white hover:bg-white/10"
-            : "text-foreground hover:text-primary hover:bg-primary/5"
+            : "text-foreground hover:text-primary hover:bg-primary/5",
         )}
         asChild
       >
@@ -72,7 +67,7 @@ const AuthButtons = ({
           "rounded-lg font-medium text-sm h-9 px-4",
           isDark
             ? "text-white/80 hover:text-white hover:bg-white/10"
-            : "text-foreground hover:text-primary hover:bg-primary/5"
+            : "text-foreground hover:text-primary hover:bg-primary/5",
         )}
         asChild
       >

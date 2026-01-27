@@ -299,7 +299,12 @@ const Login = () => {
                       >
                         Sign up
                       </button>
-                      <Link to="/registration">Sign Up</Link>
+                      <Link
+                        to="/registration"
+                        className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors"
+                      >
+                        Sign Up
+                      </Link>
                     </div>
                   </div>
                 </CardContent>
