@@ -90,7 +90,7 @@ const HirionRegistration = () => {
   });
 
   const validateCandidateStep = (step: number): boolean => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     switch (step) {
       case 1:
         if (
@@ -177,7 +177,7 @@ const HirionRegistration = () => {
   };
 
   const validateEmployerStep = (step: number): boolean => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     switch (step) {
       case 1:
         if (
@@ -242,13 +242,7 @@ const HirionRegistration = () => {
       if (!validateEmployerStep(3)) return;
     }
 
-    const { password: _ep, ...safeEmployerForm } = employerForm;
-    const {
-      password: _cp,
-      confirmPassword: _ccp,
-      ...safeCandidateForm
-    } = candidateForm;
-    console.log(safeEmployerForm, safeCandidateForm);
+    //submit logic (e.g., API call, form submission, etc.)
   };
 
   const renderEmployerStep = () => {
@@ -728,11 +722,12 @@ const HirionRegistration = () => {
                 onChange={(e) =>
                   setCandidateForm({
                     ...candidateForm,
-                    yearsExperience: e.target.value
-                      ? Number.isNaN(parseInt(e.target.value, 10))
+                    yearsExperience:
+                      e.target.value === ""
                         ? null
-                        : parseInt(e.target.value, 10)
-                      : null,
+                        : Number.isNaN(e.target.valueAsNumber)
+                          ? null
+                          : e.target.valueAsNumber,
                   })
                 }
                 placeholder="Enter your years of experience"
@@ -822,11 +817,12 @@ const HirionRegistration = () => {
                   onChange={(e) =>
                     setCandidateForm({
                       ...candidateForm,
-                      expectedSalaryMin: e.target.value
-                        ? Number.isNaN(parseInt(e.target.value, 10))
+                      expectedSalaryMin:
+                        e.target.value === ""
                           ? null
-                          : parseInt(e.target.value, 10)
-                        : null,
+                          : Number.isNaN(e.target.valueAsNumber)
+                            ? null
+                            : e.target.valueAsNumber,
                     })
                   }
                   placeholder="Enter your expected min salary"
@@ -849,11 +845,12 @@ const HirionRegistration = () => {
                   onChange={(e) =>
                     setCandidateForm({
                       ...candidateForm,
-                      expectedSalaryMax: e.target.value
-                        ? Number.isNaN(parseInt(e.target.value, 10))
+                      expectedSalaryMax:
+                        e.target.value === ""
                           ? null
-                          : parseInt(e.target.value, 10)
-                        : null,
+                          : Number.isNaN(e.target.valueAsNumber)
+                            ? null
+                            : e.target.valueAsNumber,
                     })
                   }
                   placeholder="Enter your expected max salary"
