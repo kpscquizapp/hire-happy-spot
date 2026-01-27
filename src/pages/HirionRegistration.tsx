@@ -930,11 +930,11 @@ const HirionRegistration = () => {
   return (
     <>
       <Header />
-      <div className="min-h-screen pb-16 pt-28 bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-        <div className="w-full bg-white dark:bg-gray-800 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 rounded-lg shadow-lg ">
-          <div className="dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-800 bg-gradient-to-br from-[#f7f9fc] to-[#f0f6ff] p-8">
+      <div className="min-h-screen pb-16 pt-28 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
+        <div className="w-full bg-white dark:bg-gray-900 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 rounded-lg rounded-tr-lg rounded-br-lg shadow-lg">
+          <div className="dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 bg-gradient-to-br from-[#f7f9fc] to-[#f0f6ff] p-8 lg:rounded-bl-lg rounded-tr-lg rounded-tl-lg lg:rounded-tl-none lg:rounded-tr-none">
             <div className="flex items-center gap-3 mb-6">
-              <div className="bg-primary rounded-lg p-2">
+              <div className="bg-primary p-2">
                 <Building2 className="w-6 h-6 text-white" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -990,7 +990,7 @@ const HirionRegistration = () => {
               © 2026 Hirion Talent Solutions. All rights reserved.
             </p>
           </div>
-          <div className="dark:bg-gray-800 p-8">
+          <div className="dark:bg-gray-900 p-8 rounded-br-lg rounded-tr-lg">
             <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
               Account Registration
             </h2>

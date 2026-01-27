@@ -16,43 +16,41 @@ import {
   Target,
   Users,
   TrendingUp,
-  CheckCircle2,
   Sparkles,
   Shield,
 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { useLoginMutation } from "@/app/queries/loginApi";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store";
+import { setUser } from "@/app/slices/userAuth";
 
 const EmployerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [keepSignedIn, setKeepSignedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { user, login } = useAuth();
+  const [login, { isLoading: isLoadingLogin }] = useLoginMutation();
+  const userDetails = useSelector((state: RootState) => state.user.userDetails);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user && user.role === "employer") {
+    if (!userDetails) return;
+    if (userDetails.role === "employer") {
       navigate("/employer-dashboard");
     }
-  }, [user, navigate]);
+  }, [userDetails, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
     try {
-      const success = await login(email, password, "employer");
-      if (success) {
-        toast.success("Welcome back!");
-        navigate("/employer-dashboard");
-      } else {
-        toast.error("Invalid credentials");
-      }
+      const data = await login({ email, password }).unwrap();
+      dispatch(setUser(data));
+      toast.success("Welcome back!");
+      navigate("/employer-dashboard");
     } catch (error) {
-      toast.error("An error occurred. Please try again.");
-    } finally {
-      setIsLoading(false);
+      toast.error("Invalid credentials");
     }
   };
 
@@ -206,9 +204,9 @@ const EmployerLogin = () => {
                     <Button
                       type="submit"
                       className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-all text-base shadow-lg"
-                      disabled={isLoading}
+                      disabled={isLoadingLogin}
                     >
-                      {isLoading ? (
+                      {isLoadingLogin ? (
                         "Signing in..."
                       ) : (
                         <>
