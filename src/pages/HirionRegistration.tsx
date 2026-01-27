@@ -90,6 +90,7 @@ const HirionRegistration = () => {
   });
 
   const validateCandidateStep = (step: number): boolean => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     switch (step) {
       case 1:
         if (
@@ -101,7 +102,6 @@ const HirionRegistration = () => {
           toast.error("Please fill in all required fields.");
           return false;
         }
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         if (!emailRegex.test(candidateForm.email?.trim())) {
           toast.error("Invalid email address.");
           return false;
@@ -141,6 +141,13 @@ const HirionRegistration = () => {
           return false;
         }
         if (
+          candidateForm.expectedSalaryMin === null ||
+          candidateForm.expectedSalaryMax === null
+        ) {
+          toast.error("Please enter your expected salary range.");
+          return false;
+        }
+        if (
           candidateForm.expectedSalaryMin !== null &&
           candidateForm.expectedSalaryMax !== null &&
           candidateForm.expectedSalaryMin > candidateForm.expectedSalaryMax
@@ -170,6 +177,7 @@ const HirionRegistration = () => {
   };
 
   const validateEmployerStep = (step: number): boolean => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     switch (step) {
       case 1:
         if (
@@ -181,7 +189,6 @@ const HirionRegistration = () => {
           toast.error("Please fill in all required fields.");
           return false;
         }
-        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
         if (!emailRegex.test(employerForm.email?.trim())) {
           toast.error("Invalid email address.");
           return false;
@@ -229,9 +236,10 @@ const HirionRegistration = () => {
   };
 
   const handleSubmit = () => {
-    if (!candidateForm.availableToJoin.trim()) {
-      toast.error("Please enter date available to join.");
-      return;
+    if (selectedType === "candidate") {
+      if (!validateCandidateStep(4)) return;
+    } else {
+      if (!validateEmployerStep(3)) return;
     }
 
     const { password: _ep, ...safeEmployerForm } = employerForm;
