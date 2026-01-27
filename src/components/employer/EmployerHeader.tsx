@@ -33,10 +33,7 @@ const EmployerHeader = () => {
         </Button> */}
 
         {/* User Menu */}
-        <ProfileMenu
-          btnClass="flex items-center gap-2 px-2"
-          avatarFallback="bg-navy-800 text-white"
-        />
+        <ProfileMenu />
       </div>
     </header>
   );
