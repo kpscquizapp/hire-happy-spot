@@ -32,30 +32,25 @@ const EmployerLogin = () => {
   const [login, { isLoading: isLoadingLogin }] = useLoginMutation();
   const userDetails = useSelector((state: RootState) => state.user.userDetails);
   const dispatch = useDispatch();
-
-  console.log(userDetails);
-
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!userDetails) return;
-    navigate(userDetails.role === "employer" && "/employer-dashboard");
+    if (userDetails.role === "employer") {
+      navigate("/employer-dashboard");
+    }
   }, [userDetails, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const success = await login({ email, password });
-      if ("data" in success) {
-        dispatch(setUser(success?.data));
-        toast.success("Welcome back!");
-        navigate("/employer-dashboard");
-      } else {
-        toast.error("Invalid credentials");
-      }
+      const data = await login({ email, password }).unwrap();
+      dispatch(setUser(data));
+      toast.success("Welcome back!");
+      navigate("/employer-dashboard");
     } catch (error) {
-      toast.error("An error occurred. Please try again.");
+      toast.error("Invalid credentials");
     }
   };
 
