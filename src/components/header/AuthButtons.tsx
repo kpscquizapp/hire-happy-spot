@@ -21,10 +21,7 @@ const AuthButtons = ({
   if (user) {
     return (
       <div className="hidden lg:block">
-        <ProfileMenu
-          btnClass="flex items-center gap-2 px-2 text-white"
-          avatarFallback="bg-primary rounded-full text-white"
-        />
+        <ProfileMenu />
       </div>
     );
   }

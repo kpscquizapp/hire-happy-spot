@@ -13,18 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const ProfileMenu = ({
-  btnClass,
-  avatarFallback,
-}: {
-  btnClass: string;
-  avatarFallback: string;
-}) => {
+const ProfileMenu = () => {
   const user = useSelector((state: any) => state.user.userDetails);
   const [handleLogout, isLoading] = useLogout();
   const navigate = useNavigate();
 
   const handleProfile = () => {
+    if (!user) return;
+
     if (user.role === "employer") {
       navigate("/employer-dashboard");
     } else if (user.role === "candidate") {
@@ -37,17 +33,19 @@ const ProfileMenu = ({
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none" asChild>
           <Avatar className="h-10 w-10 bg-primary cursor-pointer hover:ring-2 hover:ring-teal-400 transition-all">
-            <AvatarImage src="" />
+            {/* <AvatarImage src={user?.profileImage ?? ""} /> */}
             <AvatarFallback className="bg-primary text-white font-semibold">
-              {user.firstName.charAt(0).toUpperCase()}
+              {user?.firstName?.charAt(0)?.toUpperCase() ?? "U"}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuLabel>
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium">{user.firstName}</p>
-              <p className="text-xs text-muted-foreground">{user.email}</p>
+              <p className="text-sm font-medium">{user?.firstName ?? "User"}</p>
+              <p className="text-xs text-muted-foreground">
+                {user?.email ?? "no email provided..."}
+              </p>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
@@ -88,10 +86,10 @@ const ProfileMenu = ({
               <span>Favorite offers</span>
             </Link>
           </DropdownMenuItem> */}
-          <DropdownMenuItem>
+          {/* <DropdownMenuItem>
             <Settings className="mr-2 h-4 w-4" />
             <span>Settings</span>
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={handleLogout}

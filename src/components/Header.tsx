@@ -57,12 +57,7 @@ const Header = () => {
           {/* Mobile Menu Button & Theme Toggle */}
           <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle isDark />
-            {user && (
-              <ProfileMenu
-                btnClass="flex items-center gap-2 px-2 text-white"
-                avatarFallback="bg-primary rounded-full text-white"
-              />
-            )}
+            {user && <ProfileMenu />}
             <MobileMenuToggle
               isOpen={mobileMenuOpen}
               onToggle={toggleMobileMenu}

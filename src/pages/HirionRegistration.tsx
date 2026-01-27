@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 type UserType = "candidate" | "employer";
 type CandidateStep = 1 | 2 | 3 | 4;
@@ -28,16 +29,15 @@ interface CandidateFormData {
   mobileNumber: string;
   candidateType: string;
   primaryJobRole: string;
-  yearsExperience: number;
+  yearsExperience: number | null;
   primarySkills: string[];
   preferredWorkType: string[];
-  expectedSalaryMin: number;
-  expectedSalaryMax: number;
+  expectedSalaryMin: number | null;
+  expectedSalaryMax: number | null;
   availableToJoin: string;
   acceptedTerms: boolean;
   acceptedPrivacyPolicy: boolean;
 }
-
 interface EmployerFormData {
   email: string;
   password: string;
@@ -72,8 +72,8 @@ const HirionRegistration = () => {
     expectedSalaryMin: null,
     expectedSalaryMax: null,
     availableToJoin: "",
-    acceptedTerms: true,
-    acceptedPrivacyPolicy: true,
+    acceptedTerms: false,
+    acceptedPrivacyPolicy: false,
   });
 
   const [employerForm, setEmployerForm] = useState<EmployerFormData>({
@@ -90,6 +90,73 @@ const HirionRegistration = () => {
   });
 
   const handleNext = () => {
+    if (selectedType === "candidate" && candidateStep === 1) {
+      if (
+        !candidateForm.firstName ||
+        !candidateForm.lastName ||
+        !candidateForm.email ||
+        !candidateForm.password
+      ) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+    }
+
+    if (selectedType === "candidate" && candidateStep === 2) {
+      if (candidateForm.password !== candidateForm.confirmPassword) {
+        toast.error("Passwords do not match.");
+        return;
+      }
+    }
+
+    if (selectedType === "employer" && employerStep === 1) {
+      if (
+        !employerForm.firstName ||
+        !employerForm.lastName ||
+        !employerForm.email ||
+        !employerForm.password
+      ) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+    }
+
+    if (selectedType === "candidate" && candidateStep === 2) {
+      if (
+        !candidateForm.mobileNumber ||
+        !candidateForm.candidateType ||
+        !candidateForm.primaryJobRole
+      ) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+    }
+
+    if (selectedType === "candidate" && candidateStep === 3) {
+      if (
+        candidateForm.yearsExperience === null ||
+        candidateForm.primarySkills.length === 0
+      ) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+      if (
+        candidateForm.expectedSalaryMin !== null &&
+        candidateForm.expectedSalaryMax !== null &&
+        candidateForm.expectedSalaryMin > candidateForm.expectedSalaryMax
+      ) {
+        toast.error("Minimum salary cannot exceed maximum salary.");
+        return;
+      }
+    }
+
+    if (selectedType === "candidate" && candidateStep === 3) {
+      if (candidateForm.preferredWorkType.length === 0) {
+        toast.error("Please select at least one preferred work type.");
+        return;
+      }
+    }
+
     if (selectedType === "candidate" && candidateStep < 4) {
       setCandidateStep((prev) => (prev + 1) as CandidateStep);
     } else if (selectedType === "employer" && employerStep < 3) {
@@ -105,6 +172,10 @@ const HirionRegistration = () => {
     }
   };
 
+  const handleSubmit = () => {
+    console.log(employerForm, candidateForm);
+  };
+
   const renderEmployerStep = () => {
     switch (employerStep) {
       case 1:
@@ -112,12 +183,7 @@ const HirionRegistration = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label
-                  htmlFor="firstName"
-                  className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
-                >
-                  First Name
-                </Label>
+                <Label htmlFor="firstName">First Name</Label>
                 <Input
                   id="firstName"
                   type="text"
@@ -130,7 +196,7 @@ const HirionRegistration = () => {
                   }
                   placeholder="Enter your first name"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
               <div>
@@ -152,7 +218,7 @@ const HirionRegistration = () => {
                   }
                   placeholder="Enter your last name"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -170,10 +236,10 @@ const HirionRegistration = () => {
                 onChange={(e) =>
                   setEmployerForm({ ...employerForm, email: e.target.value })
                 }
-                autoComplete="true"
+                autoComplete="email"
                 required
                 placeholder="Enter your email address"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div className="relative">
@@ -192,7 +258,7 @@ const HirionRegistration = () => {
                 }
                 required
                 placeholder="Enter your password"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
               <button
                 type="button"
@@ -232,7 +298,7 @@ const HirionRegistration = () => {
                 }
                 placeholder="Enter your company name"
                 required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
@@ -250,7 +316,7 @@ const HirionRegistration = () => {
                   setEmployerForm({ ...employerForm, industry: e.target.value })
                 }
                 placeholder="Enter your industry"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
@@ -578,17 +644,19 @@ const HirionRegistration = () => {
                 id="yearsExperience"
                 min="0"
                 max="70"
-                value={candidateForm.yearsExperience}
+                value={candidateForm.yearsExperience ?? ""}
                 onChange={(e) =>
                   setCandidateForm({
                     ...candidateForm,
-                    yearsExperience: parseInt(e.target.value),
+                    yearsExperience: e.target.value
+                      ? parseInt(e.target.value, 10)
+                      : null,
                   })
                 }
                 placeholder="Enter your years of experience"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
+              />{" "}
             </div>
             <div>
               <Label
@@ -605,8 +673,11 @@ const HirionRegistration = () => {
                   setCandidateForm({
                     ...candidateForm,
                     primarySkills: e.target.value
-                      .split(",")
-                      .map((s) => s.trim()),
+                      ? e.target.value
+                          .split(",")
+                          .map((s) => s.trim())
+                          .filter(Boolean)
+                      : [],
                   })
                 }
                 placeholder="Enter your primary skills"
@@ -624,7 +695,6 @@ const HirionRegistration = () => {
                     <input
                       type="checkbox"
                       checked={candidateForm.preferredWorkType.includes(type)}
-                      required
                       onChange={(e) => {
                         if (e.target.checked) {
                           setCandidateForm({
@@ -664,11 +734,13 @@ const HirionRegistration = () => {
                 <Input
                   type="number"
                   id="expectedSalaryMin"
-                  value={candidateForm.expectedSalaryMin}
+                  value={candidateForm.expectedSalaryMin ?? ""}
                   onChange={(e) =>
                     setCandidateForm({
                       ...candidateForm,
-                      expectedSalaryMin: parseInt(e.target.value),
+                      expectedSalaryMin: e.target.value
+                        ? parseInt(e.target.value, 10)
+                        : null,
                     })
                   }
                   placeholder="Enter your expected min salary"
@@ -686,11 +758,13 @@ const HirionRegistration = () => {
                 <Input
                   type="number"
                   id="expectedSalaryMax"
-                  value={candidateForm.expectedSalaryMax}
+                  value={candidateForm.expectedSalaryMax ?? ""}
                   onChange={(e) =>
                     setCandidateForm({
                       ...candidateForm,
-                      expectedSalaryMax: parseInt(e.target.value),
+                      expectedSalaryMax: e.target.value
+                        ? parseInt(e.target.value, 10)
+                        : null,
                     })
                   }
                   placeholder="Enter your expected max salary"
@@ -951,8 +1025,11 @@ const HirionRegistration = () => {
 
               {((selectedType === "candidate" && candidateStep === 4) ||
                 (selectedType === "employer" && employerStep === 3)) && (
-                <button className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold">
-                  Register & Continue
+                <button
+                  className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold"
+                  onClick={handleSubmit}
+                >
+                  Sign up & Continue
                 </button>
               )}
             </div>
