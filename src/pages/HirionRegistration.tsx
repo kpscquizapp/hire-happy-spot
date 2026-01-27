@@ -107,21 +107,6 @@ const HirionRegistration = () => {
         toast.error("Passwords do not match.");
         return;
       }
-    }
-
-    if (selectedType === "employer" && employerStep === 1) {
-      if (
-        !employerForm.firstName ||
-        !employerForm.lastName ||
-        !employerForm.email ||
-        !employerForm.password
-      ) {
-        toast.error("Please fill in all required fields.");
-        return;
-      }
-    }
-
-    if (selectedType === "candidate" && candidateStep === 2) {
       if (
         !candidateForm.mobileNumber ||
         !candidateForm.candidateType ||
@@ -148,11 +133,52 @@ const HirionRegistration = () => {
         toast.error("Minimum salary cannot exceed maximum salary.");
         return;
       }
-    }
-
-    if (selectedType === "candidate" && candidateStep === 3) {
       if (candidateForm.preferredWorkType.length === 0) {
         toast.error("Please select at least one preferred work type.");
+        return;
+      }
+    }
+
+    if (selectedType === "candidate" && candidateStep === 4) {
+      if (
+        !candidateForm.acceptedTerms ||
+        !candidateForm.acceptedPrivacyPolicy
+      ) {
+        toast.error("Please accept both terms and privacy policy.");
+        return;
+      }
+      if (!candidateForm.availableToJoin) {
+        toast.error("Please enter date available to join");
+        return;
+      }
+    }
+
+    if (selectedType === "employer" && employerStep === 1) {
+      if (
+        !employerForm.firstName ||
+        !employerForm.lastName ||
+        !employerForm.email ||
+        !employerForm.password
+      ) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+    }
+    if (selectedType === "employer" && employerStep === 2) {
+      if (
+        !employerForm.companyName ||
+        !employerForm.industry ||
+        !employerForm.location ||
+        !employerForm.companySize
+      ) {
+        toast.error("Please fill in all required fields.");
+        return;
+      }
+    }
+
+    if (selectedType === "employer" && employerStep === 3) {
+      if (!employerForm.website || !employerForm.description) {
+        toast.error("Please fill in all required fields.");
         return;
       }
     }
@@ -1008,6 +1034,7 @@ const HirionRegistration = () => {
                   {((selectedType === "candidate" && candidateStep > 1) ||
                     (selectedType === "employer" && employerStep > 1)) && (
                     <button
+                      type="button"
                       onClick={handleBack}
                       className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                     >
@@ -1015,6 +1042,7 @@ const HirionRegistration = () => {
                     </button>
                   )}
                   <button
+                    type="button"
                     onClick={handleNext}
                     className="flex-1 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
                   >

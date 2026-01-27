@@ -33,9 +33,14 @@ const ProfileMenu = () => {
       <DropdownMenu>
         <DropdownMenuTrigger className="focus:outline-none" asChild>
           <Avatar className="h-10 w-10 bg-primary cursor-pointer hover:ring-2 hover:ring-teal-400 transition-all">
-            {/* <AvatarImage src={user?.profileImage ?? ""} /> */}
+            {user?.profileImage ? (
+              <AvatarImage
+                src={user?.profileImage}
+                alt={`${user?.firstName ?? "User"} avatar`}
+              />
+            ) : null}
             <AvatarFallback className="bg-primary text-white font-semibold">
-              {user?.firstName?.charAt(0)?.toUpperCase() ?? "U"}
+              {user?.firstName?.charAt(0)?.toUpperCase() || "U"}
             </AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>
