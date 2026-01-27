@@ -51,6 +51,7 @@ import JobDetailsPage from "./pages/employer/JobDetails";
 import CandidateDetailPage from "./pages/employer/CandidateDetailPage";
 import { useFetchRefreshToken } from "./services/utils/hooks/useFetchRefreshToken";
 import ForgotPassword from "./pages/ForgotPassword";
+import HirionRegistration from "./pages/HirionRegistration";
 
 const queryClient = new QueryClient();
 
@@ -96,9 +97,18 @@ const App = () => {
                     />
                     <Route path="/employer" element={<EmployerLogin />} />
                     <Route path="/employer-login" element={<EmployerLogin />} />
-                    <Route path="/employer-signup" element={<EmployerSignup />} />
-                    <Route path="/contractor-registration" element={<ContractorRegistration />} />
-                    <Route path="/profile-visibility" element={<ProfileVisibility />} />
+                    <Route
+                      path="/employer-signup"
+                      element={<EmployerSignup />}
+                    />
+                    <Route
+                      path="/contractor-registration"
+                      element={<ContractorRegistration />}
+                    />
+                    <Route
+                      path="/profile-visibility"
+                      element={<ProfileVisibility />}
+                    />
                     <Route path="/register" element={<Register />} />
                     <Route path="/jobs" element={<JobSearch />} />
                     <Route path="/jobs/:id" element={<JobDetails />} />
@@ -115,6 +125,10 @@ const App = () => {
                     <Route
                       path="/candidate-register"
                       element={<CandidateRegistration />}
+                    />
+                    <Route
+                      path="/registration"
+                      element={<HirionRegistration />}
                     />
                     <Route path="/profile" element={<CandidateProfile />} />
                     <Route
@@ -138,16 +152,40 @@ const App = () => {
                       <Route path="post-job" element={<PostJob />} />
                       <Route path="hire-fulltime" element={<HireFullTime />} />
                       <Route path="hire-interns" element={<HireInterns />} />
-                      <Route path="contract-hiring" element={<ContractHiring />} />
-                      <Route path="talent-marketplace" element={<TalentMarketplace />} />
-                      <Route path="post-bench-resource" element={<PostBenchResource />} />
-                      <Route path="active-resources" element={<ActiveResources />} />
-                      <Route path="visibility-settings" element={<VisibilitySettings />} />
+                      <Route
+                        path="contract-hiring"
+                        element={<ContractHiring />}
+                      />
+                      <Route
+                        path="talent-marketplace"
+                        element={<TalentMarketplace />}
+                      />
+                      <Route
+                        path="post-bench-resource"
+                        element={<PostBenchResource />}
+                      />
+                      <Route
+                        path="active-resources"
+                        element={<ActiveResources />}
+                      />
+                      <Route
+                        path="visibility-settings"
+                        element={<VisibilitySettings />}
+                      />
                       <Route path="ai-screening" element={<AIScreening />} />
                       <Route path="job/:jobId" element={<JobDetailsPage />} />
-                      <Route path="job/:jobId/candidates" element={<JobCandidates />} />
-                      <Route path="job/:jobId/candidate/:candidateId" element={<CandidateDetailPage />} />
-                      <Route path="interview-results/:candidateId" element={<AIInterviewResults />} />
+                      <Route
+                        path="job/:jobId/candidates"
+                        element={<JobCandidates />}
+                      />
+                      <Route
+                        path="job/:jobId/candidate/:candidateId"
+                        element={<CandidateDetailPage />}
+                      />
+                      <Route
+                        path="interview-results/:candidateId"
+                        element={<AIInterviewResults />}
+                      />
                     </Route>
 
                     {/* Standalone employer routes (redirect to dashboard) */}

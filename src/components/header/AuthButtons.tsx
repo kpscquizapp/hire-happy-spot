@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import UserMenu from "./UserMenu";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
+import ProfileMenu from "./ProfileMenu";
 
 interface AuthButtonsProps {
   isMobile?: boolean;
@@ -19,7 +19,14 @@ const AuthButtons = ({
   const user = useSelector((state: any) => state.user.userDetails);
 
   if (user) {
-    return <UserMenu />;
+    return (
+      <div className="hidden lg:block">
+        <ProfileMenu
+          btnClass="flex items-center gap-2 px-2 text-white"
+          avatarFallback="bg-primary rounded-full text-white"
+        />
+      </div>
+    );
   }
 
   if (isMobile) {
@@ -57,7 +64,7 @@ const AuthButtons = ({
           "rounded-lg font-medium text-sm h-9 px-4",
           isDark
             ? "text-white/80 hover:text-white hover:bg-white/10"
-            : "text-foreground hover:text-primary hover:bg-primary/5"
+            : "text-foreground hover:text-primary hover:bg-primary/5",
         )}
         asChild
       >
@@ -72,7 +79,7 @@ const AuthButtons = ({
           "rounded-lg font-medium text-sm h-9 px-4",
           isDark
             ? "text-white/80 hover:text-white hover:bg-white/10"
-            : "text-foreground hover:text-primary hover:bg-primary/5"
+            : "text-foreground hover:text-primary hover:bg-primary/5",
         )}
         asChild
       >

@@ -6,7 +6,7 @@ import AuthButtons from "./header/AuthButtons";
 import MobileMenuToggle from "./header/MobileMenuToggle";
 import MobileMenu from "./header/MobileMenu";
 import ThemeToggle from "./header/ThemeToggle";
-import ProfileMenu from "./ProfileMenu";
+import ProfileMenu from "./header/ProfileMenu";
 import { useSelector } from "react-redux";
 
 const Header = () => {
@@ -33,7 +33,7 @@ const Header = () => {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isScrolled
           ? "py-2 bg-navy-900/98 backdrop-blur-xl shadow-lg border-b border-white/5"
-          : "py-3 bg-navy-900"
+          : "py-3 bg-navy-900",
       )}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,16 +52,6 @@ const Header = () => {
           <div className="hidden lg:flex items-center gap-2 flex-shrink-0">
             <ThemeToggle isDark />
             <AuthButtons isDark />
-          </div>
-
-          {/* User Profile */}
-          <div className="hidden lg:flex">
-            {user && (
-              <ProfileMenu
-                btnClass="flex items-center gap-2 px-2 text-white"
-                avatarFallback="bg-primary rounded-full text-white"
-              />
-            )}
           </div>
 
           {/* Mobile Menu Button & Theme Toggle */}
