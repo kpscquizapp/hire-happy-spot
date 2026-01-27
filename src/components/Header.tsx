@@ -54,16 +54,6 @@ const Header = () => {
             <AuthButtons isDark />
           </div>
 
-          {/* User Profile */}
-          <div className="hidden lg:flex ml-">
-            {user && (
-              <ProfileMenu
-                btnClass="flex items-center gap-2 px-2 text-white"
-                avatarFallback="bg-primary rounded-full text-white"
-              />
-            )}
-          </div>
-
           {/* Mobile Menu Button & Theme Toggle */}
           <div className="lg:hidden flex items-center gap-2">
             <ThemeToggle isDark />

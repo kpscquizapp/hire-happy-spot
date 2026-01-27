@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
+import ProfileMenu from "./ProfileMenu";
 
 interface AuthButtonsProps {
   isMobile?: boolean;
@@ -16,6 +17,17 @@ const AuthButtons = ({
   // const { user } = useAuth();
 
   const user = useSelector((state: any) => state.user.userDetails);
+
+  if (user) {
+    return (
+      <div className="hidden lg:block">
+        <ProfileMenu
+          btnClass="flex items-center gap-2 px-2 text-white"
+          avatarFallback="bg-primary rounded-full text-white"
+        />
+      </div>
+    );
+  }
 
   if (isMobile) {
     return (
