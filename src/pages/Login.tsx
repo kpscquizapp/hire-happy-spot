@@ -299,6 +299,7 @@ const Login = () => {
                       >
                         Sign up
                       </button>
+                      <Link to="/registration">Sign Up</Link>
                     </div>
                   </div>
                 </CardContent>
