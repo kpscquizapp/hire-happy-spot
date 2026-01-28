@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Building2,
   User,
@@ -10,11 +10,12 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useCreateCandidateMutation } from "@/app/queries/loginApi";
 
 type UserType = "candidate" | "employer";
 type CandidateStep = 1 | 2 | 3 | 4;
@@ -55,7 +56,14 @@ const HirionRegistration = () => {
   const [selectedType, setSelectedType] = useState<UserType>("candidate");
   const [candidateStep, setCandidateStep] = useState<CandidateStep>(1);
   const [employerStep, setEmployerStep] = useState<EmployerStep>(1);
+  const [primarySkillsInput, setPrimarySkillsInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+
+  // API
+  const [createCandidate, { isLoading: isLoadingCandidate }] =
+    useCreateCandidateMutation();
 
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>({
     email: "",
@@ -76,6 +84,10 @@ const HirionRegistration = () => {
     acceptedPrivacyPolicy: false,
   });
 
+  useEffect(() => {
+    setPrimarySkillsInput(candidateForm.primarySkills.join(", "));
+  }, [candidateForm.primarySkills]);
+
   const [employerForm, setEmployerForm] = useState<EmployerFormData>({
     email: "",
     password: "",
@@ -89,7 +101,10 @@ const HirionRegistration = () => {
     description: "",
   });
 
-  const validateCandidateStep = (step: number): boolean => {
+  const validateCandidateStep = (
+    step: number,
+    form: CandidateFormData = candidateForm,
+  ): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     switch (step) {
       case 1:
@@ -128,29 +143,29 @@ const HirionRegistration = () => {
         return true;
 
       case 3:
-        if (candidateForm.yearsExperience === null) {
+        if (form.yearsExperience === null) {
           toast.error("Please select years of experience.");
           return false;
         }
-        if (candidateForm.primarySkills.length === 0) {
+        if (form.primarySkills.length === 0) {
           toast.error("Please add at least one skill.");
           return false;
         }
-        if (candidateForm.preferredWorkType.length === 0) {
+        if (form.preferredWorkType.length === 0) {
           toast.error("Please select at least one preferred work type.");
           return false;
         }
         if (
-          candidateForm.expectedSalaryMin === null ||
-          candidateForm.expectedSalaryMax === null
+          form.expectedSalaryMin === null ||
+          form.expectedSalaryMax === null
         ) {
           toast.error("Please enter your expected salary range.");
           return false;
         }
         if (
-          candidateForm.expectedSalaryMin !== null &&
-          candidateForm.expectedSalaryMax !== null &&
-          candidateForm.expectedSalaryMin > candidateForm.expectedSalaryMax
+          form.expectedSalaryMin !== null &&
+          form.expectedSalaryMax !== null &&
+          form.expectedSalaryMin > form.expectedSalaryMax
         ) {
           toast.error("Minimum salary cannot exceed maximum salary.");
           return false;
@@ -212,15 +227,26 @@ const HirionRegistration = () => {
   };
 
   const handleNext = () => {
-    let isValid = false;
-
     if (selectedType === "candidate") {
-      isValid = validateCandidateStep(candidateStep);
-      if (isValid && candidateStep < 4) {
-        setCandidateStep((prev) => (prev + 1) as CandidateStep);
+      // For step 3, parse and validate skills inline
+      if (candidateStep === 3) {
+        const parsedSkills = primarySkillsInput
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+
+        const draft = { ...candidateForm, primarySkills: parsedSkills };
+        if (!validateCandidateStep(3, draft)) return;
+        setCandidateForm(draft);
+        setCandidateStep(4);
+      } else {
+        const isValid = validateCandidateStep(candidateStep);
+        if (isValid && candidateStep < 4) {
+          setCandidateStep((prev) => (prev + 1) as CandidateStep);
+        }
       }
     } else if (selectedType === "employer") {
-      isValid = validateEmployerStep(employerStep);
+      const isValid = validateEmployerStep(employerStep);
       if (isValid && employerStep < 3) {
         setEmployerStep((prev) => (prev + 1) as EmployerStep);
       }
@@ -235,14 +261,26 @@ const HirionRegistration = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedType === "candidate") {
+      if (isLoadingCandidate) return;
       if (!validateCandidateStep(4)) return;
+      try {
+        await createCandidate(candidateForm).unwrap();
+        toast.success("Account created successfully!");
+        navigate("/login");
+      } catch (err) {
+        const errorMessage =
+          (err as any)?.data?.message ||
+          (err as any)?.message ||
+          "Failed to create account";
+        toast.error(errorMessage);
+      }
     } else {
       if (!validateEmployerStep(3)) return;
+      toast.info("Employer registration coming soon");
     }
-
-    //submit logic (e.g., API call, form submission, etc.)
+    // employer registration coming soon
   };
 
   const renderEmployerStep = () => {
@@ -429,7 +467,9 @@ const HirionRegistration = () => {
                 }
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                <option hidden>Select Company Size</option>
+                <option value="" hidden>
+                  Select Company Size
+                </option>
                 <option>1-10</option>
                 <option>11-50</option>
                 <option>51-200</option>
@@ -672,7 +712,9 @@ const HirionRegistration = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                <option hidden>Select Candidate Type</option>
+                <option value="" hidden>
+                  Select Candidate Type
+                </option>
                 <option>Full-Time Job Seeker</option>
                 <option>Part-Time Job Seeker</option>
                 <option>Contract Worker</option>
@@ -746,18 +788,8 @@ const HirionRegistration = () => {
               <Input
                 type="text"
                 id="primarySkills"
-                value={candidateForm.primarySkills.join(", ")}
-                onChange={(e) =>
-                  setCandidateForm({
-                    ...candidateForm,
-                    primarySkills: e.target.value
-                      ? e.target.value
-                          .split(",")
-                          .map((s) => s.trim())
-                          .filter(Boolean)
-                      : [],
-                  })
-                }
+                value={primarySkillsInput}
+                onChange={(e) => setPrimarySkillsInput(e.target.value)}
                 placeholder="Enter your primary skills"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -792,7 +824,7 @@ const HirionRegistration = () => {
                           });
                         }
                       }}
-                      className="mr-2 accent-primary"
+                      className="mr-2 accent-primary min-h-0 min-w-0"
                     />
                     <span className="text-gray-700 dark:text-gray-300 capitalize">
                       {type}
@@ -825,7 +857,7 @@ const HirionRegistration = () => {
                             : e.target.valueAsNumber,
                     })
                   }
-                  placeholder="Enter your expected min salary"
+                  placeholder="Yearly expected min salary"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -853,7 +885,7 @@ const HirionRegistration = () => {
                             : e.target.valueAsNumber,
                     })
                   }
-                  placeholder="Enter your expected max salary"
+                  placeholder="Yearly expected max salary"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -897,7 +929,7 @@ const HirionRegistration = () => {
                       acceptedTerms: e.target.checked,
                     })
                   }
-                  className="mt-1 mr-2 accent-primary"
+                  className="mt-1 mr-2 accent-primary min-w-0 min-h-0"
                   required
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -915,7 +947,7 @@ const HirionRegistration = () => {
                     })
                   }
                   required
-                  className="mt-1 mr-2 accent-primary"
+                  className="mt-1 mr-2 accent-primary min-w-0 min-h-0"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
                   I accept the Privacy Policy
@@ -932,7 +964,7 @@ const HirionRegistration = () => {
       <Header />
       <div className="min-h-screen pb-16 pt-28 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
         <div className="w-full bg-white dark:bg-gray-900 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 rounded-lg rounded-tr-lg rounded-br-lg shadow-lg">
-          <div className="dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 bg-gradient-to-br from-[#f7f9fc] to-[#f0f6ff] p-8 lg:rounded-bl-lg rounded-tr-lg rounded-tl-lg lg:rounded-tl-none lg:rounded-tr-none">
+          <div className="dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 bg-gradient-to-br from-[#f7f9fc] to-[#f0f6ff] p-8 lg:rounded-bl-lg rounded-tr-lg rounded-tl-lg lg:rounded-tl-none lg:rounded-tr-none dark:rounded-tl-lg lg:rounded-tl-lg">
             <div className="flex items-center gap-3 mb-6">
               <div className="bg-primary p-2">
                 <Building2 className="w-6 h-6 text-white" />
@@ -1114,11 +1146,15 @@ const HirionRegistration = () => {
               {((selectedType === "candidate" && candidateStep === 4) ||
                 (selectedType === "employer" && employerStep === 3)) && (
                 <button
-                  className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold"
+                  className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
                   onClick={handleSubmit}
                   type="button"
+                  disabled={isLoadingCandidate}
+                  aria-busy={isLoadingCandidate}
                 >
-                  Sign up & Continue
+                  {isLoadingCandidate
+                    ? "Creating account..."
+                    : "Sign up and continue"}
                 </button>
               )}
             </div>
