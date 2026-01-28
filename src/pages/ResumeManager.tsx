@@ -21,14 +21,20 @@ type Resume = {
 
 type ResumeManagerProps = {
   resumes: Resume[];
-  isLoadingResumeList: boolean
+  isLoadingResumeList: boolean;
 };
 
-const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes , isLoadingResumeList }) => {
+const ResumeManager: React.FC<ResumeManagerProps> = ({
+  resumes,
+  isLoadingResumeList,
+}) => {
   // API calls
-  const [uploadResume , { isLoading: isLoadingResumeUpload}] = useUploadResumeMutation();
-  const [viewResume , { isLoading: isLoadingResumeView}] = useLazyViewResumeQuery();
-  const [removeResume,{ isLoading: isLoadingResumeRemove}] = useRemoveResumeMutation();
+  const [uploadResume, { isLoading: isLoadingResumeUpload }] =
+    useUploadResumeMutation();
+  const [viewResume, { isLoading: isLoadingResumeView }] =
+    useLazyViewResumeQuery();
+  const [removeResume, { isLoading: isLoadingResumeRemove }] =
+    useRemoveResumeMutation();
 
   const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -63,46 +69,42 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({ resumes , isLoadingResume
     setIsModalOpen(false);
   };
 
-
-
-
   const handleView = async (resume: Resume) => {
     setLoadingViewId(resume.id);
-  try {
-   
-    const { data, error } = await viewResume({ resumeId: resume.id });
+    try {
+      const { data, error } = await viewResume({ resumeId: resume.id });
 
-    if (error || !data) {
-      throw new Error("Failed to fetch resume");
+      if (error || !data) {
+        throw new Error("Failed to fetch resume");
+      }
+
+      const isPdf =
+        resume.mimeType === "application/pdf" ||
+        resume.originalName.toLowerCase().endsWith(".pdf");
+
+      // Mobile → open PDF in new tab
+      if (isMobile && isPdf) {
+        window.open(data, "_blank");
+        return;
+      }
+
+      // Desktop → modal preview
+      latestRequestIdRef.current = resume.id;
+      setSelectedResume(resume);
+      setIsModalOpen(true);
+
+      revokePreviewUrl(previewUrl);
+      setPreviewUrl(data);
+    } catch (err) {
+      console.error("Error loading resume:", err);
+      toast.error("Failed to open resume");
+    } finally {
+      setLoadingViewId(null);
     }
-
-    const isPdf =
-      resume.mimeType === "application/pdf" ||
-      resume.originalName.toLowerCase().endsWith(".pdf");
-
-    // Mobile → open PDF in new tab
-    if (isMobile && isPdf) {
-      window.open(data, "_blank");
-      return;
-    }
-
-    // Desktop → modal preview
-    latestRequestIdRef.current = resume.id;
-    setSelectedResume(resume);
-    setIsModalOpen(true);
-
-    revokePreviewUrl(previewUrl);
-    setPreviewUrl(data);
-  } catch (err) {
-    console.error("Error loading resume:", err);
-    toast.error("Failed to open resume");
-  } finally {
-    setLoadingViewId(null);
-  }
-};
-useEffect(() => {
-  if (isMobile && isModalOpen) clearPreview();
-}, [isMobile]);
+  };
+  useEffect(() => {
+    if (isMobile && isModalOpen) clearPreview();
+  }, [isMobile]);
   const handleOpenInTab = async (resume: Resume) => {
     try {
       const { data, error } = await viewResume({ resumeId: resume.id });
@@ -143,13 +145,23 @@ useEffect(() => {
     const file = input.files?.[0];
     if (!file) return;
 
-    const maxBytes = 5 * 1024 * 1024;
+    const maxBytes = 2 * 1024 * 1024;
     const allowedTypes = [
       "application/pdf",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
     ];
-    if (file.size > maxBytes || !allowedTypes.includes(file.type)) {
-      toast.error("Please upload a PDF or DOCX file up to 5MB.");
+
+    // Separate validation checks for better error messages
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Please upload a PDF or DOCX file.");
+      input.value = "";
+      return;
+    }
+
+    if (file.size > maxBytes) {
+      toast.error(
+        `File size must be under 2MB. Your file is ${(file.size / 1024 / 1024).toFixed(1)}MB.`,
+      );
       input.value = "";
       return;
     }
@@ -162,7 +174,7 @@ useEffect(() => {
       toast.success("Resume uploaded successfully!");
     } catch (error) {
       console.error("Error uploading resume:", error);
-      toast.error("Failed to upload resume.");
+      toast.error("Failed to upload resume. Please try again.");
     } finally {
       input.value = "";
     }
@@ -187,7 +199,9 @@ useEffect(() => {
               {isLoadingResumeUpload ? (
                 <div className="flex flex-col items-center gap-2">
                   <LoaderCircle className="animate-spin w-8 h-8 text-primary" />
-                  <p className="text-sm font-medium text-slate-600 dark:text-slate-300">Uploading resume...</p>
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                    Uploading resume...
+                  </p>
                 </div>
               ) : (
                 <>
@@ -219,7 +233,9 @@ useEffect(() => {
               {isLoadingResumeList ? (
                 <div className="flex flex-col items-center justify-center py-12 gap-3">
                   <LoaderCircle className="animate-spin w-8 h-8 text-primary" />
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Loading your resumes...</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Loading your resumes...
+                  </p>
                 </div>
               ) : (
                 <>
@@ -258,7 +274,9 @@ useEffect(() => {
                           variant="outline"
                           size="sm"
                           onClick={() => handleView(resume)}
-                          disabled={loadingViewId !== null || loadingDeleteId !== null}
+                          disabled={
+                            loadingViewId !== null || loadingDeleteId !== null
+                          }
                           className="flex-1 text-xs md:text-sm flex items-center justify-center gap-2"
                         >
                           {loadingViewId === resume.id ? (
@@ -274,13 +292,14 @@ useEffect(() => {
                         <Button
                           variant="outline"
                           size="sm"
-                          disabled={loadingViewId !== null || loadingDeleteId !== null}
+                          disabled={
+                            loadingViewId !== null || loadingDeleteId !== null
+                          }
                           onClick={() => handleDelete(resume.id)}
                           className="text-red-600 hover:text-red-700 hover:bg-red-50 text-xs md:text-sm"
                         >
                           {loadingDeleteId === resume.id ? (
                             <LoaderCircle className="animate-spin w-4 h-4 md:w-5 md:h-5" />
-                          
                           ) : (
                             <>
                               <Trash2 className="w-3 h-3 md:w-4 md:h-4 mr-1" />
