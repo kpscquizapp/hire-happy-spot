@@ -104,6 +104,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({
   };
   useEffect(() => {
     if (isMobile && isModalOpen) clearPreview();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Only react to viewport changes, not modal state
   }, [isMobile]);
   const handleOpenInTab = async (resume: Resume) => {
     try {
@@ -194,7 +195,7 @@ const ResumeManager: React.FC<ResumeManagerProps> = ({
                 Upload Your Resume
               </h3>
               <p className="text-xs md:text-sm text-slate-500 mb-6 dark:text-slate-400">
-                Supported formats: PDF, DOCX <br /> Maximum size: 5MB
+                Supported formats: PDF, DOCX <br /> Maximum size: 2MB
               </p>
               {isLoadingResumeUpload ? (
                 <div className="flex flex-col items-center gap-2">

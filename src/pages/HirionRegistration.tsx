@@ -67,9 +67,12 @@ const HirionRegistration = () => {
   // API
   const [createCandidate, { isLoading: isLoadingCandidate }] =
     useCreateCandidateMutation();
-
   const [createEmployer, { isLoading: isLoadingEmployer }] =
     useCreateEmployerMutation();
+
+  // Regex validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>({
     email: "",
@@ -111,8 +114,6 @@ const HirionRegistration = () => {
     step: number,
     form: CandidateFormData = candidateForm,
   ): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     switch (step) {
       case 1:
         if (
@@ -128,7 +129,7 @@ const HirionRegistration = () => {
           toast.error("Invalid email address.");
           return false;
         }
-        if (!passwordPolicy.test(candidateForm.password?.trim())) {
+        if (!passwordPolicy.test(candidateForm.password)) {
           toast.error(
             "Password must be at least 8 characters and include uppercase, lowercase, and a number.",
           );
@@ -201,8 +202,6 @@ const HirionRegistration = () => {
   };
 
   const validateEmployerStep = (step: number): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     switch (step) {
       case 1:
         if (
