@@ -1176,17 +1176,26 @@ const HirionRegistration = () => {
 
               {((selectedType === "candidate" && candidateStep === 4) ||
                 (selectedType === "employer" && employerStep === 3)) && (
-                <button
-                  className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
-                  onClick={handleSubmit}
-                  type="button"
-                  disabled={isLoadingCandidate || isLoadingEmployer}
-                  aria-busy={isLoadingCandidate || isLoadingEmployer}
-                >
-                  {isLoadingCandidate || isLoadingEmployer
-                    ? "Creating account..."
-                    : "Sign up and continue"}
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="flex-1 bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={handleSubmit}
+                    type="button"
+                    disabled={isLoadingCandidate || isLoadingEmployer}
+                    aria-busy={isLoadingCandidate || isLoadingEmployer}
+                  >
+                    {isLoadingCandidate || isLoadingEmployer
+                      ? "Creating account..."
+                      : "Sign up and continue"}
+                  </button>
+                </div>
               )}
             </div>
 
