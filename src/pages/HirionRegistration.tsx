@@ -227,7 +227,19 @@ const HirionRegistration = () => {
     let isValid = false;
 
     if (selectedType === "candidate") {
-      isValid = validateCandidateStep(candidateStep);
+      // Sync primary skills synchronously before validation
+      if (candidateStep === 3) {
+        const parsedSkills = primarySkillsInput
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+        setCandidateForm((prev) => ({
+          ...prev,
+          primarySkills: parsedSkills,
+        }));
+      } else {
+        isValid = validateCandidateStep(candidateStep);
+      }
       if (isValid && candidateStep < 4) {
         setCandidateStep((prev) => (prev + 1) as CandidateStep);
       }
@@ -248,11 +260,10 @@ const HirionRegistration = () => {
   };
 
   const handleSubmit = async () => {
-    console.log(candidateForm);
     if (selectedType === "candidate") {
       if (!validateCandidateStep(4)) return;
       try {
-        // await createCandidate(candidateForm).unwrap();
+        await createCandidate(candidateForm).unwrap();
         toast.success("Account created successfully!");
         navigate("/login");
       } catch (err) {
