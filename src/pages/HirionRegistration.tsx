@@ -1130,7 +1130,7 @@ const HirionRegistration = () => {
                 >
                   {isLoadingCandidate
                     ? "Creating account..."
-                    : "Signup and Continue"}
+                    : "Signup and account"}
                 </button>
               )}
             </div>
