@@ -244,18 +244,20 @@ const HirionRegistration = () => {
   const handleSubmit = async () => {
     if (selectedType === "candidate") {
       if (!validateCandidateStep(4)) return;
+      try {
+        await createCandidate(candidateForm).unwrap();
+        toast.success("Account created successfully!");
+        navigate("/login");
+      } catch (err) {
+        const errorMessage =
+          (err as any)?.data?.message ||
+          (err as any)?.message ||
+          "Failed to create account";
+        toast.error(errorMessage);
+      }
     } else {
       if (!validateEmployerStep(3)) return;
-    }
-
-    try {
-      await createCandidate(candidateForm).unwrap();
-      toast.success("Account created successfully!");
-      navigate("/login");
-    } catch (err) {
-      const errorMessage =
-        err?.data?.message || err?.message || "Failed to create account";
-      toast.error(errorMessage);
+      toast.info("Employer registration coming soon");
     }
     // employer registration coming soon
   };
@@ -761,11 +763,14 @@ const HirionRegistration = () => {
               <Input
                 type="text"
                 id="primarySkills"
-                value={candidateForm.primarySkills.join(",")}
+                value={candidateForm.primarySkills.join(", ")}
                 onChange={(e) =>
                   setCandidateForm({
                     ...candidateForm,
-                    primarySkills: e.target.value.split(","),
+                    primarySkills: e.target.value
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean),
                   })
                 }
                 placeholder="Enter your primary skills"
@@ -1124,13 +1129,15 @@ const HirionRegistration = () => {
               {((selectedType === "candidate" && candidateStep === 4) ||
                 (selectedType === "employer" && employerStep === 3)) && (
                 <button
-                  className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold"
+                  className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
                   onClick={handleSubmit}
                   type="button"
+                  disabled={isLoadingCandidate}
+                  aria-busy={isLoadingCandidate}
                 >
                   {isLoadingCandidate
                     ? "Creating account..."
-                    : "Signup and account"}
+                    : "Sign up and continue"}
                 </button>
               )}
             </div>

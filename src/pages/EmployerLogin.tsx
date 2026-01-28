@@ -50,7 +50,12 @@ const EmployerLogin = () => {
       toast.success("Welcome back!");
       navigate("/employer-dashboard");
     } catch (error) {
-      toast.error("Invalid credentials");
+      const err = error as any;
+      if (err?.status === 401) {
+        toast.error("Invalid credentials");
+      } else {
+        toast.error(err?.data?.message || "Login failed. Please try again.");
+      }
     }
   };
 
@@ -177,7 +182,7 @@ const EmployerLogin = () => {
                     </div>
 
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
+                      {/* <div className="flex items-center space-x-2">
                         <Checkbox
                           id="keep-signed-in"
                           className="min-h-0 min-w-0"
@@ -192,7 +197,7 @@ const EmployerLogin = () => {
                         >
                           Keep me signed in
                         </label>
-                      </div>
+                      </div> */}
                       <Link
                         to="/forgot-password"
                         className="text-sm text-primary hover:underline font-medium"
