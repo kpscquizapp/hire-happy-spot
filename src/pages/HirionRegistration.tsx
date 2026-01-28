@@ -224,27 +224,57 @@ const HirionRegistration = () => {
   };
 
   const handleNext = () => {
-    let isValid = false;
-
     if (selectedType === "candidate") {
-      // Sync primary skills synchronously before validation
+      // For step 3, parse and validate skills inline
       if (candidateStep === 3) {
         const parsedSkills = primarySkillsInput
           .split(",")
           .map((s) => s.trim())
           .filter(Boolean);
+
         setCandidateForm((prev) => ({
           ...prev,
           primarySkills: parsedSkills,
         }));
+
+        // Validate with parsed skills
+        if (candidateForm.yearsExperience === null) {
+          toast.error("Please select years of experience.");
+          return;
+        }
+        if (parsedSkills.length === 0) {
+          toast.error("Please add at least one skill.");
+          return;
+        }
+        if (candidateForm.preferredWorkType.length === 0) {
+          toast.error("Please select at least one preferred work type.");
+          return;
+        }
+        if (
+          candidateForm.expectedSalaryMin === null ||
+          candidateForm.expectedSalaryMax === null
+        ) {
+          toast.error("Please enter your expected salary range.");
+          return;
+        }
+        if (
+          candidateForm.expectedSalaryMin !== null &&
+          candidateForm.expectedSalaryMax !== null &&
+          candidateForm.expectedSalaryMin > candidateForm.expectedSalaryMax
+        ) {
+          toast.error("Minimum salary cannot exceed maximum salary.");
+          return;
+        }
+
+        setCandidateStep(4);
       } else {
-        isValid = validateCandidateStep(candidateStep);
-      }
-      if (isValid && candidateStep < 4) {
-        setCandidateStep((prev) => (prev + 1) as CandidateStep);
+        const isValid = validateCandidateStep(candidateStep);
+        if (isValid && candidateStep < 4) {
+          setCandidateStep((prev) => (prev + 1) as CandidateStep);
+        }
       }
     } else if (selectedType === "employer") {
-      isValid = validateEmployerStep(employerStep);
+      const isValid = validateEmployerStep(employerStep);
       if (isValid && employerStep < 3) {
         setEmployerStep((prev) => (prev + 1) as EmployerStep);
       }
@@ -464,7 +494,9 @@ const HirionRegistration = () => {
                 }
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                <option hidden>Select Company Size</option>
+                <option value="" hidden>
+                  Select Company Size
+                </option>
                 <option>1-10</option>
                 <option>11-50</option>
                 <option>51-200</option>
@@ -707,7 +739,9 @@ const HirionRegistration = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                <option hidden>Select Candidate Type</option>
+                <option value="" hidden>
+                  Select Candidate Type
+                </option>
                 <option>Full-Time Job Seeker</option>
                 <option>Part-Time Job Seeker</option>
                 <option>Contract Worker</option>
@@ -783,15 +817,6 @@ const HirionRegistration = () => {
                 id="primarySkills"
                 value={primarySkillsInput}
                 onChange={(e) => setPrimarySkillsInput(e.target.value)}
-                onBlur={() =>
-                  setCandidateForm((prev) => ({
-                    ...prev,
-                    primarySkills: primarySkillsInput
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean),
-                  }))
-                }
                 placeholder="Enter your primary skills"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
