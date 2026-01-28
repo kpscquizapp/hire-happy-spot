@@ -199,6 +199,7 @@ const HirionRegistration = () => {
 
   const validateEmployerStep = (step: number): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     switch (step) {
       case 1:
         if (
@@ -214,8 +215,10 @@ const HirionRegistration = () => {
           toast.error("Invalid email address.");
           return false;
         }
-        if (employerForm.password?.trim().length < 8) {
-          toast.error("Password must be at least 8 characters.");
+        if (!passwordPolicy.test(employerForm.password?.trim())) {
+          toast.error(
+            "Password must be at least 8 characters and include uppercase, lowercase, and a number.",
+          );
           return false;
         }
         return true;
@@ -284,12 +287,13 @@ const HirionRegistration = () => {
           "Failed to create account";
         toast.error(errorMessage);
       }
-    } else {
-      if (!validateEmployerStep(3)) return;
     }
 
     // Employer Registration
     if (selectedType === "employer") {
+      if (isLoadingEmployer) return;
+      if (!validateEmployerStep(3)) return;
+
       try {
         await createEmployer(employerForm).unwrap();
         toast.success("Account created successfully!");
