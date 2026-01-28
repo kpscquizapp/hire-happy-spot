@@ -98,6 +98,10 @@ const PostBenchResource = () => {
   };
 
   return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 dark:bg-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 animate-fade-in">
+        {/* Left Sidebar - COMMENTED OUT */}
+        {/* <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
       <div className="max-w-7xl mx-auto p-6 space-y-6 animate-fade-in">
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
@@ -232,6 +236,16 @@ const PostBenchResource = () => {
                 </div>
 
                 <div className="space-y-2">
+                  <Label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Employee ID / Ref Code
+                  </Label>
+                  <Input
+                    placeholder="Optional internal tracking code"
+                    value={formData.employeeId}
+                    onChange={(e) =>
+                      setFormData({ ...formData, employeeId: e.target.value })
+                    }
+                    className="h-10 sm:h-12 rounded-lg sm:rounded-xl text-sm border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20 dark:focus:border-blue-500"
                   <Label className="text-sm font-medium text-slate-700">Professional Summary</Label>
                   <Textarea
                     placeholder="Brief summary of their expertise and key projects..."
@@ -244,6 +258,44 @@ const PostBenchResource = () => {
               </CardContent>
             </Card>
 
+          {/* Availability & Contract Terms */}
+          <Card className="border-0 shadow-lg rounded-xl sm:rounded-2xl overflow-hidden bg-white dark:bg-slate-900">
+            <CardHeader className="pb-3 sm:pb-4 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-slate-50 to-emerald-50/50 dark:from-slate-800/50 dark:to-slate-800/30 px-4 sm:px-6 py-3 sm:py-4">
+              <div className="flex items-start sm:items-center gap-2 sm:gap-3">
+                <div className="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center flex-shrink-0">
+                  <DollarSign className="h-4 sm:h-5 w-4 sm:w-5 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div className="min-w-0">
+                  <CardTitle className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100">
+                    Availability & Contract Terms
+                  </CardTitle>
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                    Define the commercials and deployment conditions
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4 sm:pt-6 space-y-3 sm:space-y-5 p-4 sm:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="space-y-2">
+                  <Label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
+                    Hourly Rate (Client Billable)
+                  </Label>
+                  <div className="relative">
+                    <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-medium text-sm">
+                      {formData.currency.split(" - ")[0]}
+                    </span>
+                    <Input
+                      placeholder="e.g. 45"
+                      value={formData.hourlyRate}
+                      onChange={(e) =>
+                        setFormData({ ...formData, hourlyRate: e.target.value })
+                      }
+                      className="pl-8 sm:pl-9 pr-12 sm:pr-14 h-10 sm:h-12 rounded-lg sm:rounded-xl text-sm border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20 dark:focus:border-blue-500"
+                    />
+                    <span className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-xs sm:text-sm">
+                      / hr
+                    </span>
             {/* Availability & Contract Terms */}
             <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white">
               <CardHeader className="pb-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-emerald-50/50">
@@ -368,6 +420,41 @@ const PostBenchResource = () => {
                   </div>
                   <CardTitle className="text-lg font-semibold text-slate-800">Documents</CardTitle>
                 </div>
+                <CardTitle className="text-base sm:text-lg font-semibold text-slate-800 dark:text-slate-100">
+                  Documents
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-4 sm:pt-6 p-4 sm:p-6">
+              <div className="space-y-2">
+                <Label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
+                  Upload Anonymized Resume (PDF)
+                </Label>
+                <label className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-2xl p-6 sm:p-10 text-center hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50/30 dark:hover:bg-blue-950/20 transition-all cursor-pointer group">
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    className="hidden"
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        resumeFile: e.target.files?.[0] ?? null,
+                      }))
+                    }
+                  />
+                  <div className="w-10 sm:w-14 h-10 sm:h-14 rounded-lg sm:rounded-2xl bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-colors">
+                    <Upload className="h-5 sm:h-6 w-5 sm:w-6 text-slate-400 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" />
+                  </div>
+                  <p className="text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    Click to upload resume
+                  </p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-2 leading-relaxed">
+                    Max file size 5MB. Please remove contact details.
+                  </p>
+                </label>
+              </div>
+            </CardContent>
+          </Card>
               </CardHeader>
               <CardContent className="pt-6 p-6">
                 <div className="space-y-2">

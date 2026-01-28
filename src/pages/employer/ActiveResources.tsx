@@ -315,6 +315,96 @@ const ActiveResources = () => {
                       >
                         {resource.status === "assigned" ? "Assigned" : "Available"}
                       </Badge>
+                    )}
+                  </div>
+
+                  {/* Details */}
+                  <div className="space-y-2 sm:space-y-3 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-700">
+                    <div className="flex justify-between items-center gap-2 text-xs sm:text-sm">
+                      <span className="text-slate-600 dark:text-slate-400">Experience</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-100 text-right">{resource.experience}</span>
+                    </div>
+                    <div className="flex justify-between items-center gap-2 text-xs sm:text-sm">
+                      <span className="text-slate-600 dark:text-slate-400">Availability</span>
+                      <span className={`font-medium whitespace-nowrap ${resource.status === 'assigned' ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
+                        {resource.status === 'assigned' ? '● Assigned' : `● Available ${resource.availableFrom}`}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center gap-2 text-xs sm:text-sm">
+                      <span className="text-slate-600 dark:text-slate-400">Rate Card</span>
+                      <span className="font-semibold text-slate-800 dark:text-slate-100">${resource.rate}<span className="text-slate-500 dark:text-slate-400">/hr</span></span>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 sm:pt-4">
+                    <Button
+                      variant="outline"
+                      className="flex-1 rounded-lg border-slate-200 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-800 text-xs sm:text-sm h-9 sm:h-10"
+                      onClick={() => handleViewResource(resource)}
+                    >
+                      View Profile
+                    </Button>
+                    <Button
+                      className="flex-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm h-9 sm:h-10"
+                      onClick={() => {
+                        toast.success(`Request sent for ${resource.name}`);
+                      }}
+                    >
+                      Request
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex flex-col gap-2 sm:gap-3 md:gap-4 mt-4 sm:mt-6 md:mt-8 px-2 sm:px-4 py-3 sm:py-4 md:py-6 bg-white dark:bg-slate-900 rounded-lg sm:rounded-xl md:rounded-2xl shadow-lg border-0">
+              <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 text-center">
+                <span className="block sm:inline">Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredResources.length)}</span>
+                <span className="hidden sm:inline"> of </span>
+                <span className="block sm:inline">{filteredResources.length} resources</span>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2 md:gap-3">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="rounded-lg text-xs sm:text-xs h-8 sm:h-9 px-2 sm:px-3 w-full sm:w-auto"
+                >
+                  ← Prev
+                </Button>
+                
+                <div className="flex items-center gap-0.5 sm:gap-1 overflow-x-auto max-w-full">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                      className="rounded-lg w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 p-0 text-xs flex-shrink-0"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="rounded-lg text-xs sm:text-xs h-8 sm:h-9 px-2 sm:px-3 w-full sm:w-auto"
+                >
+                  Next →
+                </Button>
+              </div>
+
+              <div className="text-xs text-slate-600 dark:text-slate-400 text-center">
+                Page {currentPage} of {totalPages}
                     </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
