@@ -30,7 +30,7 @@ const AuthButtons = ({
     return (
       <div className="flex flex-col space-y-3">
         <Link
-          to="/candidate-register"
+          to="/login"
           className="flex items-center justify-center px-4 py-3 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-colors font-medium text-sm"
         >
           Upload CV
@@ -42,7 +42,7 @@ const AuthButtons = ({
           Login
         </Link>
         <Link
-          to="/post-job"
+          to="/employer-login"
           className="flex items-center justify-center px-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors text-sm"
         >
           Post a Job
@@ -65,7 +65,7 @@ const AuthButtons = ({
         )}
         asChild
       >
-        <Link to="/candidate-register">Upload CV</Link>
+        <Link to="/login">Upload CV</Link>
       </Button>
 
       {/* Login Link */}
@@ -89,7 +89,7 @@ const AuthButtons = ({
         className="rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm h-9 px-5"
         asChild
       >
-        <Link to="/post-job">Post a Job</Link>
+        <Link to="/employer-login">Post a Job</Link>
       </Button>
     </div>
   );

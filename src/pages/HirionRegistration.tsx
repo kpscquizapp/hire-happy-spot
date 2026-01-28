@@ -15,7 +15,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { useCreateCandidateMutation } from "@/app/queries/loginApi";
+import {
+  useCreateCandidateMutation,
+  useCreateEmployerMutation,
+} from "@/app/queries/loginApi";
 
 type UserType = "candidate" | "employer";
 type CandidateStep = 1 | 2 | 3 | 4;
@@ -64,6 +67,9 @@ const HirionRegistration = () => {
   // API
   const [createCandidate, { isLoading: isLoadingCandidate }] =
     useCreateCandidateMutation();
+
+  const [createEmployer, { isLoading: isLoadingEmployer }] =
+    useCreateEmployerMutation();
 
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>({
     email: "",
@@ -193,6 +199,7 @@ const HirionRegistration = () => {
 
   const validateEmployerStep = (step: number): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     switch (step) {
       case 1:
         if (
@@ -208,8 +215,10 @@ const HirionRegistration = () => {
           toast.error("Invalid email address.");
           return false;
         }
-        if (employerForm.password?.trim().length < 8) {
-          toast.error("Password must be at least 8 characters.");
+        if (!passwordPolicy.test(employerForm.password?.trim())) {
+          toast.error(
+            "Password must be at least 8 characters and include uppercase, lowercase, and a number.",
+          );
           return false;
         }
         return true;
@@ -262,9 +271,11 @@ const HirionRegistration = () => {
   };
 
   const handleSubmit = async () => {
+    // Candidate Registration
     if (selectedType === "candidate") {
       if (isLoadingCandidate) return;
       if (!validateCandidateStep(4)) return;
+
       try {
         await createCandidate(candidateForm).unwrap();
         toast.success("Account created successfully!");
@@ -276,11 +287,25 @@ const HirionRegistration = () => {
           "Failed to create account";
         toast.error(errorMessage);
       }
-    } else {
-      if (!validateEmployerStep(3)) return;
-      toast.info("Employer registration coming soon");
     }
-    // employer registration coming soon
+
+    // Employer Registration
+    if (selectedType === "employer") {
+      if (isLoadingEmployer) return;
+      if (!validateEmployerStep(3)) return;
+
+      try {
+        await createEmployer(employerForm).unwrap();
+        toast.success("Account created successfully!");
+        navigate("/employer-login");
+      } catch (err) {
+        const errorMessage =
+          (err as any)?.data?.message ||
+          (err as any)?.message ||
+          "Failed to create account";
+        toast.error(errorMessage);
+      }
+    }
   };
 
   const renderEmployerStep = () => {
@@ -359,7 +384,12 @@ const HirionRegistration = () => {
                 htmlFor="password"
                 className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
               >
-                Password <span className="text-destructive">*</span>
+                Password{" "}
+                <span className="text-gray-500 font-normal text-sm">
+                  (At least 8 characters, include uppercase, lowercase, and a
+                  number)
+                </span>
+                <span className="text-destructive">*</span>
               </Label>
               <Input
                 type={showPassword ? "text" : "password"}
@@ -474,7 +504,8 @@ const HirionRegistration = () => {
                 <option>11-50</option>
                 <option>51-200</option>
                 <option>201-500</option>
-                <option>501+</option>
+                <option>501-1000</option>
+                <option>1000+</option>
               </select>
             </div>
           </>
@@ -591,7 +622,7 @@ const HirionRegistration = () => {
                 onChange={(e) =>
                   setCandidateForm({ ...candidateForm, email: e.target.value })
                 }
-                placeholder="Enter your email"
+                placeholder="Enter your email address"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -1145,17 +1176,26 @@ const HirionRegistration = () => {
 
               {((selectedType === "candidate" && candidateStep === 4) ||
                 (selectedType === "employer" && employerStep === 3)) && (
-                <button
-                  className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
-                  onClick={handleSubmit}
-                  type="button"
-                  disabled={isLoadingCandidate}
-                  aria-busy={isLoadingCandidate}
-                >
-                  {isLoadingCandidate
-                    ? "Creating account..."
-                    : "Sign up and continue"}
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="flex-1 bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={handleSubmit}
+                    type="button"
+                    disabled={isLoadingCandidate || isLoadingEmployer}
+                    aria-busy={isLoadingCandidate || isLoadingEmployer}
+                  >
+                    {isLoadingCandidate || isLoadingEmployer
+                      ? "Creating account..."
+                      : "Sign up and continue"}
+                  </button>
+                </div>
               )}
             </div>
 
