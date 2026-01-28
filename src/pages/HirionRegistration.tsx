@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Building2,
   User,
@@ -10,11 +10,15 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import {
+  useCreateCandidateMutation,
+  useCreateEmployerMutation,
+} from "@/app/queries/loginApi";
 
 type UserType = "candidate" | "employer";
 type CandidateStep = 1 | 2 | 3 | 4;
@@ -55,7 +59,20 @@ const HirionRegistration = () => {
   const [selectedType, setSelectedType] = useState<UserType>("candidate");
   const [candidateStep, setCandidateStep] = useState<CandidateStep>(1);
   const [employerStep, setEmployerStep] = useState<EmployerStep>(1);
+  const [primarySkillsInput, setPrimarySkillsInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const navigate = useNavigate();
+
+  // API
+  const [createCandidate, { isLoading: isLoadingCandidate }] =
+    useCreateCandidateMutation();
+  const [createEmployer, { isLoading: isLoadingEmployer }] =
+    useCreateEmployerMutation();
+
+  // Regex validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>({
     email: "",
@@ -76,6 +93,10 @@ const HirionRegistration = () => {
     acceptedPrivacyPolicy: false,
   });
 
+  useEffect(() => {
+    setPrimarySkillsInput(candidateForm.primarySkills.join(", "));
+  }, [candidateForm.primarySkills]);
+
   const [employerForm, setEmployerForm] = useState<EmployerFormData>({
     email: "",
     password: "",
@@ -89,8 +110,10 @@ const HirionRegistration = () => {
     description: "",
   });
 
-  const validateCandidateStep = (step: number): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validateCandidateStep = (
+    step: number,
+    form: CandidateFormData = candidateForm,
+  ): boolean => {
     switch (step) {
       case 1:
         if (
@@ -106,8 +129,10 @@ const HirionRegistration = () => {
           toast.error("Invalid email address.");
           return false;
         }
-        if (candidateForm.password?.trim().length < 8) {
-          toast.error("Password must be at least 8 characters.");
+        if (!passwordPolicy.test(candidateForm.password)) {
+          toast.error(
+            "Password must be at least 8 characters and include uppercase, lowercase, and a number.",
+          );
           return false;
         }
         return true;
@@ -128,29 +153,29 @@ const HirionRegistration = () => {
         return true;
 
       case 3:
-        if (candidateForm.yearsExperience === null) {
+        if (form.yearsExperience === null) {
           toast.error("Please select years of experience.");
           return false;
         }
-        if (candidateForm.primarySkills.length === 0) {
+        if (form.primarySkills.length === 0) {
           toast.error("Please add at least one skill.");
           return false;
         }
-        if (candidateForm.preferredWorkType.length === 0) {
+        if (form.preferredWorkType.length === 0) {
           toast.error("Please select at least one preferred work type.");
           return false;
         }
         if (
-          candidateForm.expectedSalaryMin === null ||
-          candidateForm.expectedSalaryMax === null
+          form.expectedSalaryMin === null ||
+          form.expectedSalaryMax === null
         ) {
           toast.error("Please enter your expected salary range.");
           return false;
         }
         if (
-          candidateForm.expectedSalaryMin !== null &&
-          candidateForm.expectedSalaryMax !== null &&
-          candidateForm.expectedSalaryMin > candidateForm.expectedSalaryMax
+          form.expectedSalaryMin !== null &&
+          form.expectedSalaryMax !== null &&
+          form.expectedSalaryMin > form.expectedSalaryMax
         ) {
           toast.error("Minimum salary cannot exceed maximum salary.");
           return false;
@@ -177,7 +202,6 @@ const HirionRegistration = () => {
   };
 
   const validateEmployerStep = (step: number): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     switch (step) {
       case 1:
         if (
@@ -193,8 +217,10 @@ const HirionRegistration = () => {
           toast.error("Invalid email address.");
           return false;
         }
-        if (employerForm.password?.trim().length < 8) {
-          toast.error("Password must be at least 8 characters.");
+        if (!passwordPolicy.test(employerForm.password?.trim())) {
+          toast.error(
+            "Password must be at least 8 characters and include uppercase, lowercase, and a number.",
+          );
           return false;
         }
         return true;
@@ -212,15 +238,26 @@ const HirionRegistration = () => {
   };
 
   const handleNext = () => {
-    let isValid = false;
-
     if (selectedType === "candidate") {
-      isValid = validateCandidateStep(candidateStep);
-      if (isValid && candidateStep < 4) {
-        setCandidateStep((prev) => (prev + 1) as CandidateStep);
+      // For step 3, parse and validate skills inline
+      if (candidateStep === 3) {
+        const parsedSkills = primarySkillsInput
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+
+        const draft = { ...candidateForm, primarySkills: parsedSkills };
+        if (!validateCandidateStep(3, draft)) return;
+        setCandidateForm(draft);
+        setCandidateStep(4);
+      } else {
+        const isValid = validateCandidateStep(candidateStep);
+        if (isValid && candidateStep < 4) {
+          setCandidateStep((prev) => (prev + 1) as CandidateStep);
+        }
       }
     } else if (selectedType === "employer") {
-      isValid = validateEmployerStep(employerStep);
+      const isValid = validateEmployerStep(employerStep);
       if (isValid && employerStep < 3) {
         setEmployerStep((prev) => (prev + 1) as EmployerStep);
       }
@@ -235,14 +272,42 @@ const HirionRegistration = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Candidate Registration
     if (selectedType === "candidate") {
+      if (isLoadingCandidate) return;
       if (!validateCandidateStep(4)) return;
-    } else {
-      if (!validateEmployerStep(3)) return;
+
+      try {
+        await createCandidate(candidateForm).unwrap();
+        toast.success("Account created successfully!");
+        navigate("/login");
+      } catch (err) {
+        const errorMessage =
+          (err as any)?.data?.message ||
+          (err as any)?.message ||
+          "Failed to create account";
+        toast.error(errorMessage);
+      }
     }
 
-    //submit logic (e.g., API call, form submission, etc.)
+    // Employer Registration
+    if (selectedType === "employer") {
+      if (isLoadingEmployer) return;
+      if (!validateEmployerStep(3)) return;
+
+      try {
+        await createEmployer(employerForm).unwrap();
+        toast.success("Account created successfully!");
+        navigate("/employer-login");
+      } catch (err) {
+        const errorMessage =
+          (err as any)?.data?.message ||
+          (err as any)?.message ||
+          "Failed to create account";
+        toast.error(errorMessage);
+      }
+    }
   };
 
   const renderEmployerStep = () => {
@@ -322,31 +387,41 @@ const HirionRegistration = () => {
                 className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
               >
                 Password <span className="text-destructive">*</span>
+                <br />
+                <span className="text-gray-500 font-normal text-sm">
+                  (At least 8 characters, include uppercase, lowercase, and a
+                  number)
+                </span>
               </Label>
-              <Input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={employerForm.password}
-                onChange={(e) =>
-                  setEmployerForm({ ...employerForm, password: e.target.value })
-                }
-                required
-                placeholder="Enter your password"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <button
-                type="button"
-                className="absolute right-4 top-10 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors min-h-0 min-w-0"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                aria-pressed={showPassword}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={employerForm.password}
+                  onChange={(e) =>
+                    setEmployerForm({
+                      ...employerForm,
+                      password: e.target.value,
+                    })
+                  }
+                  required
+                  placeholder="Enter your password"
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <button
+                  type="button"
+                  className="absolute right-0 sm:right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
             </div>
           </>
         );
@@ -429,12 +504,15 @@ const HirionRegistration = () => {
                 }
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                <option hidden>Select Company Size</option>
+                <option value="" hidden>
+                  Select Company Size
+                </option>
                 <option>1-10</option>
                 <option>11-50</option>
                 <option>51-200</option>
                 <option>201-500</option>
-                <option>501+</option>
+                <option>501-1000</option>
+                <option>1000+</option>
               </select>
             </div>
           </>
@@ -551,7 +629,7 @@ const HirionRegistration = () => {
                 onChange={(e) =>
                   setCandidateForm({ ...candidateForm, email: e.target.value })
                 }
-                placeholder="Enter your email"
+                placeholder="Enter your email address"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
@@ -562,34 +640,41 @@ const HirionRegistration = () => {
                 className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
               >
                 Password <span className="text-destructive">*</span>
+                <br />
+                <span className="text-gray-500 font-normal text-sm">
+                  (At least 8 characters, include uppercase, lowercase, and a
+                  number)
+                </span>
               </Label>
-              <Input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={candidateForm.password}
-                onChange={(e) =>
-                  setCandidateForm({
-                    ...candidateForm,
-                    password: e.target.value,
-                  })
-                }
-                placeholder="Enter your password"
-                required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <button
-                type="button"
-                className="absolute right-4 top-10 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors min-h-0 min-w-0"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                aria-pressed={showPassword}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={candidateForm.password}
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      password: e.target.value,
+                    })
+                  }
+                  placeholder="Enter your password"
+                  required
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <button
+                  type="button"
+                  className="absolute right-0 sm:right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
             </div>
           </>
         );
@@ -672,7 +757,9 @@ const HirionRegistration = () => {
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
               >
-                <option hidden>Select Candidate Type</option>
+                <option value="" hidden>
+                  Select Candidate Type
+                </option>
                 <option>Full-Time Job Seeker</option>
                 <option>Part-Time Job Seeker</option>
                 <option>Contract Worker</option>
@@ -746,18 +833,8 @@ const HirionRegistration = () => {
               <Input
                 type="text"
                 id="primarySkills"
-                value={candidateForm.primarySkills.join(", ")}
-                onChange={(e) =>
-                  setCandidateForm({
-                    ...candidateForm,
-                    primarySkills: e.target.value
-                      ? e.target.value
-                          .split(",")
-                          .map((s) => s.trim())
-                          .filter(Boolean)
-                      : [],
-                  })
-                }
+                value={primarySkillsInput}
+                onChange={(e) => setPrimarySkillsInput(e.target.value)}
                 placeholder="Enter your primary skills"
                 required
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -792,7 +869,7 @@ const HirionRegistration = () => {
                           });
                         }
                       }}
-                      className="mr-2 accent-primary"
+                      className="mr-2 accent-primary min-h-0 min-w-0"
                     />
                     <span className="text-gray-700 dark:text-gray-300 capitalize">
                       {type}
@@ -825,7 +902,7 @@ const HirionRegistration = () => {
                             : e.target.valueAsNumber,
                     })
                   }
-                  placeholder="Enter your expected min salary"
+                  placeholder="Yearly expected min salary"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -853,7 +930,7 @@ const HirionRegistration = () => {
                             : e.target.valueAsNumber,
                     })
                   }
-                  placeholder="Enter your expected max salary"
+                  placeholder="Yearly expected max salary"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -897,7 +974,7 @@ const HirionRegistration = () => {
                       acceptedTerms: e.target.checked,
                     })
                   }
-                  className="mt-1 mr-2 accent-primary"
+                  className="mt-1 mr-2 accent-primary min-w-0 min-h-0"
                   required
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -915,7 +992,7 @@ const HirionRegistration = () => {
                     })
                   }
                   required
-                  className="mt-1 mr-2 accent-primary"
+                  className="mt-1 mr-2 accent-primary min-w-0 min-h-0"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
                   I accept the Privacy Policy
@@ -932,7 +1009,7 @@ const HirionRegistration = () => {
       <Header />
       <div className="min-h-screen pb-16 pt-28 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
         <div className="w-full bg-white dark:bg-gray-900 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 rounded-lg rounded-tr-lg rounded-br-lg shadow-lg">
-          <div className="dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 bg-gradient-to-br from-[#f7f9fc] to-[#f0f6ff] p-8 lg:rounded-bl-lg rounded-tr-lg rounded-tl-lg lg:rounded-tl-none lg:rounded-tr-none">
+          <div className="dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 bg-gradient-to-br from-[#f7f9fc] to-[#f0f6ff] p-8 lg:rounded-bl-lg rounded-tr-lg rounded-tl-lg lg:rounded-tl-none lg:rounded-tr-none dark:rounded-tl-lg lg:rounded-tl-lg">
             <div className="flex items-center gap-3 mb-6">
               <div className="bg-primary p-2">
                 <Building2 className="w-6 h-6 text-white" />
@@ -1113,13 +1190,26 @@ const HirionRegistration = () => {
 
               {((selectedType === "candidate" && candidateStep === 4) ||
                 (selectedType === "employer" && employerStep === 3)) && (
-                <button
-                  className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold"
-                  onClick={handleSubmit}
-                  type="button"
-                >
-                  Sign up & Continue
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    className="flex-1 bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={handleSubmit}
+                    type="button"
+                    disabled={isLoadingCandidate || isLoadingEmployer}
+                    aria-busy={isLoadingCandidate || isLoadingEmployer}
+                  >
+                    {isLoadingCandidate || isLoadingEmployer
+                      ? "Creating account..."
+                      : "Sign up and continue"}
+                  </button>
+                </div>
               )}
             </div>
 

@@ -25,7 +25,6 @@ import JobDetails from "./pages/JobDetails";
 import ListBenchTalent from "./pages/ListBenchTalent";
 import Login from "./pages/Login";
 import CandidateProfile from "./pages/CandidateProfile";
-import CandidateRegistration from "./pages/CandidateRegistration";
 import JobRecommendations from "./pages/JobRecommendations";
 import SkillsAssessment from "./pages/SkillsAssessment";
 import SavedJobs from "./pages/SavedJobs";
@@ -121,10 +120,6 @@ const App = () => {
                     <Route
                       path="/forgot-password"
                       element={<ForgotPassword />}
-                    />
-                    <Route
-                      path="/candidate-register"
-                      element={<CandidateRegistration />}
                     />
                     <Route
                       path="/registration"

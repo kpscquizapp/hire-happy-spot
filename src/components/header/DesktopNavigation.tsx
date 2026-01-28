@@ -114,7 +114,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
             },
             {
               label: "Register as Talent",
-              href: "/candidate-register",
+              href: "/registration",
               description: "Create your profile",
             },
           ],
@@ -227,7 +227,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
       if (!item) return [];
       return item.sections.flatMap((s) => s.items);
     },
-    [navItems]
+    [navItems],
   );
 
   // Handle keyboard navigation
@@ -268,7 +268,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           break;
       }
     },
-    [activeDropdown, focusedIndex, getAllItems, navigate]
+    [activeDropdown, focusedIndex, getAllItems, navigate],
   );
 
   // Focus item when index changes
@@ -317,12 +317,12 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
                 activeDropdown === item.label &&
                   (isDark
                     ? "text-white bg-white/10"
-                    : "text-primary bg-primary/5")
+                    : "text-primary bg-primary/5"),
               )}
               onKeyDown={(e) => handleKeyDown(e, item.label)}
               onClick={() =>
                 setActiveDropdown(
-                  activeDropdown === item.label ? null : item.label
+                  activeDropdown === item.label ? null : item.label,
                 )
               }
               aria-expanded={activeDropdown === item.label}
@@ -333,7 +333,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
               <ChevronDown
                 className={cn(
                   "w-3.5 h-3.5 transition-transform duration-200",
-                  activeDropdown === item.label && "rotate-180"
+                  activeDropdown === item.label && "rotate-180",
                 )}
               />
             </button>
@@ -344,7 +344,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
                 "absolute top-full left-1/2 -translate-x-1/2 pt-3 transition-all duration-200 z-50",
                 activeDropdown === item.label
                   ? "opacity-100 visible translate-y-0"
-                  : "opacity-0 invisible -translate-y-2 pointer-events-none"
+                  : "opacity-0 invisible -translate-y-2 pointer-events-none",
               )}
               role="menu"
               aria-label={item.label}
@@ -375,7 +375,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
                                 "block px-3 py-2.5 rounded-lg transition-colors group outline-none",
                                 focusedIndex === currentIndex
                                   ? "bg-white/10 ring-2 ring-primary/50"
-                                  : "hover:bg-white/10"
+                                  : "hover:bg-white/10",
                               )}
                               onClick={() => {
                                 setActiveDropdown(null);
