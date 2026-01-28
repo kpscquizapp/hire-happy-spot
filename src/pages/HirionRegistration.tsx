@@ -386,7 +386,8 @@ const HirionRegistration = () => {
               >
                 Password{" "}
                 <span className="text-gray-500 font-normal text-sm">
-                  (Must include uppercase, lowercase, and a number)
+                  (At least 8 characters, include uppercase, lowercase, and a
+                  number)
                 </span>
                 <span className="text-destructive">*</span>
               </Label>
