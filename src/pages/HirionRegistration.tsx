@@ -15,7 +15,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { useCreateCandidateMutation } from "@/app/queries/loginApi";
+import {
+  useCreateCandidateMutation,
+  useCreateEmployerMutation,
+} from "@/app/queries/loginApi";
 
 type UserType = "candidate" | "employer";
 type CandidateStep = 1 | 2 | 3 | 4;
@@ -64,6 +67,9 @@ const HirionRegistration = () => {
   // API
   const [createCandidate, { isLoading: isLoadingCandidate }] =
     useCreateCandidateMutation();
+
+  const [createEmployer, { isLoading: isLoadingEmployer }] =
+    useCreateEmployerMutation();
 
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>({
     email: "",
@@ -262,9 +268,11 @@ const HirionRegistration = () => {
   };
 
   const handleSubmit = async () => {
+    // Candidate Registration
     if (selectedType === "candidate") {
       if (isLoadingCandidate) return;
       if (!validateCandidateStep(4)) return;
+
       try {
         await createCandidate(candidateForm).unwrap();
         toast.success("Account created successfully!");
@@ -278,9 +286,22 @@ const HirionRegistration = () => {
       }
     } else {
       if (!validateEmployerStep(3)) return;
-      toast.info("Employer registration coming soon");
     }
-    // employer registration coming soon
+
+    // Employer Registration
+    if (selectedType === "employer") {
+      try {
+        await createEmployer(employerForm).unwrap();
+        toast.success("Account created successfully!");
+        navigate("/employer-login");
+      } catch (err) {
+        const errorMessage =
+          (err as any)?.data?.message ||
+          (err as any)?.message ||
+          "Failed to create account";
+        toast.error(errorMessage);
+      }
+    }
   };
 
   const renderEmployerStep = () => {
@@ -359,7 +380,11 @@ const HirionRegistration = () => {
                 htmlFor="password"
                 className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
               >
-                Password <span className="text-destructive">*</span>
+                Password{" "}
+                <span className="text-gray-500 font-normal text-sm">
+                  (Must include uppercase, lowercase, and a number)
+                </span>
+                <span className="text-destructive">*</span>
               </Label>
               <Input
                 type={showPassword ? "text" : "password"}
@@ -474,7 +499,8 @@ const HirionRegistration = () => {
                 <option>11-50</option>
                 <option>51-200</option>
                 <option>201-500</option>
-                <option>501+</option>
+                <option>501-1000</option>
+                <option>1000+</option>
               </select>
             </div>
           </>
@@ -1149,10 +1175,10 @@ const HirionRegistration = () => {
                   className="w-full bg-primary text-white px-4 py-3 rounded-md hover:bg-primary/90 transition-colors font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
                   onClick={handleSubmit}
                   type="button"
-                  disabled={isLoadingCandidate}
-                  aria-busy={isLoadingCandidate}
+                  disabled={isLoadingCandidate || isLoadingEmployer}
+                  aria-busy={isLoadingCandidate || isLoadingEmployer}
                 >
-                  {isLoadingCandidate
+                  {isLoadingCandidate || isLoadingEmployer
                     ? "Creating account..."
                     : "Sign up and continue"}
                 </button>
