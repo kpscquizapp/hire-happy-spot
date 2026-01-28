@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Building2,
   User,
@@ -55,9 +55,10 @@ interface EmployerFormData {
 const HirionRegistration = () => {
   const [selectedType, setSelectedType] = useState<UserType>("candidate");
   const [candidateStep, setCandidateStep] = useState<CandidateStep>(1);
-  const [primarySkillInput, setPrimarySkillInput] = useState<string[]>([]);
   const [employerStep, setEmployerStep] = useState<EmployerStep>(1);
+  const [primarySkillsInput, setPrimarySkillsInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   // API
@@ -74,7 +75,7 @@ const HirionRegistration = () => {
     candidateType: "",
     primaryJobRole: "",
     yearsExperience: null,
-    primarySkills: primarySkillInput,
+    primarySkills: [],
     preferredWorkType: [],
     expectedSalaryMin: null,
     expectedSalaryMax: null,
@@ -82,6 +83,10 @@ const HirionRegistration = () => {
     acceptedTerms: false,
     acceptedPrivacyPolicy: false,
   });
+
+  useEffect(() => {
+    setPrimarySkillsInput(candidateForm.primarySkills.join(", "));
+  }, [candidateForm.primarySkills]);
 
   const [employerForm, setEmployerForm] = useState<EmployerFormData>({
     email: "",
@@ -765,9 +770,16 @@ const HirionRegistration = () => {
               <Input
                 type="text"
                 id="primarySkills"
-                value={primarySkillInput}
-                onChange={(e) =>
-                  setPrimarySkillInput(e.target.value.split(","))
+                value={primarySkillsInput}
+                onChange={(e) => setPrimarySkillsInput(e.target.value)}
+                onBlur={() =>
+                  setCandidateForm((prev) => ({
+                    ...prev,
+                    primarySkills: primarySkillsInput
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  }))
                 }
                 placeholder="Enter your primary skills"
                 required
