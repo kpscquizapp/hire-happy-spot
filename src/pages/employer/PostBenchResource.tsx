@@ -109,7 +109,7 @@ const PostBenchResource = () => {
   };
 
   return (
-    <div className="min-h-screen bg-br from-slate-50 via-blue-50/30 to-slate-50 dark:bg-black">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 dark:bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 animate-fade-in">
         {/* Left Sidebar - COMMENTED OUT */}
         {/* <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
@@ -242,7 +242,7 @@ const PostBenchResource = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, employeeId: e.target.value })
                     }
-                    className="h-10 sm:h-12 rounded-lg sm:rounded-xl text-sm border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    className="h-10 sm:h-12 rounded-lg sm:rounded-xl text-sm border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20 dark:focus:border-blue-500"
                   />
                 </div>
               </div>
@@ -319,7 +319,7 @@ const PostBenchResource = () => {
                   </Label>
                   <div className="relative">
                     <span className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-medium text-sm">
-                      $
+                      {formData.currency.split(" - ")[0]}
                     </span>
                     <Input
                       placeholder="e.g. 45"
@@ -505,7 +505,18 @@ const PostBenchResource = () => {
                 <Label className="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300">
                   Upload Anonymized Resume (PDF)
                 </Label>
-                <div className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-2xl p-6 sm:p-10 text-center hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50/30 dark:hover:bg-blue-950/20 transition-all cursor-pointer group">
+                <label className="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg sm:rounded-2xl p-6 sm:p-10 text-center hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50/30 dark:hover:bg-blue-950/20 transition-all cursor-pointer group">
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    className="hidden"
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        resumeFile: e.target.files?.[0] ?? null,
+                      }))
+                    }
+                  />
                   <div className="w-10 sm:w-14 h-10 sm:h-14 rounded-lg sm:rounded-2xl bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 flex items-center justify-center mx-auto mb-3 sm:mb-4 transition-colors">
                     <Upload className="h-5 sm:h-6 w-5 sm:w-6 text-slate-400 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" />
                   </div>
@@ -515,7 +526,7 @@ const PostBenchResource = () => {
                   <p className="text-xs text-slate-400 dark:text-slate-500 mt-2 leading-relaxed">
                     Max file size 5MB. Please remove contact details.
                   </p>
-                </div>
+                </label>
               </div>
             </CardContent>
           </Card>

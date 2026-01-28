@@ -329,7 +329,7 @@ const ActiveResources = () => {
                     <div className="flex justify-between items-center gap-2 text-xs sm:text-sm">
                       <span className="text-slate-600 dark:text-slate-400">Availability</span>
                       <span className={`font-medium whitespace-nowrap ${resource.status === 'assigned' ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
-                        {resource.status === 'assigned' ? '● Assigned' : '● In 15 Days'}
+                        {resource.status === 'assigned' ? '● Assigned' : `● Available ${resource.availableFrom}`}
                       </span>
                     </div>
                     <div className="flex justify-between items-center gap-2 text-xs sm:text-sm">
