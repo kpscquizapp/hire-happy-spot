@@ -101,7 +101,10 @@ const HirionRegistration = () => {
     description: "",
   });
 
-  const validateCandidateStep = (step: number): boolean => {
+  const validateCandidateStep = (
+    step: number,
+    form: CandidateFormData = candidateForm,
+  ): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     switch (step) {
       case 1:
@@ -140,29 +143,29 @@ const HirionRegistration = () => {
         return true;
 
       case 3:
-        if (candidateForm.yearsExperience === null) {
+        if (form.yearsExperience === null) {
           toast.error("Please select years of experience.");
           return false;
         }
-        if (candidateForm.primarySkills.length === 0) {
+        if (form.primarySkills.length === 0) {
           toast.error("Please add at least one skill.");
           return false;
         }
-        if (candidateForm.preferredWorkType.length === 0) {
+        if (form.preferredWorkType.length === 0) {
           toast.error("Please select at least one preferred work type.");
           return false;
         }
         if (
-          candidateForm.expectedSalaryMin === null ||
-          candidateForm.expectedSalaryMax === null
+          form.expectedSalaryMin === null ||
+          form.expectedSalaryMax === null
         ) {
           toast.error("Please enter your expected salary range.");
           return false;
         }
         if (
-          candidateForm.expectedSalaryMin !== null &&
-          candidateForm.expectedSalaryMax !== null &&
-          candidateForm.expectedSalaryMin > candidateForm.expectedSalaryMax
+          form.expectedSalaryMin !== null &&
+          form.expectedSalaryMax !== null &&
+          form.expectedSalaryMin > form.expectedSalaryMax
         ) {
           toast.error("Minimum salary cannot exceed maximum salary.");
           return false;
@@ -232,40 +235,9 @@ const HirionRegistration = () => {
           .map((s) => s.trim())
           .filter(Boolean);
 
-        setCandidateForm((prev) => ({
-          ...prev,
-          primarySkills: parsedSkills,
-        }));
-
-        // Validate with parsed skills
-        if (candidateForm.yearsExperience === null) {
-          toast.error("Please select years of experience.");
-          return;
-        }
-        if (parsedSkills.length === 0) {
-          toast.error("Please add at least one skill.");
-          return;
-        }
-        if (candidateForm.preferredWorkType.length === 0) {
-          toast.error("Please select at least one preferred work type.");
-          return;
-        }
-        if (
-          candidateForm.expectedSalaryMin === null ||
-          candidateForm.expectedSalaryMax === null
-        ) {
-          toast.error("Please enter your expected salary range.");
-          return;
-        }
-        if (
-          candidateForm.expectedSalaryMin !== null &&
-          candidateForm.expectedSalaryMax !== null &&
-          candidateForm.expectedSalaryMin > candidateForm.expectedSalaryMax
-        ) {
-          toast.error("Minimum salary cannot exceed maximum salary.");
-          return;
-        }
-
+        const draft = { ...candidateForm, primarySkills: parsedSkills };
+        if (!validateCandidateStep(3, draft)) return;
+        setCandidateForm(draft);
         setCandidateStep(4);
       } else {
         const isValid = validateCandidateStep(candidateStep);
@@ -291,6 +263,7 @@ const HirionRegistration = () => {
 
   const handleSubmit = async () => {
     if (selectedType === "candidate") {
+      if (isLoadingCandidate) return;
       if (!validateCandidateStep(4)) return;
       try {
         await createCandidate(candidateForm).unwrap();
