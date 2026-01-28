@@ -67,9 +67,12 @@ const HirionRegistration = () => {
   // API
   const [createCandidate, { isLoading: isLoadingCandidate }] =
     useCreateCandidateMutation();
-
   const [createEmployer, { isLoading: isLoadingEmployer }] =
     useCreateEmployerMutation();
+
+  // Regex validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>({
     email: "",
@@ -111,7 +114,6 @@ const HirionRegistration = () => {
     step: number,
     form: CandidateFormData = candidateForm,
   ): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     switch (step) {
       case 1:
         if (
@@ -127,8 +129,10 @@ const HirionRegistration = () => {
           toast.error("Invalid email address.");
           return false;
         }
-        if (candidateForm.password?.trim().length < 8) {
-          toast.error("Password must be at least 8 characters.");
+        if (!passwordPolicy.test(candidateForm.password)) {
+          toast.error(
+            "Password must be at least 8 characters and include uppercase, lowercase, and a number.",
+          );
           return false;
         }
         return true;
@@ -198,8 +202,6 @@ const HirionRegistration = () => {
   };
 
   const validateEmployerStep = (step: number): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     switch (step) {
       case 1:
         if (
@@ -384,37 +386,42 @@ const HirionRegistration = () => {
                 htmlFor="password"
                 className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
               >
-                Password{" "}
+                Password <span className="text-destructive">*</span>
+                <br />
                 <span className="text-gray-500 font-normal text-sm">
                   (At least 8 characters, include uppercase, lowercase, and a
                   number)
                 </span>
-                <span className="text-destructive">*</span>
               </Label>
-              <Input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={employerForm.password}
-                onChange={(e) =>
-                  setEmployerForm({ ...employerForm, password: e.target.value })
-                }
-                required
-                placeholder="Enter your password"
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <button
-                type="button"
-                className="absolute right-4 top-10 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors min-h-0 min-w-0"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                aria-pressed={showPassword}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={employerForm.password}
+                  onChange={(e) =>
+                    setEmployerForm({
+                      ...employerForm,
+                      password: e.target.value,
+                    })
+                  }
+                  required
+                  placeholder="Enter your password"
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <button
+                  type="button"
+                  className="absolute right-0 sm:right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
             </div>
           </>
         );
@@ -633,34 +640,41 @@ const HirionRegistration = () => {
                 className="block text-sm mb-2 text-gray-700 dark:text-gray-300"
               >
                 Password <span className="text-destructive">*</span>
+                <br />
+                <span className="text-gray-500 font-normal text-sm">
+                  (At least 8 characters, include uppercase, lowercase, and a
+                  number)
+                </span>
               </Label>
-              <Input
-                type={showPassword ? "text" : "password"}
-                id="password"
-                value={candidateForm.password}
-                onChange={(e) =>
-                  setCandidateForm({
-                    ...candidateForm,
-                    password: e.target.value,
-                  })
-                }
-                placeholder="Enter your password"
-                required
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-              <button
-                type="button"
-                className="absolute right-4 top-10 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors min-h-0 min-w-0"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                aria-pressed={showPassword}
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
-              </button>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={candidateForm.password}
+                  onChange={(e) =>
+                    setCandidateForm({
+                      ...candidateForm,
+                      password: e.target.value,
+                    })
+                  }
+                  placeholder="Enter your password"
+                  required
+                  className="w-full px-3 py-2 pr-10 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+                <button
+                  type="button"
+                  className="absolute right-0 sm:right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-400 transition-colors"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
             </div>
           </>
         );
