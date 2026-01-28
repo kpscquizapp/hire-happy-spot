@@ -55,6 +55,7 @@ interface EmployerFormData {
 const HirionRegistration = () => {
   const [selectedType, setSelectedType] = useState<UserType>("candidate");
   const [candidateStep, setCandidateStep] = useState<CandidateStep>(1);
+  const [primarySkillInput, setPrimarySkillInput] = useState<string[]>([]);
   const [employerStep, setEmployerStep] = useState<EmployerStep>(1);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -73,7 +74,7 @@ const HirionRegistration = () => {
     candidateType: "",
     primaryJobRole: "",
     yearsExperience: null,
-    primarySkills: [],
+    primarySkills: primarySkillInput,
     preferredWorkType: [],
     expectedSalaryMin: null,
     expectedSalaryMax: null,
@@ -242,10 +243,11 @@ const HirionRegistration = () => {
   };
 
   const handleSubmit = async () => {
+    console.log(candidateForm);
     if (selectedType === "candidate") {
       if (!validateCandidateStep(4)) return;
       try {
-        await createCandidate(candidateForm).unwrap();
+        // await createCandidate(candidateForm).unwrap();
         toast.success("Account created successfully!");
         navigate("/login");
       } catch (err) {
@@ -763,15 +765,9 @@ const HirionRegistration = () => {
               <Input
                 type="text"
                 id="primarySkills"
-                value={candidateForm.primarySkills.join(", ")}
+                value={primarySkillInput}
                 onChange={(e) =>
-                  setCandidateForm({
-                    ...candidateForm,
-                    primarySkills: e.target.value
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean),
-                  })
+                  setPrimarySkillInput(e.target.value.split(","))
                 }
                 placeholder="Enter your primary skills"
                 required
