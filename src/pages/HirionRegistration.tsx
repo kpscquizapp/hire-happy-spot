@@ -10,11 +10,12 @@ import {
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useCreateCandidateMutation } from "@/app/queries/loginApi";
 
 type UserType = "candidate" | "employer";
 type CandidateStep = 1 | 2 | 3 | 4;
@@ -56,6 +57,11 @@ const HirionRegistration = () => {
   const [candidateStep, setCandidateStep] = useState<CandidateStep>(1);
   const [employerStep, setEmployerStep] = useState<EmployerStep>(1);
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+
+  // API
+  const [createCandidate, { isLoading: isLoadingCandidate }] =
+    useCreateCandidateMutation();
 
   const [candidateForm, setCandidateForm] = useState<CandidateFormData>({
     email: "",
@@ -235,14 +241,23 @@ const HirionRegistration = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (selectedType === "candidate") {
       if (!validateCandidateStep(4)) return;
     } else {
       if (!validateEmployerStep(3)) return;
     }
 
-    //submit logic (e.g., API call, form submission, etc.)
+    try {
+      await createCandidate(candidateForm).unwrap();
+      toast.success("Account created successfully!");
+      navigate("/login");
+    } catch (err) {
+      const errorMessage =
+        err?.data?.message || err?.message || "Failed to create account";
+      toast.error(errorMessage);
+    }
+    // employer registration coming soon
   };
 
   const renderEmployerStep = () => {
@@ -746,16 +761,11 @@ const HirionRegistration = () => {
               <Input
                 type="text"
                 id="primarySkills"
-                value={candidateForm.primarySkills.join(", ")}
+                value={candidateForm.primarySkills.join(",")}
                 onChange={(e) =>
                   setCandidateForm({
                     ...candidateForm,
-                    primarySkills: e.target.value
-                      ? e.target.value
-                          .split(",")
-                          .map((s) => s.trim())
-                          .filter(Boolean)
-                      : [],
+                    primarySkills: e.target.value.split(","),
                   })
                 }
                 placeholder="Enter your primary skills"
@@ -792,7 +802,7 @@ const HirionRegistration = () => {
                           });
                         }
                       }}
-                      className="mr-2 accent-primary"
+                      className="mr-2 accent-primary min-h-0 min-w-0"
                     />
                     <span className="text-gray-700 dark:text-gray-300 capitalize">
                       {type}
@@ -825,7 +835,7 @@ const HirionRegistration = () => {
                             : e.target.valueAsNumber,
                     })
                   }
-                  placeholder="Enter your expected min salary"
+                  placeholder="Yearly expected min salary"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -853,7 +863,7 @@ const HirionRegistration = () => {
                             : e.target.valueAsNumber,
                     })
                   }
-                  placeholder="Enter your expected max salary"
+                  placeholder="Yearly expected max salary"
                   required
                   className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                 />
@@ -897,7 +907,7 @@ const HirionRegistration = () => {
                       acceptedTerms: e.target.checked,
                     })
                   }
-                  className="mt-1 mr-2 accent-primary"
+                  className="mt-1 mr-2 accent-primary min-w-0 min-h-0"
                   required
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -915,7 +925,7 @@ const HirionRegistration = () => {
                     })
                   }
                   required
-                  className="mt-1 mr-2 accent-primary"
+                  className="mt-1 mr-2 accent-primary min-w-0 min-h-0"
                 />
                 <span className="text-sm text-gray-700 dark:text-gray-300">
                   I accept the Privacy Policy
@@ -931,10 +941,10 @@ const HirionRegistration = () => {
     <>
       <Header />
       <div className="min-h-screen pb-16 pt-28 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 flex items-center justify-center p-4">
-        <div className="w-full bg-white dark:bg-gray-900 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6  shadow-lg rounded-lg">
-          <div className="dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 bg-gradient-to-br from-[#f7f9fc] to-[#f0f6ff] p-8 rounded-tl-lg rounded-bl-lg">
+        <div className="w-full bg-white dark:bg-gray-900 max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-6 rounded-lg rounded-tr-lg rounded-br-lg shadow-lg">
+          <div className="dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900 bg-gradient-to-br from-[#f7f9fc] to-[#f0f6ff] p-8 lg:rounded-bl-lg rounded-tr-lg rounded-tl-lg lg:rounded-tl-none lg:rounded-tr-none dark:rounded-tl-lg lg:rounded-tl-lg">
             <div className="flex items-center gap-3 mb-6">
-              <div className="bg-primary rounded-lg p-2">
+              <div className="bg-primary p-2">
                 <Building2 className="w-6 h-6 text-white" />
               </div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -990,7 +1000,7 @@ const HirionRegistration = () => {
               © 2026 Hirion Talent Solutions. All rights reserved.
             </p>
           </div>
-          <div className="dark:bg-gray-900 rounded-lg p-8">
+          <div className="dark:bg-gray-900 p-8 rounded-br-lg rounded-tr-lg">
             <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
               Account Registration
             </h2>
@@ -1118,7 +1128,9 @@ const HirionRegistration = () => {
                   onClick={handleSubmit}
                   type="button"
                 >
-                  Sign up & Continue
+                  {isLoadingCandidate
+                    ? "Creating account..."
+                    : "Signup and Continue"}
                 </button>
               )}
             </div>
