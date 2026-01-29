@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 interface DesktopNavigationProps {
   isDark?: boolean;
@@ -32,6 +34,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const itemRefs = useRef<HTMLAnchorElement[]>([]);
+  const userDetails = useSelector((state: RootState) => state.user.userDetails);
 
   const navItems: NavItemWithDropdown[] = [
     {
@@ -89,7 +92,10 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           items: [
             {
               label: "Browse Talent",
-              href: "/employer-login",
+              href:
+                userDetails?.role === "employer"
+                  ? "/employer-dashboard/post-bench-resource"
+                  : "/login",
               description: "Discover professionals",
             },
             {
@@ -109,7 +115,10 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           items: [
             {
               label: "List Your Talent",
-              href: "/employer-login",
+              href:
+                userDetails?.role === "employer"
+                  ? "/employer-dashboard/active-resources"
+                  : "/login",
               description: "Add bench resources",
             },
             {
@@ -287,125 +296,132 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
   }, [activeDropdown]);
 
   return (
-    <nav className="flex items-center gap-1" role="menubar">
-      {navItems.map((item, navIndex) => {
-        const allItems = getAllItems(item.label);
-        let itemIndex = 0;
+    <section className="flex w-full ml-6">
+      <nav className="flex items-center gap-1" role="menubar">
+        {navItems.map((item, navIndex) => {
+          const allItems = getAllItems(item.label);
+          let itemIndex = 0;
 
-        return (
-          <div
-            key={item.href}
-            className="relative"
-            onMouseEnter={() => {
-              setActiveDropdown(item.label);
-              setFocusedIndex(-1);
-            }}
-            onMouseLeave={() => {
-              setActiveDropdown(null);
-              setFocusedIndex(-1);
-            }}
-            ref={(el) => {
-              if (el) dropdownRefs.current.set(item.label, el);
-            }}
-          >
-            <button
-              className={cn(
-                "flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg",
-                isDark
-                  ? "text-white/80 hover:text-white hover:bg-white/10"
-                  : "text-foreground hover:text-primary hover:bg-primary/5",
-                activeDropdown === item.label &&
-                  (isDark
-                    ? "text-white bg-white/10"
-                    : "text-primary bg-primary/5"),
-              )}
-              onKeyDown={(e) => handleKeyDown(e, item.label)}
-              onClick={() =>
-                setActiveDropdown(
-                  activeDropdown === item.label ? null : item.label,
-                )
-              }
-              aria-expanded={activeDropdown === item.label}
-              aria-haspopup="menu"
-              role="menuitem"
-            >
-              {item.label}
-              <ChevronDown
-                className={cn(
-                  "w-3.5 h-3.5 transition-transform duration-200",
-                  activeDropdown === item.label && "rotate-180",
-                )}
-              />
-            </button>
-
-            {/* Dropdown Menu */}
+          return (
             <div
-              className={cn(
-                "absolute top-full left-1/2 -translate-x-1/2 pt-3 transition-all duration-200 z-50",
-                activeDropdown === item.label
-                  ? "opacity-100 visible translate-y-0"
-                  : "opacity-0 invisible -translate-y-2 pointer-events-none",
-              )}
-              role="menu"
-              aria-label={item.label}
+              key={item.href}
+              className="relative"
+              onMouseEnter={() => {
+                setActiveDropdown(item.label);
+                setFocusedIndex(-1);
+              }}
+              onMouseLeave={() => {
+                setActiveDropdown(null);
+                setFocusedIndex(-1);
+              }}
+              ref={(el) => {
+                if (el) dropdownRefs.current.set(item.label, el);
+              }}
             >
-              <div className="bg-navy-900 rounded-xl shadow-2xl border border-white/10 overflow-hidden min-w-[420px]">
-                <div className="grid grid-cols-2">
-                  {item.sections.map((section, sectionIndex) => (
-                    <div
-                      key={section.title || sectionIndex}
-                      className={cn("p-5", sectionIndex === 1 && "bg-white/5")}
-                    >
-                      {section.title && (
-                        <h3 className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 px-2">
-                          {section.title}
-                        </h3>
-                      )}
-                      <div className="space-y-0.5">
-                        {section.items.map((dropdownItem) => {
-                          const currentIndex = itemIndex++;
-                          return (
-                            <Link
-                              key={dropdownItem.href}
-                              to={dropdownItem.href}
-                              ref={(el) => {
-                                if (el) itemRefs.current[currentIndex] = el;
-                              }}
-                              className={cn(
-                                "block px-3 py-2.5 rounded-lg transition-colors group outline-none",
-                                focusedIndex === currentIndex
-                                  ? "bg-white/10 ring-2 ring-primary/50"
-                                  : "hover:bg-white/10",
-                              )}
-                              onClick={() => {
-                                setActiveDropdown(null);
-                                setFocusedIndex(-1);
-                              }}
-                              onKeyDown={(e) => handleKeyDown(e, item.label)}
-                              role="menuitem"
-                              tabIndex={activeDropdown === item.label ? 0 : -1}
-                            >
-                              <span className="block text-sm font-medium text-white group-hover:text-primary transition-colors">
-                                {dropdownItem.label}
-                              </span>
-                              {dropdownItem.description && (
-                                <span className="block text-xs text-white/50 mt-0.5">
-                                  {dropdownItem.description}
+              <button
+                className={cn(
+                  "flex items-center gap-1.5 px-4 py-2 text-sm font-medium transition-all duration-200 rounded-lg",
+                  isDark
+                    ? "text-white/80 hover:text-white hover:bg-white/10"
+                    : "text-foreground hover:text-primary hover:bg-primary/5",
+                  activeDropdown === item.label &&
+                    (isDark
+                      ? "text-white bg-white/10"
+                      : "text-primary bg-primary/5"),
+                )}
+                onKeyDown={(e) => handleKeyDown(e, item.label)}
+                onClick={() =>
+                  setActiveDropdown(
+                    activeDropdown === item.label ? null : item.label,
+                  )
+                }
+                aria-expanded={activeDropdown === item.label}
+                aria-haspopup="menu"
+                role="menuitem"
+              >
+                {item.label}
+                <ChevronDown
+                  className={cn(
+                    "w-3.5 h-3.5 transition-transform duration-200",
+                    activeDropdown === item.label && "rotate-180",
+                  )}
+                />
+              </button>
+
+              {/* Dropdown Menu */}
+              <div
+                className={cn(
+                  "absolute top-full left-0 pt-3 transition-all duration-200 z-50",
+                  activeDropdown === item.label
+                    ? "opacity-100 visible translate-y-0"
+                    : "opacity-0 invisible -translate-y-2 pointer-events-none",
+                )}
+                role="menu"
+                aria-label={item.label}
+              >
+                <div className="bg-navy-900 rounded-xl shadow-2xl border border-white/10 overflow-hidden min-w-[420px]">
+                  <div className="grid grid-cols-2">
+                    {item.sections.map((section, sectionIndex) => (
+                      <div
+                        key={section.title || sectionIndex}
+                        className={cn(
+                          "p-5",
+                          sectionIndex === 1 && "bg-white/5",
+                        )}
+                      >
+                        {section.title && (
+                          <h3 className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3">
+                            {section.title}
+                          </h3>
+                        )}
+                        <div className="space-y-0.5">
+                          {section.items.map((dropdownItem) => {
+                            const currentIndex = itemIndex++;
+                            return (
+                              <Link
+                                key={dropdownItem.href}
+                                to={dropdownItem.href}
+                                ref={(el) => {
+                                  if (el) itemRefs.current[currentIndex] = el;
+                                }}
+                                className={cn(
+                                  "block px-3 py-2.5 rounded-lg transition-colors group outline-none",
+                                  focusedIndex === currentIndex
+                                    ? "bg-white/10 ring-2 ring-primary/50"
+                                    : "hover:bg-white/10",
+                                )}
+                                onClick={() => {
+                                  setActiveDropdown(null);
+                                  setFocusedIndex(-1);
+                                }}
+                                onKeyDown={(e) => handleKeyDown(e, item.label)}
+                                role="menuitem"
+                                tabIndex={
+                                  activeDropdown === item.label ? 0 : -1
+                                }
+                              >
+                                <span className="block text-sm font-medium text-white group-hover:text-primary transition-colors">
+                                  {dropdownItem.label}
                                 </span>
-                              )}
-                            </Link>
-                          );
-                        })}
+                                {dropdownItem.description && (
+                                  <span className="block text-xs text-white/50 mt-0.5">
+                                    {dropdownItem.description}
+                                  </span>
+                                )}
+                              </Link>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        );
-      })}
-    </nav>
+          );
+        })}
+      </nav>
+    </section>
   );
 };
 

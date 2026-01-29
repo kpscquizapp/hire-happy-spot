@@ -115,51 +115,7 @@ const PostBenchResource = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 dark:bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 animate-fade-in">
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
-          {/* Left Sidebar */}
-          <div className="space-y-6">
-            {/* Title Card */}
-            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white dark:bg-slate-900">
-              <CardContent className="p-6">
-                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">
-                  Post Bench Resource
-                </h1>
-                <div className="space-y-4">
-                  {steps.map((step, index) => (
-                    <div key={step.number} className="flex items-center gap-3">
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 transition-all ${
-                          step.completed
-                            ? "bg-blue-500 text-white shadow-md shadow-blue-500/30"
-                            : step.current
-                              ? "bg-blue-100 text-blue-600 ring-2 ring-blue-500 ring-offset-2"
-                              : "bg-slate-100 text-slate-400"
-                        }`}
-                      >
-                        {step.completed ? (
-                          <CheckCircle2 className="h-4 w-4" />
-                        ) : (
-                          step.number
-                        )}
-                      </div>
-                      <span
-                        className={`text-sm font-medium ${
-                          step.current
-                            ? "text-blue-600"
-                            : step.completed
-                              ? "text-slate-700 dark:text-slate-300"
-                              : "text-slate-400"
-                        }`}
-                      >
-                        {step.title}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
+        <div className="grid grid-cols-1 gap-8">
           {/* Main Form */}
           <div className="space-y-6">
             {/* Policy Alert */}
@@ -471,7 +427,7 @@ const PostBenchResource = () => {
                               ...formData,
                               locationPreferences: {
                                 ...formData.locationPreferences,
-                                [loc.id]: checked,
+                                [loc.id]: checked as boolean,
                               },
                             })
                           }
@@ -538,12 +494,12 @@ const PostBenchResource = () => {
                       type="file"
                       accept="application/pdf"
                       className="hidden"
-                      onChange={(e) =>
-                        {
+                      onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (file && file.size > 2 * 1024 * 1024) {
                           toast.error("File too large", {
-                            description: "Please upload a file smaller than 2MB.",
+                            description:
+                              "Please upload a file smaller than 2MB.",
                           });
                           e.target.value = "";
                           setFormData((prev) => ({
@@ -556,8 +512,7 @@ const PostBenchResource = () => {
                           ...prev,
                           resumeFile: file ?? null,
                         }));
-                      }
-                      }
+                      }}
                     />
                     <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 flex items-center justify-center mx-auto mb-4 transition-colors">
                       <Upload className="h-6 w-6 text-slate-400 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" />

@@ -18,6 +18,7 @@ import {
   TrendingUp,
   Sparkles,
   Shield,
+  Loader,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLoginMutation } from "@/app/queries/loginApi";
@@ -108,11 +109,11 @@ const EmployerLogin = () => {
       <Header />
 
       <main className="flex-1 pt-20 pb-12 px-4">
-        <div className="container mx-auto max-w-7xl">
+        <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start mt-8">
             {/* Left Column - Login Form */}
             <Card className="shadow-xl border-0 rounded-2xl overflow-hidden bg-white dark:bg-slate-900">
-              <CardContent className="p-8 sm:p-10">
+              <CardContent className="py-8 sm:p-10">
                 <div className="space-y-6">
                   {/* Header */}
                   <div>
@@ -123,7 +124,7 @@ const EmployerLogin = () => {
                       <span className="text-xl font-bold text-foreground">
                         HIRION
                       </span>
-                      <span className="ml-auto px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 text-xs font-semibold rounded-full flex items-center gap-1">
+                      <span className="ml-auto px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 text-[10px] sm:text-xs font-semibold rounded-full flex items-center gap-1">
                         <Shield className="h-3 w-3" />
                         Enterprise Grade
                       </span>
@@ -212,7 +213,10 @@ const EmployerLogin = () => {
                       disabled={isLoadingLogin}
                     >
                       {isLoadingLogin ? (
-                        "Signing in..."
+                        <>
+                          <Loader className="mr-2 h-4 w-4 animate-spin" />
+                          Signing in...
+                        </>
                       ) : (
                         <>
                           Login to Employer Dashboard
