@@ -108,7 +108,7 @@ const EmployerLogin = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800">
       <Header />
 
-      <main className="flex-1 pt-20 pb-12 sm:px-4">
+      <main className="flex-1 pt-20 pb-12 px-4">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start mt-8">
             {/* Left Column - Login Form */}

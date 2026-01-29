@@ -197,10 +197,10 @@ const Login = () => {
                           Logging in...
                         </>
                       ) : (
-                        <div className="flex items-center justify-center">
+                        <>
                           Login
                           <ArrowRight className="ml-2 h-4 w-4" />
-                        </div>
+                        </>
                       )}
                     </Button>
                   </form>

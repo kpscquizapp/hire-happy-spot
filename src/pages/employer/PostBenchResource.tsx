@@ -231,7 +231,7 @@ const PostBenchResource = () => {
                     placeholder="Type skill and press enter..."
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyPress}
                     className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                   />
                   <div className="flex flex-wrap gap-2 mt-3">
@@ -423,7 +423,7 @@ const PostBenchResource = () => {
                               ...formData,
                               locationPreferences: {
                                 ...formData.locationPreferences,
-                                [loc.id]: checked,
+                                [loc.id]: checked as boolean,
                               },
                             })
                           }
