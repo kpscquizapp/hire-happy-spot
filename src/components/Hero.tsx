@@ -225,8 +225,8 @@ const Hero = () => {
                                     className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-secondary transition-colors text-left group"
                                   >
                                     <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center font-bold text-primary">
-                                      {company[0]}
-                                    </div>
+                                      {company[0] || "?"}
+                                    </div>{" "}
                                     <span className="text-sm text-foreground">
                                       {company}
                                     </span>
