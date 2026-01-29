@@ -381,16 +381,35 @@ const ActiveResources = () => {
                 </Button>
                 
                 <div className="flex items-center gap-0.5 sm:gap-1 overflow-x-auto max-w-full">
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(page)}
-                      className="rounded-lg w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 p-0 text-xs flex-shrink-0"
-                    >
-                      {page}
-                    </Button>
+                  {(() => {
+                    const pages: (number | string)[] = [];
+                    const showEllipsis = totalPages > 7;
+                    if (!showEllipsis) {
+                      return Array.from({ length: totalPages }, (_, i) => i + 1);
+                    }
+                    // Always show first, last, current, and neighbors
+                    const start = Math.max(2, currentPage - 1);
+                    const end = Math.min(totalPages - 1, currentPage + 1);
+                    pages.push(1);
+                    if (start > 2) pages.push('...');
+                    for (let i = start; i <= end; i++) pages.push(i);
+                    if (end < totalPages - 1) pages.push('...');
+                    pages.push(totalPages);
+                    return pages;
+                  })().map((page, idx) => (
+                    typeof page === 'string' ? (
+                      <span key={`ellipsis-${idx}`} className="px-2 text-slate-400">…</span>
+                    ) : (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                        className="rounded-lg w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 p-0 text-xs flex-shrink-0"
+                      >
+                        {page}
+                      </Button>
+                    )
                   ))}
                 </div>
                 
@@ -454,15 +473,15 @@ const ActiveResources = () => {
                           <Briefcase className="h-4 w-4 text-slate-400" />
                           <span>{selectedResource.experience}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-slate-600">
+                        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                           <DollarSign className="h-4 w-4 text-slate-400" />
                           <span>${selectedResource.rate}/hr ({selectedResource.currency})</span>
                         </div>
-                        <div className="flex items-center gap-2 text-slate-600">
+                        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                           <Calendar className="h-4 w-4 text-slate-400" />
                           <span>Available: {selectedResource.availableFrom}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-slate-600">
+                        <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                           <MapPin className="h-4 w-4 text-slate-400" />
                           <span>{selectedResource.locationPreference.join(", ")}</span>
                         </div>

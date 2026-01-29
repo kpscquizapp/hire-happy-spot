@@ -84,7 +84,7 @@ const PostBenchResource = () => {
     });
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
       addSkill();
@@ -275,7 +275,7 @@ const PostBenchResource = () => {
                     placeholder="Type skill and press enter..."
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyDown}
                     className="h-12 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
                   />
                   <div className="flex flex-wrap gap-2 mt-3">
@@ -535,10 +535,20 @@ const PostBenchResource = () => {
                       accept="application/pdf"
                       className="hidden"
                       onChange={(e) =>
+                        {
+                        const file = e.target.files?.[0];
+                        if (file && file.size > 2 * 1024 * 1024) {
+                          toast.error("File too large", {
+                            description: "Please upload a file smaller than 2MB.",
+                          });
+                          e.target.value = "";
+                          return;
+                        }
                         setFormData((prev) => ({
                           ...prev,
-                          resumeFile: e.target.files?.[0] ?? null,
-                        }))
+                          resumeFile: file ?? null,
+                        }));
+                      }
                       }
                     />
                     <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 flex items-center justify-center mx-auto mb-4 transition-colors">
@@ -548,7 +558,7 @@ const PostBenchResource = () => {
                       Click to upload resume
                     </p>
                     <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
-                      Max file size 5MB. Please remove contact details.
+                      Max file size 2 MB. Please remove contact details.
                     </p>
                   </label>
                 </div>
