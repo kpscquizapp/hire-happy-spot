@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { ChevronDown } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store";
 
 interface DesktopNavigationProps {
   isDark?: boolean;
@@ -32,6 +34,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
   const [focusedIndex, setFocusedIndex] = useState<number>(-1);
   const dropdownRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const itemRefs = useRef<HTMLAnchorElement[]>([]);
+  const userDetails = useSelector((state: RootState) => state.user.userDetails);
 
   const navItems: NavItemWithDropdown[] = [
     {
@@ -89,7 +92,10 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           items: [
             {
               label: "Browse Talent",
-              href: "/employer-login",
+              href:
+                userDetails?.role === "employer"
+                  ? "/employer-dashboard/post-bench-resource"
+                  : "/login",
               description: "Discover professionals",
             },
             {
@@ -109,7 +115,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           items: [
             {
               label: "List Your Talent",
-              href: "/employer-login",
+              href: "/login",
               description: "Add bench resources",
             },
             {

@@ -16,6 +16,7 @@ import {
   Loader,
   Zap,
   CheckCircle2,
+  ArrowRight,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -88,7 +89,7 @@ const Login = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-stretch mt-8">
             {/* Left Column - Login Form */}
             <Card className="shadow-xl border-0 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border dark:border-slate-800">
-              <CardContent className="p-8 sm:p-10 flex flex-col justify-center">
+              <CardContent className="py-8 sm:p-10 flex flex-col justify-center">
                 <div className="space-y-8">
                   {/* Hirion Logo Section */}
                   <div>
@@ -124,7 +125,7 @@ const Login = () => {
                         <Mail className="absolute left-4 top-3.5 h-5 w-5 text-slate-400 dark:text-slate-500" />
                         <Input
                           id="email"
-                          className="pl-12 h-12 text-base border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400"
+                          className="pl-12 h-12 text-base border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg focus:border-green-500  dark:focus:border-green-400"
                           placeholder="Enter your email"
                           type="email"
                           value={email}
@@ -145,7 +146,7 @@ const Login = () => {
                         <Lock className="absolute left-4 top-3.5 h-5 w-5 text-slate-400 dark:text-slate-500" />
                         <Input
                           id="password"
-                          className="pl-12 pr-12 h-12 text-base border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg focus:border-blue-500 focus:ring-blue-500 dark:focus:border-blue-400 dark:focus:ring-blue-400"
+                          className="pl-12 pr-12 h-12 text-base border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white rounded-lg focus:border-green-500 dark:focus:border-green-400"
                           type={showPassword ? "text" : "password"}
                           placeholder="Enter your password"
                           value={password}
@@ -193,10 +194,13 @@ const Login = () => {
                       {isLoadingLogin ? (
                         <>
                           <Loader className="mr-2 h-4 w-4 animate-spin" />
-                          Logging in...{" "}
+                          Logging in...
                         </>
                       ) : (
-                        <>Login</>
+                        <div className="flex items-center justify-center">
+                          <>Login</>
+                          <ArrowRight className="ml-2 h-4 w-5" />
+                        </div>
                       )}
                     </Button>
                   </form>

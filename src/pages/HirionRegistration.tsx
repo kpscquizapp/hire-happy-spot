@@ -7,6 +7,7 @@ import {
   CheckCircle,
   EyeOff,
   Eye,
+  Loader,
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -1205,6 +1206,7 @@ const HirionRegistration = () => {
                     disabled={isLoadingCandidate || isLoadingEmployer}
                     aria-busy={isLoadingCandidate || isLoadingEmployer}
                   >
+                    <Loader className="mr-2 h-4 w-4 animate-spin" />
                     {isLoadingCandidate || isLoadingEmployer
                       ? "Creating account..."
                       : "Sign up and continue"}
