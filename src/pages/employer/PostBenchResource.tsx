@@ -34,11 +34,15 @@ const PostBenchResource = () => {
   const [currentStep, setCurrentStep] = useState(2);
 
   const steps = [
-    { number: 1, title: "Company Profile", completed: true },
-    { number: 2, title: "Resource Details", current: true },
-    { number: 3, title: "Contract Terms", completed: false },
-    { number: 4, title: "Review & Publish", completed: false },
-  ];
+    { number: 1, title: "Company Profile" },
+    { number: 2, title: "Resource Details" },
+    { number: 3, title: "Contract Terms" },
+    { number: 4, title: "Review & Publish" },
+  ].map((step) => ({
+    ...step,
+    completed: step.number < currentStep,
+    current: step.number === currentStep,
+  }));
 
   const [formData, setFormData] = useState({
     resourceName: "John D.",
@@ -84,7 +88,7 @@ const PostBenchResource = () => {
     });
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
       addSkill();
@@ -109,18 +113,62 @@ const PostBenchResource = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
-      <div className="max-w-7xl mx-auto p-6 space-y-6 animate-fade-in">
-        <div className="grid grid-cols-1 gap-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 dark:bg-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6 space-y-4 sm:space-y-6 animate-fade-in">
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+          {/* Left Sidebar */}
+          <div className="space-y-6">
+            {/* Title Card */}
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white dark:bg-slate-900">
+              <CardContent className="p-6">
+                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6">
+                  Post Bench Resource
+                </h1>
+                <div className="space-y-4">
+                  {steps.map((step, index) => (
+                    <div key={step.number} className="flex items-center gap-3">
+                      <div
+                        className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold shrink-0 transition-all ${
+                          step.completed
+                            ? "bg-blue-500 text-white shadow-md shadow-blue-500/30"
+                            : step.current
+                              ? "bg-blue-100 text-blue-600 ring-2 ring-blue-500 ring-offset-2"
+                              : "bg-slate-100 text-slate-400"
+                        }`}
+                      >
+                        {step.completed ? (
+                          <CheckCircle2 className="h-4 w-4" />
+                        ) : (
+                          step.number
+                        )}
+                      </div>
+                      <span
+                        className={`text-sm font-medium ${
+                          step.current
+                            ? "text-blue-600"
+                            : step.completed
+                              ? "text-slate-700 dark:text-slate-300"
+                              : "text-slate-400"
+                        }`}
+                      >
+                        {step.title}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Main Form */}
           <div className="space-y-6">
             {/* Policy Alert */}
-            <Card className="border-0 shadow-sm rounded-2xl overflow-hidden bg-gradient-to-r from-orange-50 to-amber-50">
+            <Card className="border-0 shadow-sm rounded-2xl overflow-hidden bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-950/30 dark:to-amber-950/30">
               <CardContent className="p-4 flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center shrink-0">
-                  <AlertCircle className="h-4 w-4 text-orange-600" />
+                <div className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center shrink-0">
+                  <AlertCircle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
                 </div>
-                <p className="text-sm text-orange-800">
+                <p className="text-sm text-orange-800 dark:text-orange-200">
                   <strong>Bench Policy:</strong> Resources listed here must be
                   on your company payroll. Profiles can be anonymized until an
                   interview request is accepted.
@@ -129,17 +177,17 @@ const PostBenchResource = () => {
             </Card>
 
             {/* Resource Basic Info */}
-            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white">
-              <CardHeader className="pb-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-blue-50/50">
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white dark:bg-slate-900">
+              <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-slate-50 to-blue-50/50 dark:from-slate-800/50 dark:to-slate-800/30">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                    <User className="h-5 w-5 text-blue-600" />
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+                    <User className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg font-semibold text-slate-800">
+                    <CardTitle className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                       Resource Basic Info
                     </CardTitle>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       Details about the professional you want to deploy
                     </p>
                   </div>
@@ -148,7 +196,7 @@ const PostBenchResource = () => {
               <CardContent className="pt-6 space-y-5 p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       Resource Name (Internal)
                     </Label>
                     <Input
@@ -160,14 +208,14 @@ const PostBenchResource = () => {
                           resourceName: e.target.value,
                         })
                       }
-                      className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      className="h-12 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
                     />
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-slate-400 dark:text-slate-500">
                       Will be shown as "John D." publicly
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       Current Role / Designation
                     </Label>
                     <Input
@@ -179,13 +227,13 @@ const PostBenchResource = () => {
                           currentRole: e.target.value,
                         })
                       }
-                      className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      className="h-12 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
                     />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       Total Experience (Years)
                     </Label>
                     <Select
@@ -194,7 +242,7 @@ const PostBenchResource = () => {
                         setFormData({ ...formData, totalExperience: v })
                       }
                     >
-                      <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                      <SelectTrigger className="h-12 rounded-xl border-slate-200 dark:border-slate-700">
                         <SelectValue placeholder="Select..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -209,7 +257,7 @@ const PostBenchResource = () => {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       Employee ID / Ref Code
                     </Label>
                     <Input
@@ -218,21 +266,21 @@ const PostBenchResource = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, employeeId: e.target.value })
                       }
-                      className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                      className="h-12 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-700">
+                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     Technical Skills *
                   </Label>
                   <Input
                     placeholder="Type skill and press enter..."
                     value={skillInput}
                     onChange={(e) => setSkillInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    className="h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    onKeyDown={handleKeyDown}
+                    className="h-12 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
                   />
                   <div className="flex flex-wrap gap-2 mt-3">
                     {formData.skills.map((skill) => (
@@ -251,7 +299,7 @@ const PostBenchResource = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-700">
+                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     Professional Summary
                   </Label>
                   <Textarea
@@ -264,24 +312,24 @@ const PostBenchResource = () => {
                       })
                     }
                     rows={4}
-                    className="rounded-xl resize-none border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    className="rounded-xl resize-none border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
                   />
                 </div>
               </CardContent>
             </Card>
 
             {/* Availability & Contract Terms */}
-            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white">
-              <CardHeader className="pb-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-emerald-50/50">
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white dark:bg-slate-900">
+              <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-slate-50 to-emerald-50/50 dark:from-slate-800/50 dark:to-slate-800/30">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
-                    <DollarSign className="h-5 w-5 text-emerald-600" />
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center">
+                    <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   <div>
-                    <CardTitle className="text-lg font-semibold text-slate-800">
+                    <CardTitle className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                       Availability & Contract Terms
                     </CardTitle>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
                       Define the commercials and deployment conditions
                     </p>
                   </div>
@@ -290,12 +338,12 @@ const PostBenchResource = () => {
               <CardContent className="pt-6 space-y-5 p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       Hourly Rate (Client Billable)
                     </Label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
-                        $
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-medium">
+                        {formData.currency.split(" - ")[0]}
                       </span>
                       <Input
                         placeholder="e.g. 45"
@@ -306,15 +354,15 @@ const PostBenchResource = () => {
                             hourlyRate: e.target.value,
                           })
                         }
-                        className="pl-9 pr-14 h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                        className="pl-9 pr-14 h-12 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
                       />
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 text-sm">
                         / hr
                       </span>
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       Currency
                     </Label>
                     <Select
@@ -323,7 +371,7 @@ const PostBenchResource = () => {
                         setFormData({ ...formData, currency: v })
                       }
                     >
-                      <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                      <SelectTrigger className="h-12 rounded-xl border-slate-200 dark:border-slate-700">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
@@ -344,11 +392,11 @@ const PostBenchResource = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       Available From
                     </Label>
                     <div className="relative">
-                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 dark:text-slate-500" />
                       <Input
                         type="date"
                         placeholder="dd-mm-yyyy"
@@ -359,12 +407,12 @@ const PostBenchResource = () => {
                             availableFrom: e.target.value,
                           })
                         }
-                        className="pl-12 h-12 rounded-xl border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                        className="pl-12 h-12 rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-sm font-medium text-slate-700">
+                    <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                       Minimum Contract Duration
                     </Label>
                     <Select
@@ -373,7 +421,7 @@ const PostBenchResource = () => {
                         setFormData({ ...formData, minimumDuration: v })
                       }
                     >
-                      <SelectTrigger className="h-12 rounded-xl border-slate-200">
+                      <SelectTrigger className="h-12 rounded-xl border-slate-200 dark:border-slate-700">
                         <SelectValue placeholder="Select duration" />
                       </SelectTrigger>
                       <SelectContent>
@@ -390,7 +438,7 @@ const PostBenchResource = () => {
                 </div>
 
                 <div className="space-y-3">
-                  <Label className="text-sm font-medium text-slate-700">
+                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     Deployment Location Preference
                   </Label>
                   <div className="flex flex-wrap gap-4">
@@ -413,7 +461,7 @@ const PostBenchResource = () => {
                     ].map((loc) => (
                       <div
                         key={loc.id}
-                        className="flex items-center space-x-2 bg-slate-50 px-4 py-2.5 rounded-xl"
+                        className="flex items-center space-x-2 bg-slate-50 dark:bg-slate-800 px-4 py-2.5 rounded-xl"
                       >
                         <Checkbox
                           id={loc.id}
@@ -427,11 +475,11 @@ const PostBenchResource = () => {
                               },
                             })
                           }
-                          className="border-slate-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                          className="border-slate-300 dark:border-slate-600 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
                         />
                         <label
                           htmlFor={loc.id}
-                          className="text-sm cursor-pointer text-slate-600 font-medium"
+                          className="text-sm cursor-pointer text-slate-600 dark:text-slate-300 font-medium"
                         >
                           {loc.label}
                         </label>
@@ -440,7 +488,7 @@ const PostBenchResource = () => {
                   </div>
                 </div>
 
-                <div className="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 flex items-start gap-4">
+                <div className="p-5 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-2xl border border-blue-100 dark:border-blue-900 flex items-start gap-4">
                   <Checkbox
                     id="non-solicitation"
                     checked={formData.requireNonSolicitation}
@@ -450,16 +498,16 @@ const PostBenchResource = () => {
                         requireNonSolicitation: checked as boolean,
                       })
                     }
-                    className="mt-0.5 border-blue-300 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                    className="mt-0.5 border-blue-300 dark:border-blue-700 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
                   />
                   <div>
                     <label
                       htmlFor="non-solicitation"
-                      className="text-sm font-semibold text-slate-800 cursor-pointer"
+                      className="text-sm font-semibold text-slate-800 dark:text-slate-100 cursor-pointer"
                     >
                       Require Non-Solicitation Agreement
                     </label>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       Client cannot hire this resource permanently for 12
                       months.
                     </p>
@@ -469,33 +517,58 @@ const PostBenchResource = () => {
             </Card>
 
             {/* Documents */}
-            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white">
-              <CardHeader className="pb-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-purple-50/50">
+            <Card className="border-0 shadow-lg rounded-2xl overflow-hidden bg-white dark:bg-slate-900">
+              <CardHeader className="pb-4 border-b border-slate-100 dark:border-slate-800 bg-gradient-to-r from-slate-50 to-purple-50/50 dark:from-slate-800/50 dark:to-slate-800/30">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
-                    <FileText className="h-5 w-5 text-purple-600" />
+                  <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/50 flex items-center justify-center">
+                    <FileText className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <CardTitle className="text-lg font-semibold text-slate-800">
+                  <CardTitle className="text-lg font-semibold text-slate-800 dark:text-slate-100">
                     Documents
                   </CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="pt-6 p-6">
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium text-slate-700">
+                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     Upload Anonymized Resume (PDF)
                   </Label>
-                  <div className="border-2 border-dashed border-slate-200 rounded-2xl p-10 text-center hover:border-blue-400 hover:bg-blue-50/30 transition-all cursor-pointer group">
-                    <div className="w-14 h-14 rounded-2xl bg-slate-100 group-hover:bg-blue-100 flex items-center justify-center mx-auto mb-4 transition-colors">
-                      <Upload className="h-6 w-6 text-slate-400 group-hover:text-blue-500 transition-colors" />
+                  <label className="block border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl p-10 text-center hover:border-blue-400 dark:hover:border-blue-600 hover:bg-blue-50/30 dark:hover:bg-blue-950/20 transition-all cursor-pointer group">
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      className="hidden"
+                      onChange={(e) =>
+                        {
+                        const file = e.target.files?.[0];
+                        if (file && file.size > 2 * 1024 * 1024) {
+                          toast.error("File too large", {
+                            description: "Please upload a file smaller than 2MB.",
+                          });
+                          e.target.value = "";
+                          setFormData((prev) => ({
+                            ...prev,
+                            resumeFile: null,
+                          }));
+                          return;
+                        }
+                        setFormData((prev) => ({
+                          ...prev,
+                          resumeFile: file ?? null,
+                        }));
+                      }
+                      }
+                    />
+                    <div className="w-14 h-14 rounded-2xl bg-slate-100 dark:bg-slate-800 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 flex items-center justify-center mx-auto mb-4 transition-colors">
+                      <Upload className="h-6 w-6 text-slate-400 dark:text-slate-500 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors" />
                     </div>
-                    <p className="text-sm font-medium text-slate-600 group-hover:text-blue-600 transition-colors">
+                    <p className="text-sm font-medium text-slate-600 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                       Click to upload resume
                     </p>
-                    <p className="text-xs text-slate-400 mt-2">
-                      Max file size 5MB. Please remove contact details.
+                    <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+                      Max file size 2 MB. Please remove contact details.
                     </p>
-                  </div>
+                  </label>
                 </div>
               </CardContent>
             </Card>
@@ -505,7 +578,7 @@ const PostBenchResource = () => {
               <Button
                 variant="outline"
                 onClick={handleSaveDraft}
-                className="px-8 h-12 rounded-xl border-slate-200 hover:bg-slate-50 text-slate-600 font-medium"
+                className="px-8 h-12 rounded-xl border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium"
               >
                 Save Draft
               </Button>
