@@ -350,7 +350,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
             {/* Dropdown Menu */}
             <div
               className={cn(
-                "absolute top-full left-1/2 -translate-x-1/2 pt-3 transition-all duration-200 z-50",
+                "absolute top-full left-0 pt-3 transition-all duration-200 z-50",
                 activeDropdown === item.label
                   ? "opacity-100 visible translate-y-0"
                   : "opacity-0 invisible -translate-y-2 pointer-events-none",
@@ -366,7 +366,7 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
                       className={cn("p-5", sectionIndex === 1 && "bg-white/5")}
                     >
                       {section.title && (
-                        <h3 className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3 px-2">
+                        <h3 className="text-[11px] font-semibold text-primary uppercase tracking-wider mb-3">
                           {section.title}
                         </h3>
                       )}
