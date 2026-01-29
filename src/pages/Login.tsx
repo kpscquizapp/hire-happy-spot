@@ -207,16 +207,9 @@ const Login = () => {
 
                   {/* Sign Up Link */}
                   <div className="text-center text-sm pt-2 sm:pt-3">
-                    <span className="text-slate-600 dark:text-slate-400">
+                    <span className="text-slate-600 dark:text-slate-400 font-semibold">
                       Don't have an account?{" "}
                     </span>
-                    {/* <button
-                        type="button"
-                        className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors"
-                        onClick={() => setIsLogin(false)}
-                      >
-                        Sign up
-                      </button> */}
                     <Link
                       to="/registration"
                       className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-semibold transition-colors"

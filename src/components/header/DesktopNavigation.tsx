@@ -115,7 +115,10 @@ const DesktopNavigation = ({ isDark = false }: DesktopNavigationProps) => {
           items: [
             {
               label: "List Your Talent",
-              href: "/login",
+              href:
+                userDetails?.role === "employer"
+                  ? "/employer-dashboard/active-resources"
+                  : "/login",
               description: "Add bench resources",
             },
             {

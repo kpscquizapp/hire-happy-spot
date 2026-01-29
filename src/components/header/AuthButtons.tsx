@@ -42,7 +42,7 @@ const AuthButtons = ({
           Login
         </Link>
         <Link
-          to="/employer-login"
+          to="/login"
           className="flex items-center justify-center px-4 py-3 rounded-lg bg-primary text-primary-foreground font-semibold hover:bg-primary/90 transition-colors text-sm"
         >
           Post a Job
@@ -89,7 +89,7 @@ const AuthButtons = ({
         className="rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium text-sm h-9 px-5"
         asChild
       >
-        <Link to="/employer-login">Post a Job</Link>
+        <Link to="/login">Post a Job</Link>
       </Button>
     </div>
   );

@@ -1220,7 +1220,7 @@ const HirionRegistration = () => {
             </div>
 
             <div className="text-center mt-6">
-              <span className="text-sm text-gray-600 dark:text-gray-400">
+              <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">
                 Already registered?{" "}
                 <Link to="/login" className="text-green-600 hover:underline">
                   Log in to your account
