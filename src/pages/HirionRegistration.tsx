@@ -1206,10 +1206,14 @@ const HirionRegistration = () => {
                     disabled={isLoadingCandidate || isLoadingEmployer}
                     aria-busy={isLoadingCandidate || isLoadingEmployer}
                   >
-                    <Loader className="mr-2 h-4 w-4 animate-spin" />
-                    {isLoadingCandidate || isLoadingEmployer
-                      ? "Creating account..."
-                      : "Sign up and continue"}
+                    {isLoadingCandidate || isLoadingEmployer ? (
+                      <>
+                        <Loader className="mr-2 h-4 w-4 animate-spin inline" />
+                        Creating account...
+                      </>
+                    ) : (
+                      "Sign up and continue"
+                    )}
                   </button>
                 </div>
               )}

@@ -198,8 +198,8 @@ const Login = () => {
                         </>
                       ) : (
                         <div className="flex items-center justify-center">
-                          <>Login</>
-                          <ArrowRight className="ml-2 h-4 w-5" />
+                          Login
+                          <ArrowRight className="ml-2 h-4 w-4" />
                         </div>
                       )}
                     </Button>
