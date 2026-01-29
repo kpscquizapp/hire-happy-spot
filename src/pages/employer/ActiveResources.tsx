@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -144,6 +144,11 @@ const ActiveResources = () => {
   const totalPages = Math.ceil(filteredResources.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedResources = filteredResources.slice(startIndex, startIndex + itemsPerPage);
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages || 1);
+    }
+  }, [currentPage, totalPages]);
 
   // Reset to first page when filters change
   const handleFilterChange = (status: "all" | "assigned" | "available") => {

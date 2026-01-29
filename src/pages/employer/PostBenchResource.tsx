@@ -34,11 +34,15 @@ const PostBenchResource = () => {
   const [currentStep, setCurrentStep] = useState(2);
 
   const steps = [
-    { number: 1, title: "Company Profile", completed: true },
-    { number: 2, title: "Resource Details", current: true },
-    { number: 3, title: "Contract Terms", completed: false },
-    { number: 4, title: "Review & Publish", completed: false },
-  ];
+    { number: 1, title: "Company Profile" },
+    { number: 2, title: "Resource Details" },
+    { number: 3, title: "Contract Terms" },
+    { number: 4, title: "Review & Publish" },
+  ].map((step) => ({
+    ...step,
+    completed: step.number < currentStep,
+    current: step.number === currentStep,
+  }));
 
   const [formData, setFormData] = useState({
     resourceName: "John D.",
