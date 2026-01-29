@@ -546,6 +546,10 @@ const PostBenchResource = () => {
                             description: "Please upload a file smaller than 2MB.",
                           });
                           e.target.value = "";
+                          setFormData((prev) => ({
+                            ...prev,
+                            resumeFile: null,
+                          }));
                           return;
                         }
                         setFormData((prev) => ({

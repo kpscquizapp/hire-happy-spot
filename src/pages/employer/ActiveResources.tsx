@@ -142,7 +142,8 @@ const ActiveResources = () => {
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredResources.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const displayPage = Math.min(currentPage, totalPages || 1);
+  const startIndex = (displayPage - 1) * itemsPerPage;
   const paginatedResources = filteredResources.slice(startIndex, startIndex + itemsPerPage);
   useEffect(() => {
     if (currentPage > totalPages) {
@@ -379,7 +380,7 @@ const ActiveResources = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
+                  disabled={displayPage === 1}
                   className="rounded-lg text-xs sm:text-xs h-8 sm:h-9 px-2 sm:px-3 w-full sm:w-auto"
                 >
                   ← Prev
@@ -422,7 +423,7 @@ const ActiveResources = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
+                  disabled={displayPage === totalPages}
                   className="rounded-lg text-xs sm:text-xs h-8 sm:h-9 px-2 sm:px-3 w-full sm:w-auto"
                 >
                   Next →
@@ -430,7 +431,7 @@ const ActiveResources = () => {
               </div>
 
               <div className="text-xs text-slate-600 dark:text-slate-400 text-center">
-                Page {currentPage} of {totalPages}
+                Page {displayPage} of {totalPages}
               </div>
             </div>
           </>
